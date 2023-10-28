@@ -4,25 +4,20 @@
     <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
   </div>
   <div class="menu" v-show="displayMenu">
-    <bar-menu v-if="element.type == 'bar'" :element="element"></bar-menu>
-    <span v-else>Some options...</span>
+    <component
+      :is="element.type + '-menu'"
+      :element="element"
+    ></component>
   </div>
-  <link-box v-if="element.type == 'link'" :element="element"></link-box>
-  <bar-box v-else-if="element.type == 'bar'" :element="element"></bar-box>
-  <text-box v-else-if="element.type == 'text'" :element="element"></text-box>
-  <parts-box v-else-if="element.type == 'parts'" :element="element"></parts-box>
-  <h3 v-else>Unknown element</h3>
+  <component
+    :is="element.type + '-box'"
+    :element="element"
+  ></component>
 </template>
 
 <script setup>
-import LinkBox from '../links/LinkBox.vue';
-import BarBox from '../bars/BarBox.vue';
-import TextBox from '../texts/TextBox.vue';
-import PartsBox from '../parts/PartsBox.vue';
-
-import BarMenu from '../bars/BarMenu.vue';
-
 import { provide, computed, inject, ref } from 'vue';
+import { sendToServer } from '../../server.js';
 
 const props = defineProps(['element']);
 
@@ -41,19 +36,53 @@ function updateElement(data) {
 provide('updateElement', updateElement);
 
 const displayMenu = ref(false);
-function toggleMenu(){
+function toggleMenu() {
   displayMenu.value = !displayMenu.value;
 }
 
+const hasToReload = ref(false);
+provide('hasToReload',hasToReload);
+
+function reloaded(){
+  hasToReload.value = false;
+}
+provide('reloaded',reloaded);
+
+async function reloadElement() {
+  const data = {
+    type: 'element',
+    oper: 'get',
+    id: elementId.value,
+    prop: { dummy: '' },
+  };
+
+  const obj = await sendToServer(data);
+  updateElement({
+    attr: obj.data,
+  });
+  hasToReload.value = true;
+}
+
+async function changeAttr(changedAttr) {
+  const data = {
+    type: 'element',
+    oper: 'set',
+    id: elementId.value,
+    prop: changedAttr,
+  };
+
+  const obj = await sendToServer(data);
+  reloadElement();
+}
+provide('changeAttr',changeAttr);
 </script>
 
-
 <style scoped>
-.menu{
-  background-color: rgb(216, 216, 216);
+.menu {
+  background-color: rgb(230, 230, 230);
   border-style: solid;
   border-width: 0.1px;
-  border-color: rgb(190, 190, 190);
+  border-color: rgb(206, 206, 206);
   margin: 5px 0px 5px 0px;
   padding: 5px 15px 5px 15px;
 }

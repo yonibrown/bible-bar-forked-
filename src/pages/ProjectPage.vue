@@ -2,7 +2,7 @@
   <div>
     <section>
       <base-card>
-        <h2>Project {{ project.id }}: {{ project.props.name }}</h2>
+        <h2>Project {{ project.id }}: {{ project.attr.name }}</h2>
       </base-card>
       <base-card v-for="elm in project.elements" :key="elm.id">
         <element-box :element="elm"></element-box>
@@ -19,7 +19,7 @@ import { reactive, provide, computed } from 'vue';
 
 const project = reactive({
   id: 1,
-  props: {
+  attr: {
     name: '---',
     desc: '',
   },
@@ -83,7 +83,7 @@ async function loadProject() {
   };
   const obj = await sendToServer(data);
 
-  project.props = {
+  project.attr = {
     name: obj.data.name,
     desc: obj.data.desc,
   };
