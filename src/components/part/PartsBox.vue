@@ -17,7 +17,7 @@
       </tr>
       <parts-line
         class="resprt-part"
-        v-for="prt in research.parts"
+        v-for="prt in parts"
         :prt="prt"
         :key="prt.id"
       ></parts-line>
@@ -32,16 +32,14 @@ import PartsLine from './PartsLine.vue';
 import { reactive, inject, computed } from 'vue';
 
 const props = defineProps(['element']);
-const getResearch = inject('getResearch');
+const updateElement = inject('updateElement');
+// const getResearch = inject('getResearch');
 
-const research = reactive(getResearch(props.element.attr.res));
+const parts = computed(function () {
+  return props.element.parts;
+});
 
 const researchId = { res: props.element.attr.res };
-
-function updateResearch(data) {
-  Object.assign(research, data);
-}
-// provide('updateResearch', updateResearch);
 
 loadResearchParts();
 
@@ -54,7 +52,7 @@ async function loadResearchParts() {
   };
 
   const obj = await sendToServer(data);
-  updateResearch({
+  updateElement({
     parts: obj.data,
   });
 }

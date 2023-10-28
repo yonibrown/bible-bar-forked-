@@ -5,7 +5,7 @@
         <h2>Project {{ project.id }}: {{ project.attr.name }}</h2>
       </base-card>
       <base-card v-for="elm in project.elements" :key="elm.id">
-        <element-box :element="elm"></element-box>
+        <element-box :element="elm" @updateElement="(data) => updateObject(elm,data)"></element-box>
       </base-card>
     </section>
   </div>
@@ -28,10 +28,10 @@ const project = reactive({
 });
 provide('project', project);
 
-const researches = reactive({
-  list: []
-});
-provide('researches', researches);
+// const researches = reactive({
+//   list: []
+// });
+// provide('researches', researches);
 
 const projectId = computed(function () {
   return { proj: project.id };
@@ -60,17 +60,17 @@ function getCategory(linkId, col) {
 provide('getCategory', getCategory);
 
 // research methods
-function getResearch(resId) {
-  var res = researches.list.find((pRes) => {
-    return pRes.id == resId;
-  });
-  if (res == null){
-    res = {id:resId};
-    researches.list.push(res);
-  }
-  return res;
-}
-provide('getResearch', getResearch);
+// function getResearch(resId) {
+//   var res = researches.list.find((pRes) => {
+//     return pRes.id == resId;
+//   });
+//   if (res == null){
+//     res = {id:resId};
+//     researches.list.push(res);
+//   }
+//   return res;
+// }
+// provide('getResearch', getResearch);
 
 loadProject();
 
@@ -89,6 +89,12 @@ async function loadProject() {
   };
   project.elements = obj.data.elements;
   project.links = obj.data.links;
+  console.log(project);
+}
+
+function updateObject(obj,data){
+  console.log('updateObject');
+  Object.assign(obj, data);
   console.log(project);
 }
 </script>

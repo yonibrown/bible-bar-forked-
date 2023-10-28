@@ -20,6 +20,7 @@ import { provide, computed, inject, ref } from 'vue';
 import { sendToServer } from '../../server.js';
 
 const props = defineProps(['element']);
+const emit = defineEmits(['updateElement']);
 
 const projectId = inject('projectId');
 const elementId = computed(function () {
@@ -31,7 +32,7 @@ const elementId = computed(function () {
 provide('elementId', elementId);
 
 function updateElement(data) {
-  Object.assign(props.element, data);
+  emit('updateElement',data);
 }
 provide('updateElement', updateElement);
 
