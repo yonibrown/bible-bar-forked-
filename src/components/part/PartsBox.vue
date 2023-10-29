@@ -5,13 +5,13 @@
       <tr class="resprt-header">
         <td :class="categoryClass" @dblclick="changeSort('category')">
           קטגוריה
-          <i v-show="categoryAscending" class="fa fa-arrow-down"></i>
-          <i v-show="categoryDescending" class="fa fa-arrow-up"></i>
+          <i v-show="categoryAscending" class="fa fa-arrow-up"></i>
+          <i v-show="categoryDescending" class="fa fa-arrow-down"></i>
         </td>
         <td :class="verseClass" @dblclick="changeSort('verse')">
           פסוק
-          <i v-show="verseAscending" class="fa fa-arrow-down"></i>
-          <i v-show="verseDescending" class="fa fa-arrow-up"></i>
+          <i v-show="verseAscending" class="fa fa-arrow-up"></i>
+          <i v-show="verseDescending" class="fa fa-arrow-down"></i>
         </td>
         <td>טקסט</td>
       </tr>
@@ -33,7 +33,6 @@ import { reactive, inject, computed } from 'vue';
 
 const props = defineProps(['element']);
 const updateElement = inject('updateElement');
-// const getResearch = inject('getResearch');
 
 const parts = computed(function () {
   return props.element.parts;
@@ -82,12 +81,19 @@ const categoryDescending = computed(function () {
 function changeSort(newField){
   if (sort.field == newField){
     sort.ascending = !sort.ascending;
+    parts.value.reverse();
   } else {
     sort.ascending = true;
     if (sort.field == 'verse'){
       sort.field = 'category';
+      parts.value.sort(function(a,b){
+        return a.col_sort_key > b.col_sort_key ? 1 : -1;
+      });
     } else {
       sort.field = 'verse';
+      parts.value.sort(function(a,b){
+        return a.src_sort_key > b.src_sort_key ? 1 : -1;
+      });
     }
   }
 }
