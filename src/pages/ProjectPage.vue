@@ -89,11 +89,10 @@ async function loadProject() {
   };
   project.elements = obj.data.elements;
   project.links = obj.data.links;
-  console.log(project);
+  // console.log(project);
 }
 
 function updateObject(obj,data){
-  console.log('updateObject');
   Object.assign(obj, data);
   console.log(project);
 }
