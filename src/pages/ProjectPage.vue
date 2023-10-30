@@ -4,42 +4,63 @@
       <base-card>
         <h2>Project {{ project.id }}: {{ project.attr.name }}</h2>
       </base-card>
-      <base-card v-for="elm in elements" :key="elm.id">
-        <element-box :element="elm"></element-box>
-      </base-card>
+      <div
+        v-for="(elm, dispElmIdx) in dispElements"
+        :key="elm.id"
+        draggable="true"
+        @dragstart="startDrag($event, dispElmIdx)"
+        @mousedown="startMouse($event)"
+        @drop="onDrop($event, dispElmIdx)"
+        @dragover.prevent
+        @dragenter.prevent
+      >
+        <element-box
+          :element="elm"
+          @closeElement="closeElement(elm)"
+        ></element-box>
+      </div>
     </section>
   </div>
 </template>
 
 <script setup>
-import ElementBox from '../components/layout/ElementBox.vue';
-import { sendToServer } from '../server.js';
-import { reactive, provide, computed,ref } from 'vue';
+import ElementBox from "../components/layout/ElementBox.vue";
+import { sendToServer } from "../server.js";
+import { reactive, provide, computed, ref } from "vue";
 
 const project = reactive({
   id: 1,
   attr: {
-    name: '---',
-    desc: '',
+    name: "---",
+    desc: "",
   },
-  links: []
+  links: [],
 });
 
 const projectId = computed(function () {
   return { proj: project.id };
 });
-provide('projectId', projectId);
+provide("projectId", projectId);
 
 const elements = ref([]);
+const dispElements = computed(function () {
+  return elements.value
+    .filter(function (a) {
+      return +a.position > 0;
+    })
+    .sort(function (a, b) {
+      return a.position - b.position;
+    });
+});
 
 loadProject();
 
 async function loadProject() {
   const data = {
-    type: 'project',
-    oper: 'get',
+    type: "project",
+    oper: "get",
     id: projectId.value,
-    prop: { dummy: '' },
+    prop: { dummy: "" },
   };
   const obj = await sendToServer(data);
 
@@ -50,12 +71,11 @@ async function loadProject() {
   elements.value = obj.data.elements;
   project.links = obj.data.links;
   // console.log('project loaded');
-  console.log(project);
+  // console.log(dispElements);
 }
 
-
 // add a new element or reload an element
-function openElement(attr){
+function openElement(attr) {
   // if (typeof attr.opening_element != 'undefined'){
   //   var newElm = elements.value.find(function(dispElm){
   //     return dispElm.disp.opening_element == attr.opening_element;
@@ -64,20 +84,20 @@ function openElement(attr){
 
   createElement({
     proj: project.id,
-    ...attr
+    ...attr,
   });
 }
-provide('openElement',openElement);
+provide("openElement", openElement);
 
 async function createElement(attr) {
   const data = {
-    type: 'element',
-    oper: 'new',
-    id: { dummy: ''},
+    type: "element",
+    oper: "new",
+    id: { dummy: "" },
     prop: attr,
   };
   const obj = await sendToServer(data);
-  console.log(obj.id)
+  console.log(obj.id);
 }
 
 // link methods
@@ -87,7 +107,7 @@ function getLink(linkId) {
   });
   return link;
 }
-provide('getLink', getLink);
+provide("getLink", getLink);
 
 function getCategory(linkId, col) {
   const link = getLink(linkId);
@@ -99,14 +119,54 @@ function getCategory(linkId, col) {
   });
   return cat;
 }
-provide('getCategory', getCategory);
+provide("getCategory", getCategory);
 
 
-function updateObject(obj,data){
-  Object.assign(obj, data);
-  // console.log('updateObject');
+
+function closeElement(elm) {
+  elm.position = 0;
 }
 
+// drag and drop
+var handle = null;
+function startMouse(evt) {
+  handle = evt.target.closest(".element-head");
+}
+function startDrag(evt, dispElmIdx) {
+  if (handle) {
+    evt.dataTransfer.dropEffect = "move";
+    evt.dataTransfer.effectAllowed = "move";
+    evt.dataTransfer.setData("dispElmIdx", dispElmIdx);
+  } else {
+    evt.preventDefault();
+  }
+}
+function onDrop(evt, dropIdx) {
+  const dragIdx = +evt.dataTransfer.getData("dispElmIdx");
+
+  // nothing to move
+  if (dropIdx == dragIdx) {
+    return;
+  }
+
+  const dragElm = dispElements.value[dragIdx];
+  const dropElm = dispElements.value[dropIdx];
+  const dragElmPos = +dragElm.position;
+  const dropElmPos = +dropElm.position;
+
+  if (Math.abs(dropIdx - dragIdx) == 1) {
+    // switch following items
+    dragElm.position = dropElmPos;
+    dropElm.position = dragElmPos;
+  } else {
+    // place the dragged item before the dropped item
+    var prevElmPos = 0;
+    if (dropIdx > 0) {
+      prevElmPos = +dispElements.value[dropIdx - 1].position;
+    }
+    dragElm.position = (dropElmPos - prevElmPos) / 2 + prevElmPos;
+  }
+}
 </script>
 
 <style scoped></style>

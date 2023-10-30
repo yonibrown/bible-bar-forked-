@@ -1,56 +1,61 @@
 <template>
-  <div class="head">
-    <div class="title">{{ props.element.type }}</div>
-    <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
-  </div>
-  <div class="menu" v-show="displayMenu">
-    <component
-      :is="props.element.type + '-menu'"
-      :element="element"
-    ></component>
-  </div>
-  <component
-    :is="props.element.type + '-box'"
-    :element="element"
-  ></component>
+  <base-card>
+    <div class="element-head">
+      <div class="title" draggable="true">{{ props.element.type }}</div>
+      <div class="menu-button fa fa-close" @click="closeElement"></div>
+      <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
+    </div>
+    <div class="menu" v-show="displayMenu">
+      <component
+        :is="props.element.type + '-menu'"
+        :element="element"
+      ></component>
+    </div>
+    <component :is="props.element.type + '-box'" :element="element"></component>
+  </base-card>
 </template>
 
 <script setup>
-import { provide, computed, inject, ref} from 'vue';
-import { sendToServer } from '../../server.js';
+import { provide, computed, inject, ref  } from "vue";
+import { sendToServer } from "../../server.js";
 
-const props = defineProps(['element']);
+const props = defineProps(["element"]);
+const emit = defineEmits(["closeElement"]);
 
 const elementAttr = ref(props.element.attr);
 
-const projectId = inject('projectId');
+const projectId = inject("projectId");
 const elementId = computed(function () {
   return {
     elm: props.element.id,
     ...projectId.value,
   };
 });
-provide('elementId', elementId);
+provide("elementId", elementId);
 
 const displayMenu = ref(false);
 function toggleMenu() {
   displayMenu.value = !displayMenu.value;
 }
 
-const hasToReload = ref(false);
-provide('hasToReload',hasToReload);
+function closeElement() {
+  emit("closeElement");
+}
 
-function reloaded(){
+const hasToReload = ref(false);
+provide("hasToReload", hasToReload);
+
+function reloaded() {
   hasToReload.value = false;
 }
-provide('reloaded',reloaded);
+provide("reloaded", reloaded);
 
 async function reloadElement() {
   const data = {
-    type: 'element',
-    oper: 'get',
+    type: "element",
+    oper: "get",
     id: elementId.value,
-    prop: { dummy: '' },
+    prop: { dummy: "" },
   };
 
   const obj = await sendToServer(data);
@@ -60,8 +65,8 @@ async function reloadElement() {
 
 async function changeAttr(changedAttr) {
   const data = {
-    type: 'element',
-    oper: 'set',
+    type: "element",
+    oper: "set",
     id: elementId.value,
     prop: changedAttr,
   };
@@ -69,17 +74,16 @@ async function changeAttr(changedAttr) {
   const obj = await sendToServer(data);
   reloadElement();
 }
-provide('changeAttr',changeAttr);
+provide("changeAttr", changeAttr);
 
-const openElement = inject('openElement');
-function openElementFromElement(attr){
+const openElement = inject("openElement");
+function openElementFromElement(attr) {
   openElement({
     opening_element: props.element.id,
-    ...attr
+    ...attr,
   });
 }
-provide('openElement',openElementFromElement);
-
+provide("openElement", openElementFromElement);
 </script>
 
 <style scoped>
@@ -93,19 +97,25 @@ provide('openElement',openElementFromElement);
 }
 
 .menu-button {
+  cursor: default;
   float: left;
-  color: gray;
+  color: rgb(146, 146, 146);
+  margin-right: 6px;
+  padding: 4px;
 }
 .menu-button:hover {
   color: black;
+  background-color: rgb(230, 230, 230);
 }
 .title {
+  cursor: default;
   float: right;
   font-weight: bold;
   font-size: 1.17em;
 }
 
-.head {
+.elemant_head {
   margin: 0em 0em 1em 0em;
+  cursor: grab;
 }
 </style>
