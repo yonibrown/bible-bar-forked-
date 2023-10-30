@@ -16,11 +16,16 @@
 </template>
 
 <script setup>
-import { provide, computed, inject, ref } from 'vue';
+import { provide, computed, inject, ref,watch} from 'vue';
 import { sendToServer } from '../../server.js';
 
 const props = defineProps(['element']);
 const emit = defineEmits(['updateElement']);
+
+watch(props.element,function(){
+  console.log('element changed');
+  console.log(props.element);
+});
 
 const projectId = inject('projectId');
 const elementId = computed(function () {
@@ -76,6 +81,16 @@ async function changeAttr(changedAttr) {
   reloadElement();
 }
 provide('changeAttr',changeAttr);
+
+const openElement = inject('openElement');
+function openElementFromElement(attr){
+  openElement({
+    opening_element: props.element.id,
+    ...attr
+  });
+}
+provide('openElement',openElementFromElement);
+
 </script>
 
 <style scoped>

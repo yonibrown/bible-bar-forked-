@@ -7,6 +7,7 @@
       backgroundColor: category.color,
     }"
     v-show="category.display"
+    @dblclick="openText"
   >
     <span class="bar_tooltip">{{ tooltip }}</span>
   </div>
@@ -17,6 +18,7 @@ const props = defineProps(['point']);
 import { computed, inject } from 'vue';
 
 const getCategory = inject('getCategory');
+const openElement = inject('openElement');
 
 const category = computed(() => {
   return getCategory(props.point.link, props.point.col);
@@ -24,6 +26,14 @@ const category = computed(() => {
 const tooltip = computed(() => {
   return props.point.verse.replaceAll(',', ' ');
 });
+
+function openText(){
+  // console.log(props.point);
+  openElement({
+    research_id: props.point.res,
+    part_id: props.point.id,
+  });
+}
 </script>
 
 <style scoped>
