@@ -7,9 +7,10 @@
       <div
         v-for="(elm, dispElmIdx) in dispElements"
         :key="elm.id"
-        draggable="true"
+        :draggable="dragAllowed"
         @dragstart="startDrag($event, dispElmIdx)"
         @mousedown="startMouse($event)"
+        @mouseup="onMouseup"
         @drop="onDrop($event, dispElmIdx)"
         @dragover.prevent
         @dragenter.prevent
@@ -121,25 +122,31 @@ function getCategory(linkId, col) {
 }
 provide("getCategory", getCategory);
 
-
-
 function closeElement(elm) {
   elm.position = 0;
 }
 
 // drag and drop
-var handle = null;
+const dragAllowed = ref(false);
+
 function startMouse(evt) {
-  handle = evt.target.closest(".element-head");
-}
-function startDrag(evt, dispElmIdx) {
-  if (handle) {
-    evt.dataTransfer.dropEffect = "move";
-    evt.dataTransfer.effectAllowed = "move";
-    evt.dataTransfer.setData("dispElmIdx", dispElmIdx);
-  } else {
-    evt.preventDefault();
+  if (evt.target.closest(".element-head")) {
+    dragAllowed.value = true;
   }
+}
+
+// window.addEventListener("mouseup", function () {
+//   dragAllowed.value = false;
+// });
+function onMouseup(){
+  dragAllowed.value = false;
+}
+
+function startDrag(evt, dispElmIdx) {
+  dragAllowed.value = false;
+  evt.dataTransfer.dropEffect = "move";
+  evt.dataTransfer.effectAllowed = "move";
+  evt.dataTransfer.setData("dispElmIdx", dispElmIdx);
 }
 function onDrop(evt, dropIdx) {
   const dragIdx = +evt.dataTransfer.getData("dispElmIdx");
