@@ -114,7 +114,7 @@ provide("openElement", openElementFromElement);
   font-size: 1.17em;
 }
 
-.elemant_head {
+.element-head {
   margin: 0em 0em 1em 0em;
   cursor: grab;
 }
