@@ -11,16 +11,13 @@
 
 <script setup>
 import TextVerse from './TextVerse.vue';
-import { computed, inject } from 'vue';
+import {  inject ,ref} from 'vue';
 import { sendToServer } from '../../server.js';
 
 const props = defineProps(['element']);
 const elementId = inject('elementId');
-const updateElement = inject('updateElement');
 
-const verses = computed(function () {
-  return props.element.verses;
-});
+const verses = ref([]);
 
 loadElmText();
 
@@ -34,10 +31,7 @@ async function loadElmText() {
 
   const obj = await sendToServer(data);
 
-  updateElement({
-    title: obj.data.title,
-    verses: obj.data.part_list,
-  });
+  verses.value = obj.data.part_list;
 }
 </script>
 

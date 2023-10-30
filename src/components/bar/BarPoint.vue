@@ -28,8 +28,8 @@ const tooltip = computed(() => {
 });
 
 function openText(){
-  // console.log(props.point);
   openElement({
+    type: 'text',
     research_id: props.point.res,
     part_id: props.point.id,
   });

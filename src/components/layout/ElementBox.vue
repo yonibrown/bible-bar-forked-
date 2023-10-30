@@ -1,31 +1,27 @@
 <template>
   <div class="head">
-    <div class="title">{{ element.type }}</div>
+    <div class="title">{{ props.element.type }}</div>
     <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
   </div>
   <div class="menu" v-show="displayMenu">
     <component
-      :is="element.type + '-menu'"
+      :is="props.element.type + '-menu'"
       :element="element"
     ></component>
   </div>
   <component
-    :is="element.type + '-box'"
+    :is="props.element.type + '-box'"
     :element="element"
   ></component>
 </template>
 
 <script setup>
-import { provide, computed, inject, ref,watch} from 'vue';
+import { provide, computed, inject, ref} from 'vue';
 import { sendToServer } from '../../server.js';
 
 const props = defineProps(['element']);
-const emit = defineEmits(['updateElement']);
 
-watch(props.element,function(){
-  console.log('element changed');
-  console.log(props.element);
-});
+const elementAttr = ref(props.element.attr);
 
 const projectId = inject('projectId');
 const elementId = computed(function () {
@@ -35,11 +31,6 @@ const elementId = computed(function () {
   };
 });
 provide('elementId', elementId);
-
-function updateElement(data) {
-  emit('updateElement',data);
-}
-provide('updateElement', updateElement);
 
 const displayMenu = ref(false);
 function toggleMenu() {
@@ -63,9 +54,7 @@ async function reloadElement() {
   };
 
   const obj = await sendToServer(data);
-  updateElement({
-    attr: obj.data,
-  });
+  elementAttr.value = obj.data;
   hasToReload.value = true;
 }
 

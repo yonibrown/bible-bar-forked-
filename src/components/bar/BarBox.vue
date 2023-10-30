@@ -31,28 +31,20 @@ import BarSegment from './BarSegment.vue';
 import BarPoint from './BarPoint.vue';
 import { sendToServer } from '../../server.js';
 
-import { computed, inject, watch } from 'vue';
+import {  inject, watch,ref } from 'vue';
 
 const props = defineProps(['element']);
 const elementId = inject('elementId');
-const updateElement = inject('updateElement');
 const hasToReload = inject('hasToReload');
 const reloaded = inject('reloaded');
 
-const segments = computed(function () {
-  return props.element.segments;
-});
-const points = computed(function () {
-  return props.element.points;
-});
+const segments = ref([]);
+const points = ref([]);
 
 watch(hasToReload, function (newVal) {
   if (newVal) {
     // clear points so they don't interfere
-    updateElement({
-      points: [],
-      // segments: []
-    });
+    points.value = [];
 
     loadElmBarSegments();
     loadElmBarPoints();
@@ -74,9 +66,7 @@ async function loadElmBarSegments() {
 
   const obj = await sendToServer(data);
 
-  updateElement({
-    segments: obj.data.segments,
-  });
+  segments.value = obj.data.segments;
 }
 
 async function loadElmBarPoints() {
@@ -89,9 +79,7 @@ async function loadElmBarPoints() {
 
   const obj = await sendToServer(data);
 
-  updateElement({
-    points: obj.data.points,
-  });
+  points.value = obj.data.points;
 }
 </script>
 
