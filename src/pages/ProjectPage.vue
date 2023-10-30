@@ -89,12 +89,38 @@ async function loadProject() {
   };
   project.elements = obj.data.elements;
   project.links = obj.data.links;
+  console.log('project loaded');
   // console.log(project);
 }
 
 function updateObject(obj,data){
   Object.assign(obj, data);
-  console.log(project);
+  // console.log('updateObject');
+}
+
+function openElement(attr){
+  if (typeof attr.opening_element != 'undefined'){
+    var newElm = project.elements.find(function(dispElm){
+      return dispElm.disp.opening_element == attr.opening_element;
+    });
+  }
+  changeElementAttr(newElm,attr);
+}
+provide('openElement',openElement);
+
+async function changeElementAttr(elm,attr) {
+  const data = {
+    type: 'element',
+    oper: 'set',
+    id: { 
+      proj: project.id,    
+      elm:  elm.id
+    },
+    prop: attr,
+  };
+  const obj = await sendToServer(data);
+  // console.log(obj)
+  updateObject(elm,obj.data);
 }
 </script>
 
