@@ -1,7 +1,7 @@
 <template>
   <base-card>
     <div class="element-head">
-      <div class="title" draggable="true">{{ props.element.type }}</div>
+      <div class="title">{{ props.element.type }}</div>
       <div class="menu-button fa fa-close" @click="closeElement"></div>
       <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
     </div>
