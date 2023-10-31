@@ -1,16 +1,12 @@
 <template>
   <base-card>
     <div class="element-head">
-      <form v-if="editingName" @submit.prevent="submitName" class="menu">
-        <input
-          type="text"
-          id="name"
-          name="elementName"
-          ref="nameInput"
-          v-model.trim="elementName"
-        />
-        <button>שמור</button>
-      </form>
+      <base-editable
+        v-if="editingName"
+        :initialValue="elementName"
+        @submitValue="submitName"
+        :name="elementName"
+      ></base-editable>
       <div v-else @dblclick="starteditName" class="title">
         {{ elementName }}
       </div>
@@ -52,18 +48,15 @@ if (props.element.disp.name != "") {
   elementName.value = props.element.disp.name;
 }
 const editingName = ref(false);
-const nameInput = ref(null);
+
 function starteditName() {
   editingName.value = true;
 }
-watch(nameInput, function (newVal) {
-  if (newVal) {
-    newVal.focus();
-  }
-});
-function submitName(){
-  if (elementName.value == ''){
+function submitName(newName) {
+  if (newName == "") {
     elementName.value = defaultName;
+  } else {
+    elementName.value = newName;
   }
   editingName.value = false;
 }
