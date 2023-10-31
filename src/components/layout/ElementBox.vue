@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { provide, computed, inject, ref, watch } from "vue";
+import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
@@ -43,12 +43,13 @@ provide("elementId", elementId);
 
 // element name
 const defaultName = props.element.type + props.element.id;
+
 const elementName = ref(defaultName);
 if (props.element.disp.name != "") {
   elementName.value = props.element.disp.name;
 }
-const editingName = ref(false);
 
+const editingName = ref(false);
 function starteditName() {
   editingName.value = true;
 }
@@ -59,6 +60,11 @@ function submitName(newName) {
     elementName.value = newName;
   }
   editingName.value = false;
+
+  console.log(props.element);
+  changeAttr({
+    name: newName,
+  });
 }
 
 // display menu
@@ -95,7 +101,7 @@ async function reloadElement() {
 }
 
 // change attributes of element
-async function changeAttr(changedAttr) {
+async function changeAttr(changedAttr, options) {
   const data = {
     type: "element",
     oper: "set",
@@ -104,7 +110,10 @@ async function changeAttr(changedAttr) {
   };
 
   const obj = await sendToServer(data);
-  reloadElement();
+
+  if (options && options.reload) {
+    reloadElement();
+  }
 }
 provide("changeAttr", changeAttr);
 
@@ -145,7 +154,7 @@ button {
 }
 .menu-button:hover {
   color: black;
-  background-color: rgb(230, 230, 230);
+  background-color: rgb(223, 228, 235);
 }
 .title {
   cursor: default;

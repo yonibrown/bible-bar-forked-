@@ -22,7 +22,8 @@ const editableValue = ref(props.initialValue);
 const input = ref(null);
 watch(input, function (newVal) {
   if (newVal) {
-    newVal.focus();
+    // newVal.focus();
+    newVal.select();
   }
 });
 

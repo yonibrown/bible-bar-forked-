@@ -12,7 +12,7 @@ const changeAttr = inject('changeAttr');
 function selectDiv() {
   changeAttr({
     division_id: props.segment.div
-  });
+  },{reload:true});
 }
 </script>
 
