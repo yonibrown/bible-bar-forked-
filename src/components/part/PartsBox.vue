@@ -29,7 +29,7 @@
 import { sendToServer } from '../../server.js';
 import PartsLine from './PartsLine.vue';
 
-import { reactive, inject, computed ,ref} from 'vue';
+import { reactive,  computed ,ref} from 'vue';
 
 const props = defineProps(['element']);
 

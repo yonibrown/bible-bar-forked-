@@ -34,8 +34,7 @@ const project = reactive({
   attr: {
     name: "---",
     desc: "",
-  },
-  links: [],
+  }
 });
 
 const projectId = computed(function () {
@@ -43,6 +42,7 @@ const projectId = computed(function () {
 });
 provide("projectId", projectId);
 
+// elements
 const elements = ref([]);
 const dispElements = computed(function () {
   return elements.value
@@ -53,6 +53,10 @@ const dispElements = computed(function () {
       return a.position - b.position;
     });
 });
+
+//links
+const links = ref([]);
+provide('links',links);
 
 loadProject();
 
@@ -70,8 +74,8 @@ async function loadProject() {
     desc: obj.data.desc,
   };
   elements.value = obj.data.elements;
-  project.links = obj.data.links;
-  // console.log('project loaded');
+  links.value = obj.data.links;
+  // console.log(links.value);
   // console.log(dispElements);
 }
 
@@ -98,32 +102,7 @@ async function createElement(attr) {
     prop: attr,
   };
   const obj = await sendToServer(data);
-  console.log(obj.id);
-}
-
-// link methods
-function getLink(linkId) {
-  const link = project.links.find((pLink) => {
-    return pLink.id == linkId;
-  });
-  return link;
-}
-provide("getLink", getLink);
-
-function getCategory(linkId, col) {
-  const link = getLink(linkId);
-  if (link == null) {
-    return null;
-  }
-  const cat = link.categories.find((pCat) => {
-    return pCat.col == col;
-  });
-  return cat;
-}
-provide("getCategory", getCategory);
-
-function closeElement(elm) {
-  elm.position = 0;
+  // console.log(obj.id);
 }
 
 // drag and drop
@@ -173,6 +152,61 @@ function onDrop(evt, dropIdx) {
     }
     dragElm.position = (dropElmPos - prevElmPos) / 2 + prevElmPos;
   }
+  saveElmList();
+}
+
+async function saveElmList(){
+  const elmList = dispElements.value.map(function(elm,idx) {
+    return {
+      id: elm.id,
+      disp: elm.disp.gs_disp,
+      position: idx+1
+    }
+  });
+  // console.log(elmList);
+  const data = {
+    type: "project",
+    oper: "save_elements",
+    id: projectId.value,
+    prop: {
+      elements: elmList
+    },
+  };
+  const obj = await sendToServer(data);
+}
+
+// link methods
+function getLink(linkId) {
+  const link = links.value.find((pLink) => {
+    return pLink.id == linkId;
+  });
+  return link;
+}
+provide("getLink", getLink);
+
+function getCategory(linkId, col) {
+  const link = getLink(linkId);
+  if (link == null) {
+    return null;
+  }
+  const cat = link.categories.find((pCat) => {
+    return pCat.col == col;
+  });
+  return cat;
+}
+provide("getCategory", getCategory);
+
+function unlinkElement(link,element){
+  link.elements = link.elements.filter(function(elmId){
+    return elmId != element.id;
+  });
+}
+provide('unlinkElement',unlinkElement);
+
+
+function closeElement(elm) {
+  elm.position = 0;
+  saveElmList();
 }
 </script>
 

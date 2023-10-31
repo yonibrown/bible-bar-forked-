@@ -75,7 +75,7 @@ async function submitChanges() {
     console.log('no change');
     return;
   }
-  changeAttr(changedAttr);
+  changeAttr(changedAttr,{reload:true});
 
   changedAttr = {};
   hasChanges.value = false;
