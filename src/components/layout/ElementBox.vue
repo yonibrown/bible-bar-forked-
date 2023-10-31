@@ -10,25 +10,30 @@
       <div v-else @dblclick="starteditName" class="title">
         {{ elementName }}
       </div>
-      <div class="menu-button fa fa-close" @click="closeElement"></div>
-      <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
+      <span class="menu-buttons">
+      <menu-button type="options" @click="toggleMenu"></menu-button>
+      <menu-button type="close" @click="closeElement"></menu-button>
+    </span>
     </div>
-    <div class="menu" v-show="displayMenu">
-      <component
+    <div v-show="displayMenu">
+      <component class="menu"
         :is="props.element.type + '-menu'"
         :element="element"
       ></component>
+      <links-menu class="menu" v-if="displayLinksMenu" @removeLink="removeLink"></links-menu>
     </div>
     <component :is="props.element.type + '-box'" :element="element"></component>
   </base-card>
 </template>
 
 <script setup>
+import MenuButton from '../ui/MenuButton.vue';
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
 const emit = defineEmits(["closeElement"]);
+const getLink = inject('getLink');
 
 const elementAttr = ref(props.element.attr);
 
@@ -42,7 +47,21 @@ const elementId = computed(function () {
 provide("elementId", elementId);
 
 // element name
-const defaultName = props.element.type + props.element.id;
+const defaultName = getDefaultName();
+function getDefaultName(){
+  if (props.element.type == 'link'){
+    const link = getLink(props.element.attr.link_id);
+    if (link){
+      if (link.name != ''){
+        return link.name;
+      } else {
+        return 'link'+link.id;
+      }
+    }
+  }
+  return 'element' + props.element.id;
+}
+// console.log(props.element);
 
 const elementName = ref(defaultName);
 if (props.element.disp.name != "") {
@@ -61,7 +80,7 @@ function submitName(newName) {
   }
   editingName.value = false;
 
-  console.log(props.element);
+  // console.log(props.element);
   changeAttr({
     name: newName,
   });
@@ -72,6 +91,9 @@ const displayMenu = ref(false);
 function toggleMenu() {
   displayMenu.value = !displayMenu.value;
 }
+const displayLinksMenu = computed(function(){
+  return props.element.type != 'link';
+});
 
 // close element button
 function closeElement() {
@@ -126,6 +148,24 @@ function openElementFromElement(attr) {
   });
 }
 provide("openElement", openElementFromElement);
+
+//links
+const projLinks = inject('links');
+const links = computed(function(){
+  return projLinks.value.filter(function(link){
+    return link.elements.find(function(elmId){
+      return elmId == props.element.id;
+    });
+  });
+});
+provide('links',links);
+// console.log(links.value);
+
+const unlinkElement = inject('unlinkElement');
+function removeLink(link){
+  unlinkElement(link,props.element);
+}
+
 </script>
 
 <style scoped>
@@ -134,6 +174,10 @@ form {
 }
 button {
   margin-right: 5px;
+}
+
+.menu-buttons {
+  float: left;
 }
 
 .menu {
@@ -145,17 +189,6 @@ button {
   padding: 5px 15px 5px 15px;
 }
 
-.menu-button {
-  cursor: default;
-  float: left;
-  color: rgb(146, 146, 146);
-  margin-right: 6px;
-  padding: 4px;
-}
-.menu-button:hover {
-  color: black;
-  background-color: rgb(223, 228, 235);
-}
 .title {
   cursor: default;
   float: right;
