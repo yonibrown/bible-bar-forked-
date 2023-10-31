@@ -124,6 +124,7 @@ provide("getCategory", getCategory);
 
 function closeElement(elm) {
   elm.position = 0;
+  saveElmList();
 }
 
 // drag and drop
@@ -173,6 +174,27 @@ function onDrop(evt, dropIdx) {
     }
     dragElm.position = (dropElmPos - prevElmPos) / 2 + prevElmPos;
   }
+  saveElmList();
+}
+
+async function saveElmList(){
+  const elmList = dispElements.value.map(function(elm,idx) {
+    return {
+      id: elm.id,
+      disp: elm.disp.gs_disp,
+      position: idx+1
+    }
+  });
+  console.log(elmList);
+  const data = {
+    type: "project",
+    oper: "save_elements",
+    id: projectId.value,
+    prop: {
+      elements: elmList
+    },
+  };
+  const obj = await sendToServer(data);
 }
 </script>
 

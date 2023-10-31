@@ -1,7 +1,19 @@
 <template>
   <base-card>
     <div class="element-head">
-      <div class="title">{{ props.element.type }}</div>
+      <form v-if="editingName" @submit.prevent="submitName" class="menu">
+        <input
+          type="text"
+          id="name"
+          name="elementName"
+          ref="nameInput"
+          v-model.trim="elementName"
+        />
+        <button>שמור</button>
+      </form>
+      <div v-else @dblclick="starteditName" class="title">
+        {{ elementName }}
+      </div>
       <div class="menu-button fa fa-close" @click="closeElement"></div>
       <div class="menu-button fa fa-bars" @click="toggleMenu"></div>
     </div>
@@ -16,7 +28,7 @@
 </template>
 
 <script setup>
-import { provide, computed, inject, ref  } from "vue";
+import { provide, computed, inject, ref, watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
@@ -33,15 +45,41 @@ const elementId = computed(function () {
 });
 provide("elementId", elementId);
 
+// element name
+const defaultName = props.element.type + props.element.id;
+const elementName = ref(defaultName);
+if (props.element.disp.name != "") {
+  elementName.value = props.element.disp.name;
+}
+const editingName = ref(false);
+const nameInput = ref(null);
+function starteditName() {
+  editingName.value = true;
+}
+watch(nameInput, function (newVal) {
+  if (newVal) {
+    newVal.focus();
+  }
+});
+function submitName(){
+  if (elementName.value == ''){
+    elementName.value = defaultName;
+  }
+  editingName.value = false;
+}
+
+// display menu
 const displayMenu = ref(false);
 function toggleMenu() {
   displayMenu.value = !displayMenu.value;
 }
 
+// close element button
 function closeElement() {
   emit("closeElement");
 }
 
+// reload element
 const hasToReload = ref(false);
 provide("hasToReload", hasToReload);
 
@@ -63,6 +101,7 @@ async function reloadElement() {
   hasToReload.value = true;
 }
 
+// change attributes of element
 async function changeAttr(changedAttr) {
   const data = {
     type: "element",
@@ -76,6 +115,7 @@ async function changeAttr(changedAttr) {
 }
 provide("changeAttr", changeAttr);
 
+// open a new element
 const openElement = inject("openElement");
 function openElementFromElement(attr) {
   openElement({
@@ -87,6 +127,13 @@ provide("openElement", openElementFromElement);
 </script>
 
 <style scoped>
+form {
+  display: inline;
+}
+button {
+  margin-right: 5px;
+}
+
 .menu {
   background-color: rgb(230, 230, 230);
   border-style: solid;
