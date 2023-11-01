@@ -27,7 +27,7 @@
 <script setup>
 import ElementBox from "../components/layout/ElementBox.vue";
 import { sendToServer } from "../server.js";
-import { reactive, provide, computed, ref } from "vue";
+import { reactive, provide, computed, ref ,watch} from "vue";
 
 const project = reactive({
   id: 1,
@@ -75,8 +75,6 @@ async function loadProject() {
   };
   elements.value = obj.data.elements;
   links.value = obj.data.links;
-  // console.log(links.value);
-  // console.log(dispElements);
 }
 
 // add a new element or reload an element
@@ -102,7 +100,6 @@ async function createElement(attr) {
     prop: attr,
   };
   const obj = await sendToServer(data);
-  // console.log(obj.id);
 }
 
 // drag and drop
@@ -163,7 +160,7 @@ async function saveElmList(){
       position: idx+1
     }
   });
-  // console.log(elmList);
+
   const data = {
     type: "project",
     oper: "save_elements",
@@ -202,6 +199,11 @@ function unlinkElement(link,element){
   });
 }
 provide('unlinkElement',unlinkElement);
+// watch(links,function(){
+//   console.log('links',links);
+// },{
+//     deep: true,
+//   });
 
 
 function closeElement(elm) {

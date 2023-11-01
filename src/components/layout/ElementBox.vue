@@ -61,7 +61,6 @@ function getDefaultName(){
   }
   return 'element' + props.element.id;
 }
-// console.log(props.element);
 
 const elementName = ref(defaultName);
 if (props.element.disp.name != "") {
@@ -80,7 +79,6 @@ function submitName(newName) {
   }
   editingName.value = false;
 
-  // console.log(props.element);
   changeAttr({
     name: newName,
   });
@@ -159,7 +157,6 @@ const links = computed(function(){
   });
 });
 provide('links',links);
-// console.log(links.value);
 
 const unlinkElement = inject('unlinkElement');
 function removeLink(link){
