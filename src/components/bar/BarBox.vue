@@ -20,9 +20,9 @@
       </div>
       <div class="bar_area">
         <bar-link-points
-          v-for="linkId in barActiveLinks"
-          :key="linkId"
-          :linkId="linkId"
+          v-for="link in links"
+          :key="link.id"
+          :linkId="link.id"
           :points="points"
         ></bar-link-points>
       </div>
@@ -46,11 +46,11 @@ const links = inject("links");
 const segments = ref([]);
 const points = ref([]);
 
-const barActiveLinks = ref(
-  links.value.map(function (link) {
-    return link.id;
-  })
-);
+// const barActiveLinks = ref(
+//   links.value.map(function (link) {
+//     return link.id;
+//   })
+// );
 
 // watch(links,function(newVal){
 //   const linkIds = newVal.map(function(link){

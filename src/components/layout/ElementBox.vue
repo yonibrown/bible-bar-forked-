@@ -11,29 +11,38 @@
         {{ elementName }}
       </div>
       <span class="menu-buttons">
-      <menu-button type="options" @click="toggleMenu"></menu-button>
-      <menu-button type="close" @click="closeElement"></menu-button>
-    </span>
+        <menu-button type="options" @click="toggleMenu"></menu-button>
+        <menu-button type="close" @click="closeElement"></menu-button>
+      </span>
     </div>
     <div v-show="displayMenu">
-      <component class="menu"
+      <component
+        class="menu"
         :is="props.element.type + '-menu'"
         :element="element"
       ></component>
-      <links-menu class="menu" v-if="displayLinksMenu" @removeLink="removeLink"></links-menu>
+      <links-menu
+        class="menu"
+        :class="{ 'hilight-menu': hilightLinksMenu }"
+        v-if="displayLinksMenu"
+        @removeLink="removeLink"
+        @dragenter.prevent="enterLinksMenu"
+        @dragleave.prevent="leaveLinksMenu"
+        @drop.prevent="leaveLinksMenu"
+      ></links-menu>
     </div>
     <component :is="props.element.type + '-box'" :element="element"></component>
   </base-card>
 </template>
 
 <script setup>
-import MenuButton from '../ui/MenuButton.vue';
+import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
 const emit = defineEmits(["closeElement"]);
-const getLink = inject('getLink');
+const getLink = inject("getLink");
 
 const elementAttr = ref(props.element.attr);
 
@@ -48,18 +57,18 @@ provide("elementId", elementId);
 
 // element name
 const defaultName = getDefaultName();
-function getDefaultName(){
-  if (props.element.type == 'link'){
+function getDefaultName() {
+  if (props.element.type == "link") {
     const link = getLink(props.element.attr.link_id);
-    if (link){
-      if (link.name != ''){
+    if (link) {
+      if (link.name != "") {
         return link.name;
       } else {
-        return 'link'+link.id;
+        return "link" + link.id;
       }
     }
   }
-  return 'element' + props.element.id;
+  return "element" + props.element.id;
 }
 
 const elementName = ref(defaultName);
@@ -89,9 +98,16 @@ const displayMenu = ref(false);
 function toggleMenu() {
   displayMenu.value = !displayMenu.value;
 }
-const displayLinksMenu = computed(function(){
-  return props.element.type != 'link';
+const displayLinksMenu = computed(function () {
+  return props.element.type != "link";
 });
+const hilightLinksMenu = ref(false);
+function enterLinksMenu() {
+  hilightLinksMenu.value = true;
+}
+function leaveLinksMenu() {
+  hilightLinksMenu.value = false;
+}
 
 // close element button
 function closeElement() {
@@ -148,21 +164,20 @@ function openElementFromElement(attr) {
 provide("openElement", openElementFromElement);
 
 //links
-const projLinks = inject('links');
-const links = computed(function(){
-  return projLinks.value.filter(function(link){
-    return link.elements.find(function(elmId){
+const projLinks = inject("links");
+const links = computed(function () {
+  return projLinks.value.filter(function (link) {
+    return link.elements.find(function (elmId) {
       return elmId == props.element.id;
     });
   });
 });
-provide('links',links);
+provide("links", links);
 
-const unlinkElement = inject('unlinkElement');
-function removeLink(link){
-  unlinkElement(link,props.element);
+const unlinkElement = inject("unlinkElement");
+function removeLink(link) {
+  unlinkElement(link, props.element);
 }
-
 </script>
 
 <style scoped>
@@ -184,6 +199,10 @@ button {
   border-color: rgb(206, 206, 206);
   margin: 5px 0px 5px 0px;
   padding: 5px 15px 5px 15px;
+}
+
+.hilight-menu {
+  background-color: rgb(255, 238, 238);
 }
 
 .title {
