@@ -1,6 +1,6 @@
 <template>
   <the-header></the-header>
-  <router-view v-slot="slotProps">
+  <router-view v-slot="slotProps" class="page-body">
     <transition name="route" mode="out-in">
       <component :is="slotProps.Component"></component>
     </transition>
@@ -30,6 +30,10 @@ html {
 
 body {
   margin: 0;
+}
+
+.page-body{
+  margin-top: 120px;
 }
 
 .route-enter-from {

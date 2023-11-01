@@ -29,14 +29,11 @@
 import { sendToServer } from '../../server.js';
 import PartsLine from './PartsLine.vue';
 
-import { reactive, inject, computed } from 'vue';
+import { reactive,  computed ,ref} from 'vue';
 
 const props = defineProps(['element']);
-const updateElement = inject('updateElement');
 
-const parts = computed(function () {
-  return props.element.parts;
-});
+const parts = ref([]);
 
 const researchId = { res: props.element.attr.res };
 
@@ -51,9 +48,7 @@ async function loadResearchParts() {
   };
 
   const obj = await sendToServer(data);
-  updateElement({
-    parts: obj.data,
-  });
+  parts.value = obj.data;
 }
 
 const sort = reactive({
