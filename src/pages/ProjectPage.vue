@@ -14,7 +14,7 @@
         @drop="onDrop($event, dispElmIdx)"
         @dragover.prevent
         @dragenter.prevent
-        class="element-dropable"
+        drop-list="project-elements"
       >
         <element-box
           :element="elm"
@@ -118,11 +118,20 @@ function startDrag(evt, dispElmIdx) {
   evt.dataTransfer.dropEffect = "move";
   evt.dataTransfer.effectAllowed = "move";
   evt.dataTransfer.setData("dispElmIdx", dispElmIdx);
+
+  const elm = dispElements.value[dispElmIdx];
+  if (elm.type == 'link'){
+    evt.dataTransfer.setData("linkId", elm.attr.link_id);
+  }
 }
 function onDrop(evt, dropIdx) {
-  const dragIdx = +evt.dataTransfer.getData("dispElmIdx");
-  console.log("drop", evt.target.closest(".element-dropable"));
+  const dropList = evt.target.closest("[drop-list]").getAttribute('drop-list');
+  // check the element is dropped in the correct list
+  if (dropList != 'project-elements'){
+    return;
+  }
 
+  const dragIdx = +evt.dataTransfer.getData("dispElmIdx");
   // nothing to move
   if (dropIdx == dragIdx) {
     return;
@@ -194,12 +203,19 @@ function getCategory(linkId, col) {
 }
 provide("getCategory", getCategory);
 
-function unlinkElement(link, element) {
-  link.elements = link.elements.filter(function (elmId) {
-    return elmId != element.id;
+function unlinkElement(link, elementId) {
+  link.elements = link.elements.filter(function (arrElmId) {
+    return arrElmId != elementId;
   });
 }
 provide("unlinkElement", unlinkElement);
+
+function linkElement(link, elementId) {
+  if (!link.elements.includes(elementId)){
+    link.elements.push(elementId);
+  }
+}
+provide("linkElement", linkElement);
 // watch(links,function(){
 //   console.log('links',links);
 // },{
