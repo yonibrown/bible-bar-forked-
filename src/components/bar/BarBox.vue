@@ -33,7 +33,7 @@ import { sendToServer } from '../../server.js';
 
 import {  inject, watch,ref } from 'vue';
 
-const props = defineProps(['element']);
+// const props = defineProps(['element']);
 const elementId = inject('elementId');
 const hasToReload = inject('hasToReload');
 const reloaded = inject('reloaded');
