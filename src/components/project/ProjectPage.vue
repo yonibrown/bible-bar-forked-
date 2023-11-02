@@ -23,11 +23,12 @@
       </div>
     </section>
   </div>
+
 </template>
 
 <script setup>
-import ElementBox from "../components/element/ElementBox.vue";
-import { sendToServer } from "../server.js";
+import ElementBox from "../element/ElementBox.vue";
+import { sendToServer } from "../../server.js";
 import { reactive, provide, computed, ref, watch } from "vue";
 
 const project = reactive({

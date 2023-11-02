@@ -3,7 +3,7 @@
     <input
       type="text"
       id="editable"
-      :name="props.name"
+      :name="name"
       ref="input"
       v-model.trim="editableValue"
     />

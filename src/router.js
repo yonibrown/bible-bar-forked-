@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import ProjectPage from './pages/ProjectPage.vue';
+import ProjectPage from './components/project/ProjectPage.vue';
 import NotFound from './pages/NotFound.vue';
 
 const router = createRouter({

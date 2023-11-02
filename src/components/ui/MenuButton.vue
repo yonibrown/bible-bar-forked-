@@ -7,8 +7,10 @@ import { computed } from "vue";
 
 const props = defineProps(["type"]);
 
-const faClass = computed(function(){
-    switch (props.type) {
+const faClass = computed(function () {
+  switch (props.type) {
+    case "reload":
+      return "fa-rotate-right";
     case "close":
       return "fa-close";
     case "options":

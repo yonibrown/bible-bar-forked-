@@ -10,23 +10,31 @@
 </template>
 
 <script setup>
-import TextVerse from './TextVerse.vue';
-import {  inject ,ref} from 'vue';
-import { sendToServer } from '../../server.js';
+import TextVerse from "./TextVerse.vue";
+import { inject, ref, watch } from "vue";
+import { sendToServer } from "../../server.js";
 
-const props = defineProps(['element']);
-const elementId = inject('elementId');
+const elementId = inject("elementId");
+const hasToReload = inject("hasToReload");
+const reloaded = inject("reloaded");
 
 const verses = ref([]);
+
+watch(hasToReload, function (newVal) {
+  if (newVal) {
+    loadElmText();
+    reloaded();
+  }
+});
 
 loadElmText();
 
 async function loadElmText() {
   const data = {
-    type: 'element',
-    oper: 'get_segment',
+    type: "element",
+    oper: "get_segment",
     id: elementId.value,
-    prop: { dummy: '' },
+    prop: { dummy: "" },
   };
 
   const obj = await sendToServer(data);

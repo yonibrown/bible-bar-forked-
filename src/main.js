@@ -15,9 +15,6 @@ import BarBox from './components/bar/BarBox.vue';
 import TextBox from './components/text/TextBox.vue';
 import PartsBox from './components/part/PartsBox.vue';
 
-import BarMenu from './components/bar/BarMenu.vue';
-import LinksMenu from './components/link/LinksMenu.vue';
-
 const app = createApp(App)
 
 app.use(router);
@@ -34,8 +31,5 @@ app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);
 app.component('text-box', TextBox);
 app.component('parts-box', PartsBox);
-
-app.component('bar-menu', BarMenu);
-app.component('links-menu', LinksMenu);
 
 app.mount('#app');

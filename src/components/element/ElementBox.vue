@@ -11,16 +11,19 @@
         {{ elementName }}
       </div>
       <span class="menu-buttons">
+        <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
         <menu-button type="options" @click="toggleMenu"></menu-button>
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
     <div v-show="displayMenu">
-      <component
+      <sequence-menu
+        v-if="displaySequenceMenu"
         class="menu"
-        :is="props.element.type + '-menu'"
-        :element="element"
-      ></component>
+        :elementAttr="elementAttr"
+        :displayScale="displayScale"
+        :enableWholeText="enableWholeText"
+      ></sequence-menu>
       <links-menu
         class="menu"
         :class="{ 'hilight-menu': hilightLinksMenu }"
@@ -31,11 +34,14 @@
         @drop.prevent="onDrop"
       ></links-menu>
     </div>
-    <component :is="props.element.type + '-box'" :element="element"></component>
+    <component :is="element.type + '-box'" :elementAttr="elementAttr"></component>
   </base-card>
 </template>
 
 <script setup>
+import SequenceMenu from '../sequence/SequenceMenu.vue';
+import LinksMenu from '../link/LinksMenu.vue';
+
 import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
@@ -60,7 +66,7 @@ provide("elementId", elementId);
 const defaultName = getDefaultName();
 function getDefaultName() {
   if (props.element.type == "link") {
-    const link = getLink(props.element.attr.link_id);
+    const link = getLink(elementAttr.link_id);
     if (link) {
       if (link.name != "") {
         return link.name;
@@ -99,6 +105,15 @@ const displayMenu = ref(false);
 function toggleMenu() {
   displayMenu.value = !displayMenu.value;
 }
+const displaySequenceMenu = computed(function () {
+  return props.element.type == "bar" || props.element.type == "text";
+});
+const displayScale = computed(function () {
+  return props.element.type == "bar";
+});
+const enableWholeText = computed(function () {
+  return props.element.type == "bar";
+});
 const displayLinksMenu = computed(function () {
   return props.element.type != "link";
 });
@@ -148,6 +163,7 @@ async function reloadElement() {
   };
 
   const obj = await sendToServer(data);
+  console.log('reloadElement');
   elementAttr.value = obj.data;
   hasToReload.value = true;
 }
@@ -160,7 +176,7 @@ async function changeAttr(changedAttr, options) {
     id: elementId.value,
     prop: changedAttr,
   };
-
+  
   const obj = await sendToServer(data);
 
   if (options && options.reload) {
