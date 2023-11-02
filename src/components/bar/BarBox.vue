@@ -38,17 +38,10 @@ import { sendToServer } from "../../server.js";
 
 import { inject, watch, ref, computed } from "vue";
 
-<<<<<<< HEAD
-// const props = defineProps(['element']);
-const elementId = inject('elementId');
-const hasToReload = inject('hasToReload');
-const reloaded = inject('reloaded');
-=======
 const elementId = inject("elementId");
 const hasToReload = inject("hasToReload");
 const reloaded = inject("reloaded");
 const links = inject("links");
->>>>>>> e3d8fc38030d14c85816090ea147c1f3149074f1
 
 const segments = ref([]);
 const points = ref([]);
