@@ -28,7 +28,7 @@
         @removeLink="removeLink"
         @dragenter.prevent="enterLinksMenu"
         @dragleave.prevent="leaveLinksMenu"
-        @drop.prevent="leaveLinksMenu"
+        @drop.prevent="onDrop"
       ></links-menu>
     </div>
     <component :is="props.element.type + '-box'" :element="element"></component>
@@ -43,6 +43,7 @@ import { sendToServer } from "../../server.js";
 const props = defineProps(["element"]);
 const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
+const linkElement = inject("linkElement");
 
 const elementAttr = ref(props.element.attr);
 
@@ -107,6 +108,21 @@ function enterLinksMenu() {
 }
 function leaveLinksMenu() {
   hilightLinksMenu.value = false;
+}
+function onDrop(evt) {
+  leaveLinksMenu();
+
+  const dropList = evt.target.closest("[drop-list]").getAttribute("drop-list");
+  // check the element is dropped in the correct list
+  if (dropList != "bar-links") {
+    return;
+  }
+
+  const linkId = +evt.dataTransfer.getData("linkId");
+  if (linkId != 0){
+    const link = getLink(linkId);
+    linkElement(link, props.element.id);
+  }
 }
 
 // close element button
@@ -176,8 +192,9 @@ provide("links", links);
 
 const unlinkElement = inject("unlinkElement");
 function removeLink(link) {
-  unlinkElement(link, props.element);
+  unlinkElement(link, props.element.id);
 }
+
 </script>
 
 <style scoped>
