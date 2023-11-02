@@ -23,7 +23,6 @@ var injectedChange = false;
 const selected = ref(injectedSelectedDiv.value);
 
 watch(injectedSelectedDiv,(newVal) => {
-  // console.log(props.keyLvlIdx+': div changed to '+newVal);
   if (selected.value != newVal){
     injectedChange = true;
     selected.value = newVal;
@@ -34,7 +33,6 @@ watch(selected, (newVal) => {
   if (injectedChange){
     injectedChange = false;
   } else {
-    // console.log(props.keyLvlIdx+': change div to '+newVal);
     changeKey(props.keyLvlIdx,newVal);
   }
 });

@@ -19,27 +19,49 @@
         ></bar-segment>
       </div>
       <div class="bar_area">
-        <bar-point v-for="pt in points" :key="pt.id" :point="pt"></bar-point>
+        <bar-link-points
+          v-for="link in links"
+          :key="link.id"
+          :linkId="link.id"
+          :points="points"
+        ></bar-link-points>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import BarSgmHeader from './BarSgmHeader.vue';
-import BarSegment from './BarSegment.vue';
-import BarPoint from './BarPoint.vue';
-import { sendToServer } from '../../server.js';
+import BarSgmHeader from "./BarSgmHeader.vue";
+import BarSegment from "./BarSegment.vue";
+import BarLinkPoints from "./BarLinkPoints.vue";
+import { sendToServer } from "../../server.js";
 
-import {  inject, watch,ref } from 'vue';
+import { inject, watch, ref, computed } from "vue";
 
-const props = defineProps(['element']);
-const elementId = inject('elementId');
-const hasToReload = inject('hasToReload');
-const reloaded = inject('reloaded');
+const elementId = inject("elementId");
+const hasToReload = inject("hasToReload");
+const reloaded = inject("reloaded");
+const links = inject("links");
 
 const segments = ref([]);
 const points = ref([]);
+
+// const barActiveLinks = ref(
+//   links.value.map(function (link) {
+//     return link.id;
+//   })
+// );
+
+// watch(links,function(newVal){
+//   const linkIds = newVal.map(function(link){
+//     return link.id;
+//   });
+
+//   linkIds.find(function(linkId){
+//     return
+//   });
+
+// });
 
 watch(hasToReload, function (newVal) {
   if (newVal) {
@@ -58,10 +80,10 @@ loadElmBarPoints();
 
 async function loadElmBarSegments() {
   const data = {
-    type: 'element',
-    oper: 'get_segments',
+    type: "element",
+    oper: "get_segments",
     id: elementId.value,
-    prop: { dummy: '' },
+    prop: { dummy: "" },
   };
 
   const obj = await sendToServer(data);
@@ -71,10 +93,10 @@ async function loadElmBarSegments() {
 
 async function loadElmBarPoints() {
   const data = {
-    type: 'element',
-    oper: 'get_points',
+    type: "element",
+    oper: "get_points",
     id: elementId.value,
-    prop: { dummy: '' },
+    prop: { dummy: "" },
   };
 
   const obj = await sendToServer(data);
