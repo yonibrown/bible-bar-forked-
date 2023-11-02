@@ -190,6 +190,13 @@ const links = computed(function () {
 });
 provide("links", links);
 
+const linkIds = computed(function () {
+  return links.value.map(function(link){
+    return link.id;
+  });
+});
+provide("linkIds", linkIds);
+
 const unlinkElement = inject("unlinkElement");
 function removeLink(link) {
   unlinkElement(link, props.element.id);

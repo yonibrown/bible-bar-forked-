@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import ElementBox from "../components/layout/ElementBox.vue";
+import ElementBox from "../components/element/ElementBox.vue";
 import { sendToServer } from "../server.js";
 import { reactive, provide, computed, ref, watch } from "vue";
 

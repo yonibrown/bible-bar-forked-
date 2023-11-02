@@ -4,18 +4,21 @@
 </template>
 
 <script setup>
-import { computed,inject } from 'vue';
+import { computed, inject } from "vue";
 
-const props = defineProps(['word', 'verse']);
-const getCategory = inject('getCategory');
+const props = defineProps(["word", "verse"]);
+const linkIds = inject("linkIds");
+const getCategory = inject("getCategory");
 
 const categoryStyle = computed(() => {
   if (props.word.word_linked) {
-    let cat = getCategory(props.word.link,props.word.col);
-    if (cat && cat.display){
-      return {
-        backgroundColor: cat.color,
-      };
+    if (linkIds.value.includes(props.word.link)) {
+      let cat = getCategory(props.word.link, props.word.col);
+      if (cat && cat.display) {
+        return {
+          backgroundColor: cat.color,
+        };
+      }
     }
   }
 
