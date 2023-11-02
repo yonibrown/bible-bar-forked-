@@ -14,6 +14,7 @@
         @drop="onDrop($event, dispElmIdx)"
         @dragover.prevent
         @dragenter.prevent
+        class="element-dropable"
       >
         <element-box
           :element="elm"
@@ -27,14 +28,14 @@
 <script setup>
 import ElementBox from "../components/layout/ElementBox.vue";
 import { sendToServer } from "../server.js";
-import { reactive, provide, computed, ref } from "vue";
+import { reactive, provide, computed, ref, watch } from "vue";
 
 const project = reactive({
   id: 1,
   attr: {
     name: "---",
     desc: "",
-  }
+  },
 });
 
 const projectId = computed(function () {
@@ -56,7 +57,7 @@ const dispElements = computed(function () {
 
 //links
 const links = ref([]);
-provide('links',links);
+provide("links", links);
 
 loadProject();
 
@@ -75,18 +76,10 @@ async function loadProject() {
   };
   elements.value = obj.data.elements;
   links.value = obj.data.links;
-  // console.log(links.value);
-  // console.log(dispElements);
 }
 
 // add a new element or reload an element
 function openElement(attr) {
-  // if (typeof attr.opening_element != 'undefined'){
-  //   var newElm = elements.value.find(function(dispElm){
-  //     return dispElm.disp.opening_element == attr.opening_element;
-  //   });
-  // }
-
   createElement({
     proj: project.id,
     ...attr,
@@ -102,10 +95,9 @@ async function createElement(attr) {
     prop: attr,
   };
   const obj = await sendToServer(data);
-  // console.log(obj.id);
 }
 
-// drag and drop
+// drag and drop elements
 const dragAllowed = ref(false);
 
 function startMouse(evt) {
@@ -117,7 +109,7 @@ function startMouse(evt) {
 // window.addEventListener("mouseup", function () {
 //   dragAllowed.value = false;
 // });
-function onMouseup(){
+function onMouseup() {
   dragAllowed.value = false;
 }
 
@@ -129,6 +121,7 @@ function startDrag(evt, dispElmIdx) {
 }
 function onDrop(evt, dropIdx) {
   const dragIdx = +evt.dataTransfer.getData("dispElmIdx");
+  console.log("drop", evt.target.closest(".element-dropable"));
 
   // nothing to move
   if (dropIdx == dragIdx) {
@@ -155,24 +148,29 @@ function onDrop(evt, dropIdx) {
   saveElmList();
 }
 
-async function saveElmList(){
-  const elmList = dispElements.value.map(function(elm,idx) {
+async function saveElmList() {
+  const elmList = dispElements.value.map(function (elm, idx) {
     return {
       id: elm.id,
       disp: elm.disp.gs_disp,
-      position: idx+1
-    }
+      position: idx + 1,
+    };
   });
-  // console.log(elmList);
+
   const data = {
     type: "project",
     oper: "save_elements",
     id: projectId.value,
     prop: {
-      elements: elmList
+      elements: elmList,
     },
   };
   const obj = await sendToServer(data);
+}
+
+function closeElement(elm) {
+  elm.position = 0;
+  saveElmList();
 }
 
 // link methods
@@ -196,18 +194,17 @@ function getCategory(linkId, col) {
 }
 provide("getCategory", getCategory);
 
-function unlinkElement(link,element){
-  link.elements = link.elements.filter(function(elmId){
+function unlinkElement(link, element) {
+  link.elements = link.elements.filter(function (elmId) {
     return elmId != element.id;
   });
 }
-provide('unlinkElement',unlinkElement);
-
-
-function closeElement(elm) {
-  elm.position = 0;
-  saveElmList();
-}
+provide("unlinkElement", unlinkElement);
+// watch(links,function(){
+//   console.log('links',links);
+// },{
+//     deep: true,
+//   });
 </script>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="element-dropable">
     <span>הדגשות:</span>
     <links-menu-obj
       v-for="link in links"
