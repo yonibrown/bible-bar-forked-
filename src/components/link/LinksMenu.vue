@@ -1,5 +1,5 @@
 <template>
-  <div drop-list="bar-links">
+  <div>
     <span>הדגשות:</span>
     <links-menu-obj
       v-for="link in links"

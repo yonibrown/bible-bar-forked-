@@ -11,25 +11,26 @@
         @dragstart="startDrag($event, dispElmIdx)"
         @mousedown="startMouse($event)"
         @mouseup="onMouseup"
-        @drop="onDrop($event, dispElmIdx)"
-        @dragover.prevent
-        @dragenter.prevent
-        drop-list="project-elements"
       >
-        <element-box
-          :element="elm"
-          @closeElement="closeElement(elm)"
-        ></element-box>
+        <base-dropable
+          :data="dispElmIdx"
+          :drop="moveElement"
+          :dragStruct="['dispElmIdx']"
+        >
+          <element-box
+            :element="elm"
+            @closeElement="closeElement(elm)"
+          ></element-box>
+        </base-dropable>
       </div>
     </section>
   </div>
-
 </template>
 
 <script setup>
 import ElementBox from "../element/ElementBox.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref, watch } from "vue";
+import { reactive, provide, computed, ref } from "vue";
 
 const project = reactive({
   id: 1,
@@ -121,18 +122,13 @@ function startDrag(evt, dispElmIdx) {
   evt.dataTransfer.setData("dispElmIdx", dispElmIdx);
 
   const elm = dispElements.value[dispElmIdx];
-  if (elm.type == 'link'){
+  if (elm.type == "link") {
     evt.dataTransfer.setData("linkId", elm.attr.link_id);
   }
 }
-function onDrop(evt, dropIdx) {
-  const dropList = evt.target.closest("[drop-list]").getAttribute('drop-list');
-  // check the element is dropped in the correct list
-  if (dropList != 'project-elements'){
-    return;
-  }
+function moveElement(dragData,dropIdx) {
+  const dragIdx = +dragData.dispElmIdx;
 
-  const dragIdx = +evt.dataTransfer.getData("dispElmIdx");
   // nothing to move
   if (dropIdx == dragIdx) {
     return;
@@ -212,7 +208,7 @@ function unlinkElement(link, elementId) {
 provide("unlinkElement", unlinkElement);
 
 function linkElement(link, elementId) {
-  if (!link.elements.includes(elementId)){
+  if (!link.elements.includes(elementId)) {
     link.elements.push(elementId);
   }
 }
@@ -223,5 +219,3 @@ provide("linkElement", linkElement);
 //     deep: true,
 //   });
 </script>
-
-<style scoped></style>

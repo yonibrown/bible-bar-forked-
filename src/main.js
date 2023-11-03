@@ -6,6 +6,7 @@ import App from './App.vue';
 import BaseCard from './components/ui/BaseCard.vue';
 import BaseEditable from './components/ui/BaseEditable.vue';
 import BaseScrollable from './components/ui/BaseScrollable.vue';
+import BaseDropable from './components/ui/BaseDropable.vue';
 
 import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
@@ -19,6 +20,7 @@ app.use(router);
 app.component('base-card', BaseCard);
 app.component('base-editable', BaseEditable);
 app.component('base-scrollable', BaseScrollable);
+app.component('base-dropable', BaseDropable);
 
 app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);

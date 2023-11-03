@@ -24,23 +24,30 @@
         :displayScale="displayScale"
         :enableWholeText="enableWholeText"
       ></sequence-menu>
-      <links-menu
-        class="menu"
-        :class="{ 'hilight-menu': hilightLinksMenu }"
-        v-if="displayLinksMenu"
-        @removeLink="removeLink"
-        @dragenter.prevent="enterLinksMenu"
-        @dragleave.prevent="leaveLinksMenu"
-        @drop.prevent="onDrop"
-      ></links-menu>
+      <base-dropable
+        :drop="addToLinks"
+        :dragStruct="['linkId']"
+        :dragEnter="enterLinksMenu"
+        :dragLeave="leaveLinksMenu"
+      >
+        <links-menu
+          class="menu"
+          :class="{ 'hilight-menu': hilightLinksMenu }"
+          v-if="displayLinksMenu"
+          @removeLink="removeLink"
+        ></links-menu>
+      </base-dropable>
     </div>
-    <component :is="element.type + '-box'" :elementAttr="elementAttr"></component>
+    <component
+      :is="element.type + '-box'"
+      :elementAttr="elementAttr"
+    ></component>
   </base-card>
 </template>
 
 <script setup>
-import SequenceMenu from '../sequence/SequenceMenu.vue';
-import LinksMenu from '../link/LinksMenu.vue';
+import SequenceMenu from "../sequence/SequenceMenu.vue";
+import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
@@ -66,7 +73,7 @@ provide("elementId", elementId);
 const defaultName = getDefaultName();
 function getDefaultName() {
   if (props.element.type == "link") {
-    const link = getLink(elementAttr.link_id);
+    const link = getLink(elementAttr.value.link_id);
     if (link) {
       if (link.name != "") {
         return link.name;
@@ -124,17 +131,9 @@ function enterLinksMenu() {
 function leaveLinksMenu() {
   hilightLinksMenu.value = false;
 }
-function onDrop(evt) {
-  leaveLinksMenu();
-
-  const dropList = evt.target.closest("[drop-list]").getAttribute("drop-list");
-  // check the element is dropped in the correct list
-  if (dropList != "bar-links") {
-    return;
-  }
-
-  const linkId = +evt.dataTransfer.getData("linkId");
-  if (linkId != 0){
+function addToLinks(dragData) {
+  const linkId = +dragData.linkId;
+  if (linkId != 0) {
     const link = getLink(linkId);
     linkElement(link, props.element.id);
   }
@@ -163,7 +162,7 @@ async function reloadElement() {
   };
 
   const obj = await sendToServer(data);
-  console.log('reloadElement');
+  console.log("reloadElement");
   elementAttr.value = obj.data;
   hasToReload.value = true;
 }
@@ -176,7 +175,7 @@ async function changeAttr(changedAttr, options) {
     id: elementId.value,
     prop: changedAttr,
   };
-  
+
   const obj = await sendToServer(data);
 
   if (options && options.reload) {
@@ -207,7 +206,7 @@ const links = computed(function () {
 provide("links", links);
 
 const linkIds = computed(function () {
-  return links.value.map(function(link){
+  return links.value.map(function (link) {
     return link.id;
   });
 });
@@ -217,7 +216,6 @@ const unlinkElement = inject("unlinkElement");
 function removeLink(link) {
   unlinkElement(link, props.element.id);
 }
-
 </script>
 
 <style scoped>
