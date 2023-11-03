@@ -24,6 +24,10 @@ export default {
   box-sizing: border-box;
 } */
 
+.bible-text {
+  font-family: David, sans-serif;
+}
+
 html {
   font-family: "Roboto", sans-serif;
 }

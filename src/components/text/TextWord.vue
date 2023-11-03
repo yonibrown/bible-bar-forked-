@@ -26,16 +26,13 @@ const categoryStyle = computed(() => {
 
   return {}; // no category linked
 });
+
+const scrollIn = inject('scrollIn');
 onMounted(function () {
   if (props.word.anchor) {
     scrollIn(wordObj.value);
   }
 });
-
-function scrollIn(elm) {
-  const scrollable = elm.closest(".scrollable");
-  scrollable.scrollTop = elm.offsetTop - scrollable.offsetTop;
-}
 </script>
 
 <style scoped></style>

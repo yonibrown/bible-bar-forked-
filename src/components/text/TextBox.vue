@@ -1,12 +1,13 @@
 <template>
-  <!-- <h3>Text</h3> -->
-  <div class="win_text bible-text in_body scrollable">
-    <text-verse
-      v-for="vrs in verses"
-      :key="vrs.part_id"
-      :verse="vrs"
-    ></text-verse>
-  </div>
+  <base-scrollable class="bible-text">
+    <div>
+      <text-verse
+        v-for="vrs in verses"
+        :key="vrs.part_id"
+        :verse="vrs"
+      ></text-verse>
+    </div>
+  </base-scrollable>
 </template>
 
 <script setup>
@@ -42,22 +43,3 @@ async function loadElmText() {
   verses.value = obj.data.part_list;
 }
 </script>
-
-<style scoped>
-.win_text {
-  overflow-x: hidden;
-  overflow-y: scroll;
-  padding: 15px;
-  border: 1px solid #9aaab9;
-  background-color: white;
-  text-align: justify;
-}
-
-.bible-text {
-  font-family: David, sans-serif;
-}
-
-.in_body {
-  margin: 15px auto;
-}
-</style>
