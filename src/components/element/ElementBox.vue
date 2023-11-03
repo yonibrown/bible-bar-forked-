@@ -29,8 +29,7 @@
         :dragStruct="['linkId']"
         :dragEnter="enterLinksMenu"
         :dragLeave="leaveLinksMenu"
-      >
-        <links-menu
+      ><links-menu
           class="menu"
           :class="{ 'hilight-menu': hilightLinksMenu }"
           v-if="displayLinksMenu"

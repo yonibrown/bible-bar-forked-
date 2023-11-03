@@ -13,7 +13,6 @@
 <script setup>
 import { inject } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
-// const emit = defineEmits(['removeLink']);
 
 const links = inject("links");
 </script>
