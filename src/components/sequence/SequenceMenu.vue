@@ -113,6 +113,7 @@ async function submitChanges() {
   }
   console.log(changedAttr);
   changeAttr(changedAttr, { reload: true });
+  // if only scale changed, we can reload only the segments
 
   changedAttr = {};
   hasChanges.value = false;
