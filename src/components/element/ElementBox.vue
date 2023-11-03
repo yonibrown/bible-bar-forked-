@@ -24,7 +24,7 @@
         :displayScale="displayScale"
         :enableWholeText="enableWholeText"
       ></sequence-menu>
-      <base-dropable
+      <base-droppable
         :drop="addToLinks"
         :dragStruct="['linkId']"
         :dragEnter="enterLinksMenu"
@@ -36,7 +36,7 @@
           v-if="displayLinksMenu"
           @removeLink="removeLink"
         ></links-menu>
-      </base-dropable>
+      </base-droppable>
     </div>
     <component
       :is="element.type + '-box'"

@@ -4,15 +4,12 @@
       <base-card>
         <h2>Project {{ project.id }}: {{ project.attr.name }}</h2>
       </base-card>
-      <div
+      <base-draggable
         v-for="(elm, dispElmIdx) in dispElements"
         :key="elm.id"
-        :draggable="dragAllowed"
-        @dragstart="startDrag($event, dispElmIdx)"
-        @mousedown="startMouse($event)"
-        @mouseup="onMouseup"
+        :data="dragData(dispElmIdx)"
       >
-        <base-dropable
+        <base-droppable
           :data="dispElmIdx"
           :drop="moveElement"
           :dragStruct="['dispElmIdx']"
@@ -21,8 +18,8 @@
             :element="elm"
             @closeElement="closeElement(elm)"
           ></element-box>
-        </base-dropable>
-      </div>
+        </base-droppable>
+      </base-draggable>
     </section>
   </div>
 </template>
@@ -100,32 +97,15 @@ async function createElement(attr) {
 }
 
 // drag and drop elements
-const dragAllowed = ref(false);
-
-function startMouse(evt) {
-  if (evt.target.closest(".element-head")) {
-    dragAllowed.value = true;
-  }
-}
-
-// window.addEventListener("mouseup", function () {
-//   dragAllowed.value = false;
-// });
-function onMouseup() {
-  dragAllowed.value = false;
-}
-
-function startDrag(evt, dispElmIdx) {
-  dragAllowed.value = false;
-  evt.dataTransfer.dropEffect = "move";
-  evt.dataTransfer.effectAllowed = "move";
-  evt.dataTransfer.setData("dispElmIdx", dispElmIdx);
-
+function dragData(dispElmIdx){
+  const data = {dispElmIdx};
   const elm = dispElements.value[dispElmIdx];
   if (elm.type == "link") {
-    evt.dataTransfer.setData("linkId", elm.attr.link_id);
+    data.linkId = elm.attr.link_id;
   }
+  return data;
 }
+
 function moveElement(dragData,dropIdx) {
   const dragIdx = +dragData.dispElmIdx;
 

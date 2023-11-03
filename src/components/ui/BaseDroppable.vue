@@ -16,7 +16,6 @@ import { ref } from "vue";
 const props = defineProps([
   "data",
   "drop",
-  "list",
   "dragStruct",
   "dragEnter",
   "dragLeave",
