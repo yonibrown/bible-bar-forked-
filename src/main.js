@@ -8,6 +8,7 @@ import BaseEditable from './components/ui/BaseEditable.vue';
 import BaseScrollable from './components/ui/BaseScrollable.vue';
 import BaseDroppable from './components/ui/BaseDroppable.vue';
 import BaseDraggable from './components/ui/BaseDraggable.vue';
+import BaseDialog from './components/ui/BaseDialog.vue';
 
 import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
@@ -23,6 +24,7 @@ app.component('base-editable', BaseEditable);
 app.component('base-scrollable', BaseScrollable);
 app.component('base-droppable', BaseDroppable);
 app.component('base-draggable', BaseDraggable);
+app.component('base-dialog', BaseDialog);
 
 app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);

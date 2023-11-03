@@ -2,8 +2,24 @@
   <div>
     <section>
       <base-card>
-        <h2>Project {{ project.id }}: {{ project.attr.name }}</h2>
+        <div>
+          <div class="title">
+            Project {{ project.id }}: {{ project.attr.name }}
+          </div>
+          <span class="menu-buttons">
+            <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+            <menu-button type="add" @click="openNewElement"></menu-button>
+            <menu-button type="close"></menu-button>
+          </span>
+        </div>
       </base-card>
+      <base-dialog
+        :show="displayNewElement"
+        title="חלון חדש"
+        @close="closeNewElement"
+      >
+        <p>{{ error }}</p>
+      </base-dialog>
       <base-draggable
         v-for="(elm, dispElmIdx) in dispElements"
         :key="elm.id"
@@ -25,6 +41,7 @@
 </template>
 
 <script setup>
+import MenuButton from "../ui/MenuButton.vue";
 import ElementBox from "../element/ElementBox.vue";
 import { sendToServer } from "../../server.js";
 import { reactive, provide, computed, ref } from "vue";
@@ -53,6 +70,14 @@ const dispElements = computed(function () {
       return a.position - b.position;
     });
 });
+
+const displayNewElement = ref(false);
+function closeNewElement(){
+  displayNewElement.value = false;
+}
+function openNewElement(){
+  displayNewElement.value = true;
+}
 
 //links
 const links = ref([]);
@@ -97,8 +122,8 @@ async function createElement(attr) {
 }
 
 // drag and drop elements
-function dragData(dispElmIdx){
-  const data = {dispElmIdx};
+function dragData(dispElmIdx) {
+  const data = { dispElmIdx };
   const elm = dispElements.value[dispElmIdx];
   if (elm.type == "link") {
     data.linkId = elm.attr.link_id;
@@ -106,7 +131,7 @@ function dragData(dispElmIdx){
   return data;
 }
 
-function moveElement(dragData,dropIdx) {
+function moveElement(dragData, dropIdx) {
   const dragIdx = +dragData.dispElmIdx;
 
   // nothing to move
@@ -190,7 +215,7 @@ async function unlinkElement(link, elementId) {
     oper: "remove_elm",
     id: {
       proj: project.id,
-      link: link.id
+      link: link.id,
     },
     prop: { elm: elementId },
   };
@@ -208,7 +233,7 @@ async function linkElement(link, elementId) {
     oper: "add_elm",
     id: {
       proj: project.id,
-      link: link.id
+      link: link.id,
     },
     prop: { elm: elementId },
   };
@@ -216,11 +241,22 @@ async function linkElement(link, elementId) {
 }
 provide("linkElement", linkElement);
 
-
-
 // watch(links,function(){
 //   console.log('links',links);
 // },{
 //     deep: true,
 //   });
 </script>
+
+<style scoped>
+.menu-buttons {
+  float: left;
+}
+.title {
+  cursor: default;
+  float: right;
+  font-weight: bold;
+  font-size: 1.5em;
+  margin: 0.83em 0;
+}
+</style>
