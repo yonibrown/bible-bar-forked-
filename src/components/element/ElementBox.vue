@@ -2,14 +2,11 @@
   <base-card>
     <div class="element-head">
       <base-editable
-        v-if="editingName"
         :initialValue="elementName"
         @submitValue="submitName"
-        :name="elementName"
+        name="elementName"
+        :defaultValue="defaultName"
       ></base-editable>
-      <div v-else @dblclick="starteditName" class="title">
-        {{ elementName }}
-      </div>
       <span class="menu-buttons">
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
         <menu-button type="options" @click="toggleMenu"></menu-button>
@@ -69,7 +66,7 @@ const elementId = computed(function () {
 provide("elementId", elementId);
 
 // element name
-const defaultName = getDefaultName();
+const defaultName = computed(getDefaultName);
 function getDefaultName() {
   if (props.element.type == "link") {
     const link = getLink(elementAttr.value.link_id);
@@ -84,27 +81,18 @@ function getDefaultName() {
   return "element" + props.element.id;
 }
 
-const elementName = ref(defaultName);
+const elementName = ref(defaultName.value);
 if (props.element.disp.name != "") {
   elementName.value = props.element.disp.name;
 }
 
-const editingName = ref(false);
-function starteditName() {
-  editingName.value = true;
-}
 function submitName(newName) {
-  if (newName == "") {
-    elementName.value = defaultName;
-  } else {
-    elementName.value = newName;
-  }
-  editingName.value = false;
-
+  elementName.value = newName;
   changeAttr({
     name: newName,
   });
 }
+
 
 // display menu
 const displayMenu = ref(false);
