@@ -1,6 +1,6 @@
 <template>
   <!-- <h3>Text</h3> -->
-  <div class="win_text bible-text in_body" ref="textBox">
+  <div class="win_text bible-text in_body scrollable">
     <text-verse
       v-for="vrs in verses"
       :key="vrs.part_id"
@@ -11,7 +11,7 @@
 
 <script setup>
 import TextVerse from "./TextVerse.vue";
-import { inject, ref, watch, provide } from "vue";
+import { inject, ref, watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const elementId = inject("elementId");
@@ -19,8 +19,6 @@ const hasToReload = inject("hasToReload");
 const reloaded = inject("reloaded");
 
 const verses = ref([]);
-const textBox = ref(null);
-provide("textBox", textBox);
 
 watch(hasToReload, function (newVal) {
   if (newVal) {
