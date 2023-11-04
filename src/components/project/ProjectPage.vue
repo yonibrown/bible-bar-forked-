@@ -13,13 +13,6 @@
           </span>
         </div>
       </base-card>
-      <base-dialog
-        :show="displayNewElement"
-        title="חלון חדש"
-        @close="closeNewElement"
-      >
-        <p>{{ error }}</p>
-      </base-dialog>
       <base-draggable
         v-for="(elm, dispElmIdx) in dispElements"
         :key="elm.id"
@@ -42,7 +35,7 @@
 
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
-import ElementBox from "../element/ElementBox.vue";
+import ElementBox from "./ElementBox.vue";
 import { sendToServer } from "../../server.js";
 import { reactive, provide, computed, ref } from "vue";
 
@@ -64,20 +57,12 @@ const elements = ref([]);
 const dispElements = computed(function () {
   return elements.value
     .filter(function (a) {
-      return +a.position > 0;
+      return +a.position >= 0;
     })
     .sort(function (a, b) {
       return a.position - b.position;
     });
 });
-
-const displayNewElement = ref(false);
-function closeNewElement(){
-  displayNewElement.value = false;
-}
-function openNewElement(){
-  displayNewElement.value = true;
-}
 
 //links
 const links = ref([]);
@@ -103,22 +88,39 @@ async function loadProject() {
 }
 
 // add a new element or reload an element
-function openElement(attr) {
-  createElement({
-    proj: project.id,
-    ...attr,
-  });
-}
-provide("openElement", openElement);
-
-async function createElement(attr) {
+async function createElement(attr,options) {
   const data = {
     type: "element",
     oper: "new",
     id: { dummy: "" },
-    prop: attr,
+    prop: {
+      proj: project.id,
+      ...attr,
+    },
   };
   const obj = await sendToServer(data);
+
+  console.log(obj.data);
+  if (options && options.openingElement){
+    const elm = options.openingElement;
+    if (elm.type == 'new'){
+      elm.type = attr.type;
+      elm.id = obj.data.id;
+      elm.attr = obj.data.attr;
+    }
+  }
+}
+provide("createElement", createElement);
+
+var tempElementId = -1;
+function openNewElement() {
+  elements.value.push({
+    id: tempElementId--,
+    position: elementPrevPos(0),
+    type: "new",
+    name: "new element",
+  });
+  console.log(elements.value);
 }
 
 // drag and drop elements
@@ -149,21 +151,25 @@ function moveElement(dragData, dropIdx) {
     dragElm.position = dropElmPos;
     dropElm.position = dragElmPos;
   } else {
-    // place the dragged item before the dropped item
-    var prevElmPos = 0;
-    if (dropIdx > 0) {
-      prevElmPos = +dispElements.value[dropIdx - 1].position;
-    }
-    dragElm.position = (dropElmPos - prevElmPos) / 2 + prevElmPos;
+    dragElm.position = elementPrevPos(dropIdx);
   }
   saveElmList();
+}
+
+function elementPrevPos(elmIdx) {
+  const elm = dispElements.value[elmIdx];
+  const elmPos = +elm.position;
+  var prevElmPos = 0;
+  if (elmIdx > 0) {
+    prevElmPos = +dispElements.value[elmIdx - 1].position;
+  }
+  return (elmPos - prevElmPos) / 2 + prevElmPos;
 }
 
 async function saveElmList() {
   const elmList = dispElements.value.map(function (elm, idx) {
     return {
       id: elm.id,
-      disp: elm.disp.gs_disp,
       position: idx + 1,
     };
   });
@@ -180,7 +186,7 @@ async function saveElmList() {
 }
 
 function closeElement(elm) {
-  elm.position = 0;
+  elm.position = -1;
   saveElmList();
 }
 

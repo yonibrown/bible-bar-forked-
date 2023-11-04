@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <base-menu>
     <span>טקסט:</span>
     <select>
       <option value="1_1" selected="selected">נוסח המסורה</option>
@@ -43,7 +43,7 @@
       @click="submitChanges"
       :disabled="!hasChanges"
     />
-  </div>
+  </base-menu>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <base-menu>
     <span>הדגשות:</span>
     <links-menu-obj
       v-for="link in links"
@@ -7,7 +7,7 @@
       :link="link"
       @removeLink="$emit('removeLink',link)"
     ></links-menu-obj>
-  </div>
+  </base-menu>
 </template>
 
 <script setup>

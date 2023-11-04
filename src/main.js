@@ -8,12 +8,13 @@ import BaseEditable from './components/ui/BaseEditable.vue';
 import BaseScrollable from './components/ui/BaseScrollable.vue';
 import BaseDroppable from './components/ui/BaseDroppable.vue';
 import BaseDraggable from './components/ui/BaseDraggable.vue';
-import BaseDialog from './components/ui/BaseDialog.vue';
+import BaseMenu from './components/ui/BaseMenu.vue';
 
 import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
 import TextBox from './components/text/TextBox.vue';
 import PartsBox from './components/part/PartsBox.vue';
+import NewBox from './components/project/NewBox.vue';
 
 const app = createApp(App)
 
@@ -24,11 +25,12 @@ app.component('base-editable', BaseEditable);
 app.component('base-scrollable', BaseScrollable);
 app.component('base-droppable', BaseDroppable);
 app.component('base-draggable', BaseDraggable);
-app.component('base-dialog', BaseDialog);
+app.component('base-menu', BaseMenu);
 
 app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);
 app.component('text-box', TextBox);
 app.component('parts-box', PartsBox);
+app.component('new-box', NewBox);
 
 app.mount('#app');

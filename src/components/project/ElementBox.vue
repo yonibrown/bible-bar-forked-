@@ -9,11 +9,15 @@
       ></base-editable>
       <span class="menu-buttons">
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
-        <menu-button type="options" @click="toggleMenu"></menu-button>
+        <menu-button
+          v-if="displayOptionsButton"
+          type="options"
+          @click="toggleMenu"
+        ></menu-button>
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
-    <div v-show="displayMenu">
+    <div v-show="displayOptions">
       <sequence-menu
         v-if="displaySequenceMenu"
         class="menu"
@@ -26,7 +30,7 @@
         :dragStruct="['linkId']"
         :dragEnter="enterLinksMenu"
         :dragLeave="leaveLinksMenu"
-      ><links-menu
+        ><links-menu
           class="menu"
           :class="{ 'hilight-menu': hilightLinksMenu }"
           v-if="displayLinksMenu"
@@ -68,6 +72,9 @@ provide("elementId", elementId);
 // element name
 const defaultName = computed(getDefaultName);
 function getDefaultName() {
+  if (props.element.type == "new") {
+    return "new element";
+  }
   if (props.element.type == "link") {
     const link = getLink(elementAttr.value.link_id);
     if (link) {
@@ -82,8 +89,8 @@ function getDefaultName() {
 }
 
 const elementName = ref(defaultName.value);
-if (props.element.disp.name != "") {
-  elementName.value = props.element.disp.name;
+if (props.element.name.trim() != "") {
+  elementName.value = props.element.name;
 }
 
 function submitName(newName) {
@@ -93,12 +100,15 @@ function submitName(newName) {
   });
 }
 
-
 // display menu
-const displayMenu = ref(false);
+const displayOptions = ref(false);
 function toggleMenu() {
-  displayMenu.value = !displayMenu.value;
+  displayOptions.value = !displayOptions.value;
 }
+
+const displayOptionsButton = computed(function () {
+  return props.element.type != "new";
+});
 const displaySequenceMenu = computed(function () {
   return props.element.type == "bar" || props.element.type == "text";
 });
@@ -156,6 +166,9 @@ async function reloadElement() {
 
 // change attributes of element
 async function changeAttr(changedAttr, options) {
+  if (props.element.type == "new") {
+    return;
+  }
   const data = {
     type: "element",
     oper: "set",
@@ -172,14 +185,21 @@ async function changeAttr(changedAttr, options) {
 provide("changeAttr", changeAttr);
 
 // open a new element
-const openElement = inject("openElement");
-function openElementFromElement(attr) {
-  openElement({
-    opening_element: props.element.id,
-    ...attr,
-  });
+const createElement = inject("createElement");
+function createElementFromElement(attr) {
+  const newAttr = { ...attr };
+  const options = {};
+  if (props.element.type == "new") {
+    newAttr.position = props.element.position;
+    newAttr.name = elementName.value;
+    options.openingElement = props.element;
+  } else {
+    newAttr.opening_element = props.element.id;
+  }
+  createElement(newAttr,options);
 }
-provide("openElement", openElementFromElement);
+provide("createElement", createElementFromElement);
+
 
 //links
 const projLinks = inject("links");
@@ -215,15 +235,6 @@ button {
 
 .menu-buttons {
   float: left;
-}
-
-.menu {
-  background-color: rgb(230, 230, 230);
-  border-style: solid;
-  border-width: 0.1px;
-  border-color: rgb(206, 206, 206);
-  margin: 5px 0px 5px 0px;
-  padding: 5px 15px 5px 15px;
 }
 
 .hilight-menu {
