@@ -37,7 +37,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementBox from "./ElementBox.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref,onUpdated } from "vue";
+import { reactive, provide, computed, ref, onUpdated } from "vue";
 
 const project = reactive({
   id: 1,
@@ -88,7 +88,7 @@ async function loadProject() {
 }
 
 // add a new element or reload an element
-async function createElement(attr,options) {
+async function createElement(attr, options) {
   const data = {
     type: "element",
     oper: "new",
@@ -100,9 +100,9 @@ async function createElement(attr,options) {
   };
   const obj = await sendToServer(data);
 
-  if (options && options.openingElement){
+  if (options && options.openingElement) {
     const elm = options.openingElement;
-    if (elm.type == 'new'){
+    if (elm.type == "new") {
       elm.type = attr.type;
       elm.id = obj.data.id;
       elm.attr = obj.data.attr;
@@ -155,8 +155,8 @@ function moveElement(dragData, dropIdx) {
 }
 
 const positionVersion = ref(0);
-provide("positionVersion",positionVersion);
-onUpdated(function(){
+provide("positionVersion", positionVersion);
+onUpdated(function () {
   positionVersion.value++;
 });
 

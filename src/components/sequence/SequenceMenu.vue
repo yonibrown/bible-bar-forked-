@@ -50,11 +50,8 @@
 import SequenceKey from "./SequenceKey.vue";
 import SequenceScale from "./SequenceScale.vue";
 
-import { computed, provide, inject, ref ,onUpdated} from "vue";
+import { computed, provide, inject, ref } from "vue";
 
-onUpdated(function(){
-  console.log('sequenceMenu updated',props.elementAttr.seq_level);
-});
 const props = defineProps(["elementAttr", "displayScale", "enableWholeText"]);
 
 const changeAttr = inject("changeAttr");
