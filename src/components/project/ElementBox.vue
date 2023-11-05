@@ -48,7 +48,7 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
-import { provide, computed, inject, ref, watch } from "vue";
+import { provide, computed, inject, ref ,watch} from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
@@ -56,6 +56,7 @@ const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
 
 const elementAttr = ref(props.element.attr);
+console.log('elementBox element',props.element.attr);
 
 const projectId = inject("projectId");
 const elementId = computed(function () {
@@ -156,9 +157,13 @@ async function reloadElement() {
   };
 
   const obj = await sendToServer(data);
-  elementAttr.value = obj.data;
+  elementAttr.value = obj.data.attr;
+  console.log('ElementBox change',elementAttr.value.seq_index);
   hasToReload.value = true;
 }
+watch(elementAttr,function(newVal){
+  console.log('ElementBox cahnged');
+})
 
 // change attributes of element
 async function changeAttr(changedAttr, options) {

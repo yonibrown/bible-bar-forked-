@@ -32,7 +32,7 @@
     <span v-if="displayScale">
       <span>סקאלה:</span>
       <sequence-scale
-        :initialValue="attr.seq_level"
+        :initialValue="elementAttr.seq_level"
         @changeValue="(newVal) => updateAttr('seq_level', newVal)"
         defaultValue="min"
       ></sequence-scale>
@@ -47,18 +47,17 @@
 </template>
 
 <script setup>
-import SequenceKey from "../sequence/SequenceKey.vue";
-import SequenceScale from "../sequence/SequenceScale.vue";
+import SequenceKey from "./SequenceKey.vue";
+import SequenceScale from "./SequenceScale.vue";
 
-import { computed, provide, inject, ref } from "vue";
+import { computed, provide, inject, ref ,onUpdated} from "vue";
 
+onUpdated(function(){
+  console.log('sequenceMenu updated',props.elementAttr.seq_level);
+});
 const props = defineProps(["elementAttr", "displayScale", "enableWholeText"]);
 
 const changeAttr = inject("changeAttr");
-
-const attr = computed(function () {
-  return props.elementAttr;
-});
 
 const seqIndex = computed(function () {
   return {
