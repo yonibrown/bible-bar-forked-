@@ -20,7 +20,6 @@
     <div v-show="displayOptions">
       <sequence-menu
         v-if="displaySequenceMenu"
-        class="menu"
         :elementAttr="elementAttr"
         :displayScale="displayScale"
         :enableWholeText="enableWholeText"
@@ -31,10 +30,9 @@
         :dragEnter="enterLinksMenu"
         :dragLeave="leaveLinksMenu"
         ><links-menu
-          class="menu"
-          :class="{ 'hilight-menu': hilightLinksMenu }"
           v-if="displayLinksMenu"
           @removeLink="removeLink"
+          :hilightMenu="hilightLinksMenu"
         ></links-menu>
       </base-droppable>
     </div>
@@ -234,10 +232,6 @@ button {
 
 .menu-buttons {
   float: left;
-}
-
-.hilight-menu {
-  background-color: rgb(255, 238, 238);
 }
 
 .title {

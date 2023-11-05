@@ -1,8 +1,12 @@
 <template>
-    <div class="menu">
+    <div class="menu" :class="{ 'hilight-menu': hilightMenu }">
         <slot></slot>
     </div>
 </template>
+
+<script setup>
+const props = defineProps(['hilightMenu']);
+</script>
 
 |<style scoped>
 .menu {
@@ -17,4 +21,8 @@
 div * {
   margin-left: 6px;
 }
+.hilight-menu {
+  background-color: rgb(255, 253, 238);
+}
+
 </style>
