@@ -15,7 +15,6 @@ import { inject } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
 
 const props = defineProps(['hilightMenu']);
-console.log('hilightMenu',props.hilightMenu);
 
 const links = inject("links");
 </script>

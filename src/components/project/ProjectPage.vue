@@ -214,48 +214,6 @@ function getCategory(linkId, col) {
   return cat;
 }
 provide("getCategory", getCategory);
-
-async function unlinkElement(link, elementId) {
-  link.elements = link.elements.filter(function (arrElmId) {
-    return arrElmId != elementId;
-  });
-
-  const data = {
-    type: "link",
-    oper: "remove_elm",
-    id: {
-      proj: project.id,
-      link: link.id,
-    },
-    prop: { elm: elementId },
-  };
-  const obj = await sendToServer(data);
-}
-provide("unlinkElement", unlinkElement);
-
-async function linkElement(link, elementId) {
-  if (!link.elements.includes(elementId)) {
-    link.elements.push(elementId);
-  }
-
-  const data = {
-    type: "link",
-    oper: "add_elm",
-    id: {
-      proj: project.id,
-      link: link.id,
-    },
-    prop: { elm: elementId },
-  };
-  const obj = await sendToServer(data);
-}
-provide("linkElement", linkElement);
-
-// watch(links,function(){
-//   console.log('links',links);
-// },{
-//     deep: true,
-//   });
 </script>
 
 <style scoped>

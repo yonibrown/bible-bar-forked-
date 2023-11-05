@@ -31,7 +31,7 @@
         :dragLeave="leaveLinksMenu"
         ><links-menu
           v-if="displayLinksMenu"
-          @removeLink="removeLink"
+          @removeLink="unlinkElement"
           :hilightMenu="hilightLinksMenu"
         ></links-menu>
       </base-droppable>
@@ -48,13 +48,12 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
-import { provide, computed, inject, ref,watch } from "vue";
+import { provide, computed, inject, ref, watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
 const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
-const linkElement = inject("linkElement");
 
 const elementAttr = ref(props.element.attr);
 
@@ -130,7 +129,7 @@ function addToLinks(dragData) {
   const linkId = +dragData.linkId;
   if (linkId != 0) {
     const link = getLink(linkId);
-    linkElement(link, props.element.id);
+    linkElement(link);
   }
 }
 
@@ -193,10 +192,9 @@ function createElementFromElement(attr) {
   } else {
     newAttr.opening_element = props.element.id;
   }
-  createElement(newAttr,options);
+  createElement(newAttr, options);
 }
 provide("createElement", createElementFromElement);
-
 
 //links
 const projLinks = inject("links");
@@ -216,9 +214,38 @@ const linkIds = computed(function () {
 });
 provide("linkIds", linkIds);
 
-const unlinkElement = inject("unlinkElement");
-function removeLink(link) {
-  unlinkElement(link, props.element.id);
+async function linkElement(link) {
+  if (!link.elements.includes(props.element.id)) {
+    link.elements.push(props.element.id);
+  }
+
+  const data = {
+    type: "link",
+    oper: "add_elm",
+    id: {
+      proj: projectId.value.proj,
+      link: link.id,
+    },
+    prop: { elm: props.element.id },
+  };
+  const obj = await sendToServer(data);
+}
+
+async function unlinkElement(link) {
+  link.elements = link.elements.filter(function (arrElmId) {
+    return arrElmId != props.element.id;
+  });
+
+  const data = {
+    type: "link",
+    oper: "remove_elm",
+    id: {
+      proj: projectId.value.proj,
+      link: link.id,
+    },
+    prop: { elm: props.element.id },
+  };
+  const obj = await sendToServer(data);
 }
 </script>
 
