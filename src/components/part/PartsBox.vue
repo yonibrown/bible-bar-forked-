@@ -31,11 +31,11 @@ import PartsLine from './PartsLine.vue';
 
 import { reactive,  computed ,ref} from 'vue';
 
-const props = defineProps(['element']);
+const props = defineProps(['elementAttr']);
 
 const parts = ref([]);
 
-const researchId = { res: props.element.attr.res };
+const researchId = { res: props.elementAttr.res };
 
 loadResearchParts();
 

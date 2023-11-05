@@ -19,10 +19,6 @@ td {
   font-size: 85%;
 }
 
-.bible-text {
-  font-family: David, sans-serif;
-}
-
 .resprt-part {
   background-color: white;
 }

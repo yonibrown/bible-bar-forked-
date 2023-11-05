@@ -18,7 +18,7 @@ const props = defineProps(['point']);
 import { computed, inject } from 'vue';
 
 const getCategory = inject('getCategory');
-const openElement = inject('openElement');
+const createElement = inject('createElement');
 
 const category = computed(() => {
   return getCategory(props.point.link, props.point.col);
@@ -28,7 +28,7 @@ const tooltip = computed(() => {
 });
 
 function openText(){
-  openElement({
+  createElement({
     type: 'text',
     research_id: props.point.res,
     part_id: props.point.id,
