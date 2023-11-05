@@ -1,41 +1,36 @@
 import { createApp } from 'vue';
 
 import router from './router.js';
-// import store from './store/index.js';
 import App from './App.vue';
+
 import BaseCard from './components/ui/BaseCard.vue';
 import BaseEditable from './components/ui/BaseEditable.vue';
-// import BaseButton from './components/ui/BaseButton.vue';
-// import BaseBadge from './components/ui/BaseBadge.vue';
-// import BaseSpinner from './components/ui/BaseSpinner.vue';
-// import BaseDialog from './components/ui/BaseDialog.vue';
+import BaseScrollable from './components/ui/BaseScrollable.vue';
+import BaseDroppable from './components/ui/BaseDroppable.vue';
+import BaseDraggable from './components/ui/BaseDraggable.vue';
+import BaseMenu from './components/ui/BaseMenu.vue';
 
 import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
 import TextBox from './components/text/TextBox.vue';
 import PartsBox from './components/part/PartsBox.vue';
-
-import BarMenu from './components/bar/BarMenu.vue';
-import LinksMenu from './components/link/LinksMenu.vue';
+import NewBox from './components/project/NewBox.vue';
 
 const app = createApp(App)
 
 app.use(router);
-// app.use(store);
 
 app.component('base-card', BaseCard);
 app.component('base-editable', BaseEditable);
-// app.component('base-button', BaseButton);
-// app.component('base-badge', BaseBadge);
-// app.component('base-spinner', BaseSpinner);
-// app.component('base-dialog', BaseDialog);
+app.component('base-scrollable', BaseScrollable);
+app.component('base-droppable', BaseDroppable);
+app.component('base-draggable', BaseDraggable);
+app.component('base-menu', BaseMenu);
 
 app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);
 app.component('text-box', TextBox);
 app.component('parts-box', PartsBox);
-
-app.component('bar-menu', BarMenu);
-app.component('links-menu', LinksMenu);
+app.component('new-box', NewBox);
 
 app.mount('#app');

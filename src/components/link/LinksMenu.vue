@@ -1,5 +1,5 @@
 <template>
-  <div drop-list="bar-links">
+  <base-menu>
     <span>הדגשות:</span>
     <links-menu-obj
       v-for="link in links"
@@ -7,13 +7,12 @@
       :link="link"
       @removeLink="$emit('removeLink',link)"
     ></links-menu-obj>
-  </div>
+  </base-menu>
 </template>
 
 <script setup>
 import { inject } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
-// const emit = defineEmits(['removeLink']);
 
 const links = inject("links");
 </script>

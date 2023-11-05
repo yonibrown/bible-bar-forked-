@@ -2,40 +2,53 @@
   <base-card>
     <div class="element-head">
       <base-editable
-        v-if="editingName"
         :initialValue="elementName"
         @submitValue="submitName"
-        :name="elementName"
+        name="elementName"
+        :defaultValue="defaultName"
       ></base-editable>
-      <div v-else @dblclick="starteditName" class="title">
-        {{ elementName }}
-      </div>
       <span class="menu-buttons">
-        <menu-button type="options" @click="toggleMenu"></menu-button>
+        <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+        <menu-button
+          v-if="displayOptionsButton"
+          type="options"
+          @click="toggleMenu"
+        ></menu-button>
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
-    <div v-show="displayMenu">
-      <component
+    <div v-show="displayOptions">
+      <sequence-menu
+        v-if="displaySequenceMenu"
         class="menu"
-        :is="props.element.type + '-menu'"
-        :element="element"
-      ></component>
-      <links-menu
-        class="menu"
-        :class="{ 'hilight-menu': hilightLinksMenu }"
-        v-if="displayLinksMenu"
-        @removeLink="removeLink"
-        @dragenter.prevent="enterLinksMenu"
-        @dragleave.prevent="leaveLinksMenu"
-        @drop.prevent="onDrop"
-      ></links-menu>
+        :elementAttr="elementAttr"
+        :displayScale="displayScale"
+        :enableWholeText="enableWholeText"
+      ></sequence-menu>
+      <base-droppable
+        :drop="addToLinks"
+        :dragStruct="['linkId']"
+        :dragEnter="enterLinksMenu"
+        :dragLeave="leaveLinksMenu"
+        ><links-menu
+          class="menu"
+          :class="{ 'hilight-menu': hilightLinksMenu }"
+          v-if="displayLinksMenu"
+          @removeLink="removeLink"
+        ></links-menu>
+      </base-droppable>
     </div>
-    <component :is="props.element.type + '-box'" :element="element"></component>
+    <component
+      :is="element.type + '-box'"
+      :elementAttr="elementAttr"
+    ></component>
   </base-card>
 </template>
 
 <script setup>
+import SequenceMenu from "../sequence/SequenceMenu.vue";
+import LinksMenu from "../link/LinksMenu.vue";
+
 import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
@@ -57,10 +70,13 @@ const elementId = computed(function () {
 provide("elementId", elementId);
 
 // element name
-const defaultName = getDefaultName();
+const defaultName = computed(getDefaultName);
 function getDefaultName() {
+  if (props.element.type == "new") {
+    return "new element";
+  }
   if (props.element.type == "link") {
-    const link = getLink(props.element.attr.link_id);
+    const link = getLink(elementAttr.value.link_id);
     if (link) {
       if (link.name != "") {
         return link.name;
@@ -72,33 +88,36 @@ function getDefaultName() {
   return "element" + props.element.id;
 }
 
-const elementName = ref(defaultName);
-if (props.element.disp.name != "") {
-  elementName.value = props.element.disp.name;
+const elementName = ref(defaultName.value);
+if (props.element.name.trim() != "") {
+  elementName.value = props.element.name;
 }
 
-const editingName = ref(false);
-function starteditName() {
-  editingName.value = true;
-}
 function submitName(newName) {
-  if (newName == "") {
-    elementName.value = defaultName;
-  } else {
-    elementName.value = newName;
-  }
-  editingName.value = false;
-
+  elementName.value = newName;
   changeAttr({
     name: newName,
   });
 }
 
 // display menu
-const displayMenu = ref(false);
+const displayOptions = ref(false);
 function toggleMenu() {
-  displayMenu.value = !displayMenu.value;
+  displayOptions.value = !displayOptions.value;
 }
+
+const displayOptionsButton = computed(function () {
+  return props.element.type != "new";
+});
+const displaySequenceMenu = computed(function () {
+  return props.element.type == "bar" || props.element.type == "text";
+});
+const displayScale = computed(function () {
+  return props.element.type == "bar";
+});
+const enableWholeText = computed(function () {
+  return props.element.type == "bar";
+});
 const displayLinksMenu = computed(function () {
   return props.element.type != "link";
 });
@@ -109,17 +128,9 @@ function enterLinksMenu() {
 function leaveLinksMenu() {
   hilightLinksMenu.value = false;
 }
-function onDrop(evt) {
-  leaveLinksMenu();
-
-  const dropList = evt.target.closest("[drop-list]").getAttribute("drop-list");
-  // check the element is dropped in the correct list
-  if (dropList != "bar-links") {
-    return;
-  }
-
-  const linkId = +evt.dataTransfer.getData("linkId");
-  if (linkId != 0){
+function addToLinks(dragData) {
+  const linkId = +dragData.linkId;
+  if (linkId != 0) {
     const link = getLink(linkId);
     linkElement(link, props.element.id);
   }
@@ -148,12 +159,16 @@ async function reloadElement() {
   };
 
   const obj = await sendToServer(data);
+  console.log("reloadElement");
   elementAttr.value = obj.data;
   hasToReload.value = true;
 }
 
 // change attributes of element
 async function changeAttr(changedAttr, options) {
+  if (props.element.type == "new") {
+    return;
+  }
   const data = {
     type: "element",
     oper: "set",
@@ -170,14 +185,21 @@ async function changeAttr(changedAttr, options) {
 provide("changeAttr", changeAttr);
 
 // open a new element
-const openElement = inject("openElement");
-function openElementFromElement(attr) {
-  openElement({
-    opening_element: props.element.id,
-    ...attr,
-  });
+const createElement = inject("createElement");
+function createElementFromElement(attr) {
+  const newAttr = { ...attr };
+  const options = {};
+  if (props.element.type == "new") {
+    newAttr.position = props.element.position;
+    newAttr.name = elementName.value;
+    options.openingElement = props.element;
+  } else {
+    newAttr.opening_element = props.element.id;
+  }
+  createElement(newAttr,options);
 }
-provide("openElement", openElementFromElement);
+provide("createElement", createElementFromElement);
+
 
 //links
 const projLinks = inject("links");
@@ -190,11 +212,17 @@ const links = computed(function () {
 });
 provide("links", links);
 
+const linkIds = computed(function () {
+  return links.value.map(function (link) {
+    return link.id;
+  });
+});
+provide("linkIds", linkIds);
+
 const unlinkElement = inject("unlinkElement");
 function removeLink(link) {
   unlinkElement(link, props.element.id);
 }
-
 </script>
 
 <style scoped>
@@ -207,15 +235,6 @@ button {
 
 .menu-buttons {
   float: left;
-}
-
-.menu {
-  background-color: rgb(230, 230, 230);
-  border-style: solid;
-  border-width: 0.1px;
-  border-color: rgb(206, 206, 206);
-  margin: 5px 0px 5px 0px;
-  padding: 5px 15px 5px 15px;
 }
 
 .hilight-menu {

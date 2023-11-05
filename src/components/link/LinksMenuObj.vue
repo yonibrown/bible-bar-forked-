@@ -9,7 +9,6 @@
 import MenuButton from "../ui/MenuButton.vue";
 import { computed } from "vue";
 const props = defineProps(["link"]);
-// const emit = defineEmits(["removeLink"]);
 
 const name = computed(function () {
   if (props.link.name == "") {
@@ -17,10 +16,6 @@ const name = computed(function () {
   }
   return props.link.name;
 });
-
-// function removeLink() {
-//   emit("removeLink");
-// }
 </script>
 
 <style scoped>
