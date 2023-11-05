@@ -39,7 +39,6 @@ async function loadElmText() {
   };
 
   const obj = await sendToServer(data);
-
   verses.value = obj.data.part_list;
 }
 </script>
