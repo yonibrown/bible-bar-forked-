@@ -5,14 +5,30 @@
 </template>
 
 <script setup>
-import { provide,ref } from "vue";
+import { provide,ref ,inject,watch} from "vue";
 
 const scrollable = ref(null);
+var scrollTop = 0;
 
 function scrollIn(elm) {
-  scrollable.value.scrollTop = elm.offsetTop - scrollable.value.offsetTop;
+  if (elm != null){
+    scrollTop = elm.offsetTop - scrollable.value.offsetTop;
+    // elm.classList.add("scrollable-anchor");
+  }
+  scrollable.value.scrollTop = scrollTop;
+  // console.log(scrollable.value.offsetTop);
 }
 provide("scrollIn", scrollIn);
+
+const positionVersion = inject("positionVersion");
+watch(positionVersion,function(){
+  console.log('position changed');
+  // const elm = scrollable.value.getElementsByClassName("scrollable-anchor");
+  // console.log(elm);
+  scrollIn();
+});
+
+// when scrolled: save new scrollTop
 </script>
 
 <style scoped>

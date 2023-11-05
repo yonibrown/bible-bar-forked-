@@ -37,7 +37,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementBox from "./ElementBox.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref } from "vue";
+import { reactive, provide, computed, ref,onUpdated } from "vue";
 
 const project = reactive({
   id: 1,
@@ -155,6 +155,13 @@ function moveElement(dragData, dropIdx) {
   }
   saveElmList();
 }
+
+const positionVersion = ref(0);
+provide("positionVersion",positionVersion);
+onUpdated(function(){
+  positionVersion.value++;
+  console.log('positionVersion',positionVersion.value);
+});
 
 function elementPrevPos(elmIdx) {
   const elm = dispElements.value[elmIdx];
