@@ -100,7 +100,6 @@ async function createElement(attr,options) {
   };
   const obj = await sendToServer(data);
 
-  console.log(obj.data);
   if (options && options.openingElement){
     const elm = options.openingElement;
     if (elm.type == 'new'){
@@ -120,7 +119,6 @@ function openNewElement() {
     type: "new",
     name: "new element",
   });
-  console.log(elements.value);
 }
 
 // drag and drop elements
@@ -160,7 +158,6 @@ const positionVersion = ref(0);
 provide("positionVersion",positionVersion);
 onUpdated(function(){
   positionVersion.value++;
-  console.log('positionVersion',positionVersion.value);
 });
 
 function elementPrevPos(elmIdx) {

@@ -79,7 +79,6 @@ function updateAttr(attr, newVal) {
 
 async function submitChanges() {
   if (Object.keys(changedAttr).length == 0) {
-    console.log("no change");
     return;
   }
 
@@ -111,7 +110,6 @@ async function submitChanges() {
       return;
     }
   }
-  console.log(changedAttr);
   changeAttr(changedAttr, { reload: true });
   // if only scale changed, we can reload only the segments
 

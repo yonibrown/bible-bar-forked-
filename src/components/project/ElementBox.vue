@@ -159,7 +159,6 @@ async function reloadElement() {
   };
 
   const obj = await sendToServer(data);
-  console.log("reloadElement");
   elementAttr.value = obj.data;
   hasToReload.value = true;
 }
