@@ -50,7 +50,7 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
-import { provide, computed, inject, ref } from "vue";
+import { provide, computed, inject, ref,watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element"]);
