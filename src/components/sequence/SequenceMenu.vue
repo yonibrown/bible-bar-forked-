@@ -32,7 +32,7 @@
     <span v-if="displayScale">
       <span>סקאלה:</span>
       <sequence-scale
-        :initialValue="elementAttr.seq_level"
+        :initialValue="initialScaleLevel"
         @changeValue="(newVal) => updateAttr('seq_level', newVal)"
         defaultValue="min"
       ></sequence-scale>
@@ -123,9 +123,12 @@ const filterText = computed(function () {
 
 const initialFromKey = ref(props.elementAttr.from_key);
 const initialToKey = ref(props.elementAttr.to_key);
+const initialScaleLevel = ref(props.elementAttr.seq_level);
 function removeFilter() {
+  console.log('remove filter');
   initialFromKey.value = null;
   initialToKey.value = null;
+  initialScaleLevel.value = null;
 }
 </script>
 

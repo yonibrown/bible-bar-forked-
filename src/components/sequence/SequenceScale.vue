@@ -25,9 +25,14 @@ var injectedChange = false;
 const selected = ref(props.initialValue);
 
 watch(injectedSelectedLevel, (newVal) => {
+  console.log(newVal,indexLevels.value);
   if (selected.value != newVal) {
     injectedChange = true;
-    selected.value = newVal;
+    if (newVal == null){
+      selected.value = indexLevels.value[0].id;
+    } else {
+      selected.value = newVal;
+    }
   }
 });
 
