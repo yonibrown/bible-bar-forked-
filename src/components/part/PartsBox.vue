@@ -3,12 +3,12 @@
   <div>
     <table>
       <tr class="resprt-header">
-        <td :class="categoryClass" @dblclick="changeSort('category')">
+        <td :class="categoryClass" @dblclick="changeSort('col')">
           קטגוריה
           <i v-show="categoryAscending" class="fa fa-arrow-up"></i>
           <i v-show="categoryDescending" class="fa fa-arrow-down"></i>
         </td>
-        <td :class="verseClass" @dblclick="changeSort('verse')">
+        <td :class="verseClass" @dblclick="changeSort('src')">
           פסוק
           <i v-show="verseAscending" class="fa fa-arrow-up"></i>
           <i v-show="verseDescending" class="fa fa-arrow-down"></i>
@@ -26,71 +26,81 @@
 </template>
 
 <script setup>
-import { sendToServer } from '../../server.js';
-import PartsLine from './PartsLine.vue';
+import { sendToServer } from "../../server.js";
+import PartsLine from "./PartsLine.vue";
 
-import { reactive,  computed ,ref} from 'vue';
+import { reactive, computed, ref ,inject} from "vue";
 
-const props = defineProps(['elementAttr']);
+const props = defineProps(["elementAttr"]);
+
+const changeAttr = inject("changeAttr");
 
 const parts = ref([]);
 
 const researchId = { res: props.elementAttr.res };
 
+const sort = reactive({
+  field: props.elementAttr.sort, // src/sol/pos
+  ascending: props.elementAttr.ordering=='ASC',
+});
+
 loadResearchParts();
 
 async function loadResearchParts() {
   const data = {
-    type: 'research',
-    oper: 'get_prt_list',
+    type: "research",
+    oper: "get_prt_list",
     id: researchId,
-    prop: { sort: 'src' },
+    prop: { 
+      sort:sort.field,
+      ordering: sort.ascending?'ASC':'DESC'
+    },
   };
 
   const obj = await sendToServer(data);
   parts.value = obj.data;
 }
 
-const sort = reactive({
-  field: 'verse',
-  ascending: true,
-});
 const verseClass = computed(function () {
-  return sort.field == 'verse' ? 'sortingField' : '';
+  return sort.field == "src" ? "sortingField" : "";
 });
 const categoryClass = computed(function () {
-  return sort.field == 'category' ? 'sortingField' : '';
+  return sort.field == "col" ? "sortingField" : "";
 });
 const verseAscending = computed(function () {
-  return (sort.field == 'verse') & (sort.ascending);
+  return (sort.field == "src") & sort.ascending;
 });
 const verseDescending = computed(function () {
-  return (sort.field == 'verse') & (!sort.ascending);
+  return (sort.field == "src") & !sort.ascending;
 });
 const categoryAscending = computed(function () {
-  return (sort.field == 'category') & (sort.ascending);
+  return (sort.field == "col") & sort.ascending;
 });
 const categoryDescending = computed(function () {
-  return (sort.field == 'category') & (!sort.ascending);
+  return (sort.field == "col") & !sort.ascending;
 });
-function changeSort(newField){
-  if (sort.field == newField){
+function changeSort(newField) {
+  if (sort.field == newField) {
     sort.ascending = !sort.ascending;
     parts.value.reverse();
   } else {
     sort.ascending = true;
-    if (sort.field == 'verse'){
-      sort.field = 'category';
-      parts.value.sort(function(a,b){
+    if (sort.field == "src") {
+      sort.field = "col";
+      parts.value.sort(function (a, b) {
         return a.col_sort_key > b.col_sort_key ? 1 : -1;
       });
     } else {
-      sort.field = 'verse';
-      parts.value.sort(function(a,b){
+      sort.field = "src";
+      parts.value.sort(function (a, b) {
         return a.src_sort_key > b.src_sort_key ? 1 : -1;
       });
     }
   }
+  changeAttr({
+    sort: 'src',
+    ordering: 'ASC'
+  });
 }
 </script>
 
