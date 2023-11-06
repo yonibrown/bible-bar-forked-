@@ -1,5 +1,5 @@
 <template>
-  <base-menu>
+  <base-menu :hilightMenu="hilightMenu">
     <span>הדגשות:</span>
     <links-menu-obj
       v-for="link in links"
@@ -13,6 +13,8 @@
 <script setup>
 import { inject } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
+
+const props = defineProps(['hilightMenu']);
 
 const links = inject("links");
 </script>
