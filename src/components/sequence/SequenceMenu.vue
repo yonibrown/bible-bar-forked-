@@ -32,7 +32,7 @@
     <span v-if="displayScale">
       <span>סקאלה:</span>
       <sequence-scale
-        :initialValue="attr.seq_level"
+        :initialValue="initialScaleLevel"
         @changeValue="(newVal) => updateAttr('seq_level', newVal)"
         defaultValue="min"
       ></sequence-scale>
@@ -47,18 +47,14 @@
 </template>
 
 <script setup>
-import SequenceKey from "../sequence/SequenceKey.vue";
-import SequenceScale from "../sequence/SequenceScale.vue";
+import SequenceKey from "./SequenceKey.vue";
+import SequenceScale from "./SequenceScale.vue";
 
 import { computed, provide, inject, ref } from "vue";
 
 const props = defineProps(["elementAttr", "displayScale", "enableWholeText"]);
 
 const changeAttr = inject("changeAttr");
-
-const attr = computed(function () {
-  return props.elementAttr;
-});
 
 const seqIndex = computed(function () {
   return {
@@ -79,7 +75,6 @@ function updateAttr(attr, newVal) {
 
 async function submitChanges() {
   if (Object.keys(changedAttr).length == 0) {
-    console.log("no change");
     return;
   }
 
@@ -111,7 +106,6 @@ async function submitChanges() {
       return;
     }
   }
-  console.log(changedAttr);
   changeAttr(changedAttr, { reload: true });
   // if only scale changed, we can reload only the segments
 
@@ -129,9 +123,12 @@ const filterText = computed(function () {
 
 const initialFromKey = ref(props.elementAttr.from_key);
 const initialToKey = ref(props.elementAttr.to_key);
+const initialScaleLevel = ref(props.elementAttr.seq_level);
 function removeFilter() {
+  console.log('remove filter');
   initialFromKey.value = null;
   initialToKey.value = null;
+  initialScaleLevel.value = null;
 }
 </script>
 

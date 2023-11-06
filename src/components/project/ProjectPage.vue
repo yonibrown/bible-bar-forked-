@@ -37,7 +37,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementBox from "./ElementBox.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref,onUpdated } from "vue";
+import { reactive, provide, computed, ref, onUpdated } from "vue";
 
 const project = reactive({
   id: 1,
@@ -88,7 +88,7 @@ async function loadProject() {
 }
 
 // add a new element or reload an element
-async function createElement(attr,options) {
+async function createElement(attr, options) {
   const data = {
     type: "element",
     oper: "new",
@@ -100,10 +100,9 @@ async function createElement(attr,options) {
   };
   const obj = await sendToServer(data);
 
-  console.log(obj.data);
-  if (options && options.openingElement){
+  if (options && options.openingElement) {
     const elm = options.openingElement;
-    if (elm.type == 'new'){
+    if (elm.type == "new") {
       elm.type = attr.type;
       elm.id = obj.data.id;
       elm.attr = obj.data.attr;
@@ -120,7 +119,6 @@ function openNewElement() {
     type: "new",
     name: "new element",
   });
-  console.log(elements.value);
 }
 
 // drag and drop elements
@@ -157,10 +155,9 @@ function moveElement(dragData, dropIdx) {
 }
 
 const positionVersion = ref(0);
-provide("positionVersion",positionVersion);
-onUpdated(function(){
+provide("positionVersion", positionVersion);
+onUpdated(function () {
   positionVersion.value++;
-  console.log('positionVersion',positionVersion.value);
 });
 
 function elementPrevPos(elmIdx) {
@@ -217,48 +214,6 @@ function getCategory(linkId, col) {
   return cat;
 }
 provide("getCategory", getCategory);
-
-async function unlinkElement(link, elementId) {
-  link.elements = link.elements.filter(function (arrElmId) {
-    return arrElmId != elementId;
-  });
-
-  const data = {
-    type: "link",
-    oper: "remove_elm",
-    id: {
-      proj: project.id,
-      link: link.id,
-    },
-    prop: { elm: elementId },
-  };
-  const obj = await sendToServer(data);
-}
-provide("unlinkElement", unlinkElement);
-
-async function linkElement(link, elementId) {
-  if (!link.elements.includes(elementId)) {
-    link.elements.push(elementId);
-  }
-
-  const data = {
-    type: "link",
-    oper: "add_elm",
-    id: {
-      proj: project.id,
-      link: link.id,
-    },
-    prop: { elm: elementId },
-  };
-  const obj = await sendToServer(data);
-}
-provide("linkElement", linkElement);
-
-// watch(links,function(){
-//   console.log('links',links);
-// },{
-//     deep: true,
-//   });
 </script>
 
 <style scoped>

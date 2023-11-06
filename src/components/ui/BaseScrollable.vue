@@ -1,5 +1,5 @@
 <template>
-  <div ref="scrollable">
+  <div ref="scrollable" @scrollend="saveOffset">
     <slot> </slot>
   </div>
 </template>
@@ -16,19 +16,19 @@ function scrollIn(elm) {
     // elm.classList.add("scrollable-anchor");
   }
   scrollable.value.scrollTop = scrollTop;
-  // console.log(scrollable.value.offsetTop);
 }
 provide("scrollIn", scrollIn);
 
 const positionVersion = inject("positionVersion");
 watch(positionVersion,function(){
-  console.log('position changed');
   // const elm = scrollable.value.getElementsByClassName("scrollable-anchor");
-  // console.log(elm);
   scrollIn();
 });
 
 // when scrolled: save new scrollTop
+function saveOffset(){
+  scrollTop = scrollable.value.scrollTop;
+}
 </script>
 
 <style scoped>

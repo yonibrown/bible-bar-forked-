@@ -41,14 +41,14 @@ function onDrop(evt) {
 }
 
 function onDragEnter() {
-    if (props.dragEnter){
-        props.dragEnter();
-    }
+  if (props.dragEnter) {
+    props.dragEnter();
+  }
 }
 
 function onDragLeave() {
-    if (props.dragLeave){
-        props.dragLeave();
-    }
+  if (props.dragLeave) {
+    props.dragLeave();
+  }
 }
 </script>
