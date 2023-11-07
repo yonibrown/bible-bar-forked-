@@ -25,6 +25,7 @@ import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
 import { reactive, provide, computed, ref } from "vue";
 import { useLinks } from "./links.js";
+import { useResearches } from "./researches.js";
 
 const project = reactive({
   id: 1,
@@ -45,6 +46,7 @@ const elements = ref([]);
 
 
 const links = useLinks();
+const researches = useResearches();
 
 loadProject();
 
@@ -63,6 +65,8 @@ async function loadProject() {
   };
   elements.value = obj.data.elements;
   links.value = obj.data.links;
+  researches.value = obj.data.researches;
+  console.log(researches);
 }
 
 // add a new element or reload an element
