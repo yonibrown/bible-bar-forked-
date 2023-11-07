@@ -36,7 +36,7 @@ import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
 import { sendToServer } from "../../server.js";
 
-import { inject, watch, ref, computed } from "vue";
+import { inject, watch, ref } from "vue";
 
 const elementId = inject("elementId");
 const hasToReload = inject("hasToReload");
