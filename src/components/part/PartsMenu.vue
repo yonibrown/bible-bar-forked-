@@ -17,7 +17,7 @@
         type="submit"
         value="החל"
         @click="submitChanges"
-        :disabled="!hasChanges"
+        :disabled="!hasChanges || !linesSelected"
       />
     </span>
   </base-menu>
@@ -29,6 +29,7 @@ import { ref, computed, inject } from "vue";
 const emit = defineEmits(["updateData"]);
 
 const elementAttr = inject("elementAttr");
+const linesSelected = inject("linesSelected");
 const getResearch = inject("getResearch");
 
 const action = ref("choose");

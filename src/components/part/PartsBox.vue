@@ -112,12 +112,17 @@ function updateData(data){
     moveSelectedToCat(data.newCat);
   }
 }
-defineExpose({updateData});
 
 const selectedParts = computed(function(){
   return linesRef.value.filter(function(col){
     return col.checked;
+  }).map(function(col){
+    return col.id;
   });
+});
+
+const linesSelected = computed(function(){
+  return selectedParts.value.length > 0;
 });
 
 function moveSelectedToCat(cat){
@@ -125,8 +130,10 @@ function moveSelectedToCat(cat){
   //   console.log(col.checked);
   //   return col.checked;
   // });
-  console.log(selectedParts);
+  console.log(selectedParts.value);
+  // console.log(parts.value);
 }
+defineExpose({updateData,linesSelected});
 </script>
 
 <style scoped>

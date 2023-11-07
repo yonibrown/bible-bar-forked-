@@ -256,6 +256,11 @@ async function unlinkElement(link) {
 function updateData(data){
   boxRef.value.updateData(data);
 }
+
+const linesSelected = computed(function(){
+  return boxRef.value && boxRef.value.linesSelected;
+});
+provide('linesSelected',linesSelected);
 </script>
 
 <style scoped>
