@@ -114,26 +114,17 @@ function updateData(data){
 }
 
 const selectedParts = computed(function(){
-  return linesRef.value.filter(function(col){
-    return col.checked;
-  }).map(function(col){
-    return col.id;
+  return linesRef.value.filter(function(part){
+    return part.checked;
+  }).map(function(part){
+    return part.id;
   });
 });
 
-const linesSelected = computed(function(){
-  return selectedParts.value.length > 0;
-});
-
 function moveSelectedToCat(cat){
-  // const selectedParts = linesRef.value.filter(function(col){
-  //   console.log(col.checked);
-  //   return col.checked;
-  // });
-  console.log(selectedParts.value);
-  // console.log(parts.value);
+  console.log('moveToCat',selectedParts.value,cat);
 }
-defineExpose({updateData,linesSelected});
+defineExpose({updateData});
 </script>
 
 <style scoped>
