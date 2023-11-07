@@ -24,6 +24,7 @@ import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
 import { reactive, provide, computed, ref } from "vue";
+import { useLinks } from "./links.js";
 
 const project = reactive({
   id: 1,
@@ -43,9 +44,7 @@ const listRef = ref();
 const elements = ref([]);
 
 
-
-const links = ref([]);
-provide("links", links);
+const links = useLinks();
 
 loadProject();
 
@@ -91,26 +90,6 @@ async function createElement(attr, options) {
 provide("createElement", createElement);
 
 // link methods
-function getLink(linkId) {
-  const link = links.value.find((pLink) => {
-    return pLink.id == linkId;
-  });
-  return link;
-}
-provide("getLink", getLink);
-
-function getCategory(linkId, col) {
-  const link = getLink(linkId);
-  if (link == null) {
-    return null;
-  }
-  const cat = link.categories.find((pCat) => {
-    return pCat.col == col;
-  });
-  return cat;
-}
-provide("getCategory", getCategory);
-
 function openNewElement(){
   listRef.value.openNewElement();
 }
