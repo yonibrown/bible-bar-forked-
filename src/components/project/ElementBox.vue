@@ -24,6 +24,11 @@
         :displayScale="displayScale"
         :enableWholeText="enableWholeText"
       ></sequence-menu>
+      <parts-menu
+        v-if="displayPartsMenu"
+        :elementAttr="elementAttr"
+        @updateData="updateData"
+      ></parts-menu>
       <base-droppable
         :drop="addToLinks"
         :dragStruct="['linkId']"
@@ -46,6 +51,7 @@
 
 <script setup>
 import SequenceMenu from "../sequence/SequenceMenu.vue";
+import PartsMenu from "../part/PartsMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
@@ -57,6 +63,8 @@ const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
 
 const elementAttr = ref(props.element.attr);
+provide('elementAttr',elementAttr);
+
 const boxRef = ref();
 
 const projectId = inject("projectId");
@@ -101,6 +109,8 @@ function submitName(newName) {
 
 // display menu
 const displayOptions = ref(false);
+provide('displayOptions',displayOptions);
+
 function toggleMenu() {
   displayOptions.value = !displayOptions.value;
 }
@@ -110,6 +120,9 @@ const displayOptionsButton = computed(function () {
 });
 const displaySequenceMenu = computed(function () {
   return props.element.type == "bar" || props.element.type == "text";
+});
+const displayPartsMenu = computed(function () {
+  return props.element.type == "parts";
 });
 const displayScale = computed(function () {
   return props.element.type == "bar";
@@ -238,6 +251,10 @@ async function unlinkElement(link) {
     prop: { elm: props.element.id },
   };
   const obj = await sendToServer(data);
+}
+
+function updateData(data){
+  boxRef.value.updateData(data);
 }
 </script>
 

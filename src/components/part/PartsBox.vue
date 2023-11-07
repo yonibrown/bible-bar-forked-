@@ -3,6 +3,7 @@
   <div>
     <table>
       <tr class="resprt-header">
+        <td v-show="displayOptions"></td>
         <td :class="categoryClass" @dblclick="changeSort('col')">
           קטגוריה
           <i v-show="categoryAscending" class="fa fa-arrow-up"></i>
@@ -16,6 +17,7 @@
         <td>טקסט</td>
       </tr>
       <parts-line
+        ref="linesRef"
         class="resprt-part"
         v-for="prt in parts"
         :prt="prt"
@@ -29,13 +31,15 @@
 import { sendToServer } from "../../server.js";
 import PartsLine from "./PartsLine.vue";
 
-import { reactive, computed, ref ,inject} from "vue";
+import { reactive, computed, ref, inject } from "vue";
 
+const displayOptions = inject("displayOptions");
 const props = defineProps(["elementAttr"]);
 
 const changeAttr = inject("changeAttr");
 
 const parts = ref([]);
+const linesRef = ref([]);
 
 const researchId = { res: props.elementAttr.res };
 
@@ -51,9 +55,9 @@ async function loadResearchParts() {
     type: "research",
     oper: "get_prt_list",
     id: researchId,
-    prop: { 
-      sort:attr.sort,
-      ordering: attr.ordering
+    prop: {
+      sort: attr.sort,
+      ordering: attr.ordering,
     },
   };
 
@@ -68,23 +72,23 @@ const categoryClass = computed(function () {
   return attr.sort == "col" ? "sortingField" : "";
 });
 const verseAscending = computed(function () {
-  return (attr.sort == "src") & (attr.ordering == 'ASC');
+  return (attr.sort == "src") & (attr.ordering == "ASC");
 });
 const verseDescending = computed(function () {
-  return (attr.sort == "src") & (attr.ordering == 'DESC');
+  return (attr.sort == "src") & (attr.ordering == "DESC");
 });
 const categoryAscending = computed(function () {
-  return (attr.sort == "col") & (attr.ordering == 'ASC');
+  return (attr.sort == "col") & (attr.ordering == "ASC");
 });
 const categoryDescending = computed(function () {
-  return (attr.sort == "col") & (attr.ordering == 'DESC');
+  return (attr.sort == "col") & (attr.ordering == "DESC");
 });
 function changeSort(newField) {
   if (attr.sort == newField) {
-    attr.ordering = attr.ordering=='ASC'?'DESC':'ASC';
+    attr.ordering = attr.ordering == "ASC" ? "DESC" : "ASC";
     parts.value.reverse();
   } else {
-    attr.ordering = 'ASC';
+    attr.ordering = "ASC";
     if (attr.sort == "src") {
       attr.sort = "col";
       parts.value.sort(function (a, b) {
@@ -99,8 +103,29 @@ function changeSort(newField) {
   }
   changeAttr({
     sort: attr.sort,
-    ordering: attr.ordering
+    ordering: attr.ordering,
   });
+}
+
+function updateData(data){
+  if (data.action == 'moveSelectedToCat'){
+    moveSelectedToCat(data.newCat);
+  }
+}
+defineExpose({updateData});
+
+const selectedParts = computed(function(){
+  return linesRef.value.filter(function(col){
+    return col.checked;
+  });
+});
+
+function moveSelectedToCat(cat){
+  // const selectedParts = linesRef.value.filter(function(col){
+  //   console.log(col.checked);
+  //   return col.checked;
+  // });
+  console.log(selectedParts);
 }
 </script>
 

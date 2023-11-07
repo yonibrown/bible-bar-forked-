@@ -25,7 +25,6 @@ var injectedChange = false;
 const selected = ref(props.initialValue);
 
 watch(injectedSelectedLevel, (newVal) => {
-  console.log(newVal,indexLevels.value);
   if (selected.value != newVal) {
     injectedChange = true;
     if (newVal == null){

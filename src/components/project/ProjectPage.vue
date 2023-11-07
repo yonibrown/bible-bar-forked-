@@ -66,7 +66,6 @@ async function loadProject() {
   elements.value = obj.data.elements;
   links.value = obj.data.links;
   researches.value = obj.data.researches;
-  console.log(researches);
 }
 
 // add a new element or reload an element
