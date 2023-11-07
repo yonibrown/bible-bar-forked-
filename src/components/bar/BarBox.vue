@@ -36,44 +36,22 @@ import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
 import { sendToServer } from "../../server.js";
 
-import { inject, watch, ref } from "vue";
+import { inject, ref } from "vue";
 
 const elementId = inject("elementId");
-const hasToReload = inject("hasToReload");
-const reloaded = inject("reloaded");
 const links = inject("links");
 
 const segments = ref([]);
 const points = ref([]);
 
-// const barActiveLinks = ref(
-//   links.value.map(function (link) {
-//     return link.id;
-//   })
-// );
+function reload() {
+  // clear points so they don't interfere
+  points.value = [];
 
-// watch(links,function(newVal){
-//   const linkIds = newVal.map(function(link){
-//     return link.id;
-//   });
-
-//   linkIds.find(function(linkId){
-//     return
-//   });
-
-// });
-
-watch(hasToReload, function (newVal) {
-  if (newVal) {
-    // clear points so they don't interfere
-    points.value = [];
-
-    loadElmBarSegments();
-    loadElmBarPoints();
-
-    reloaded();
-  }
-});
+  loadElmBarSegments();
+  loadElmBarPoints();
+}
+defineExpose({ reload });
 
 loadElmBarSegments();
 loadElmBarPoints();

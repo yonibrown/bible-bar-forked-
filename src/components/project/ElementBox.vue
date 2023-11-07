@@ -39,6 +39,7 @@
     <component
       :is="element.type + '-box'"
       :elementAttr="elementAttr"
+      ref="boxRef"
     ></component>
   </base-card>
 </template>
@@ -56,6 +57,7 @@ const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
 
 const elementAttr = ref(props.element.attr);
+const boxRef = ref();
 
 const projectId = inject("projectId");
 const elementId = computed(function () {
@@ -138,15 +140,6 @@ function closeElement() {
   emit("closeElement");
 }
 
-// reload element
-const hasToReload = ref(false);
-provide("hasToReload", hasToReload);
-
-function reloaded() {
-  hasToReload.value = false;
-}
-provide("reloaded", reloaded);
-
 async function reloadElement() {
   const data = {
     type: "element",
@@ -157,7 +150,7 @@ async function reloadElement() {
 
   const obj = await sendToServer(data);
   elementAttr.value = obj.data.attr;
-  hasToReload.value = true;
+  boxRef.value.reload();
 }
 // change attributes of element
 async function changeAttr(changedAttr, options) {
