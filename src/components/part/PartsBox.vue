@@ -133,7 +133,6 @@ const selectedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  console.log("moveToCat", selectedParts.value, cat);
   const data = {
     type: "research",
     oper: "update_parts",
@@ -161,7 +160,6 @@ const checkState = computed(function () {
   return "partial";
 });
 watch(checkState, function (newVal) {
-  console.log("checkbox selected list changed",newVal);
   if (newVal == 'all') {
     checkAllRef.value = true;
     checkPartial.value = false;
