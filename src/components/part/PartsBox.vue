@@ -117,8 +117,13 @@ function changeSort(newField) {
 }
 
 function updateData(data) {
-  if (data.action == "moveSelectedToCat") {
-    moveSelectedToCat(data.newCat);
+  switch (data.action) {
+    case "moveSelectedToCat":
+      moveSelectedToCat(data.newCat);
+      break;
+    case "duplicate":
+      duplicateSelected();
+      break;
   }
 }
 
@@ -147,6 +152,19 @@ async function moveSelectedToCat(cat) {
   loadResearchParts();
 }
 
+async function duplicateSelected() {
+  const data = {
+    type: "research",
+    oper: "duplicate",
+    id: researchId,
+    prop: {
+      partList: selectedParts.value,
+    },
+  };
+
+  const obj = await sendToServer(data);
+}
+
 const checkAllRef = ref(false);
 const checkPartial = ref(false);
 const checkState = computed(function () {
@@ -160,11 +178,11 @@ const checkState = computed(function () {
   return "partial";
 });
 watch(checkState, function (newVal) {
-  if (newVal == 'all') {
+  if (newVal == "all") {
     checkAllRef.value = true;
     checkPartial.value = false;
   } else {
-    if (newVal == 'none') {
+    if (newVal == "none") {
       checkAllRef.value = false;
       checkPartial.value = false;
     } else {
