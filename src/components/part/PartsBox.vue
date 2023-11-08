@@ -152,6 +152,7 @@ async function moveSelectedToCat(cat) {
   loadResearchParts();
 }
 
+const createElement = inject('createElement');
 async function duplicateSelected() {
   const data = {
     type: "research",
@@ -163,7 +164,12 @@ async function duplicateSelected() {
   };
 
   const obj = await sendToServer(data);
+  createElement({
+    type: 'parts',
+    res: obj.data.new_res_id,
+  });
 }
+
 
 const checkAllRef = ref(false);
 const checkPartial = ref(false);

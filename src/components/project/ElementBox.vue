@@ -58,12 +58,12 @@ import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-const props = defineProps(["element"]);
+const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
 
 const elementAttr = ref(props.element.attr);
-provide('elementAttr',elementAttr);
+provide("elementAttr", elementAttr);
 
 const boxRef = ref();
 
@@ -109,7 +109,7 @@ function submitName(newName) {
 
 // display menu
 const displayOptions = ref(false);
-provide('displayOptions',displayOptions);
+provide("displayOptions", displayOptions);
 
 function toggleMenu() {
   displayOptions.value = !displayOptions.value;
@@ -196,6 +196,9 @@ function createElementFromElement(attr) {
     options.openingElement = props.element;
   } else {
     newAttr.opening_element = props.element.id;
+    newAttr.name = "";
+    newAttr.position = props.nextPos;
+    console.log(props.nextPos);
   }
   createElement(newAttr, options);
 }
@@ -253,7 +256,7 @@ async function unlinkElement(link) {
   const obj = await sendToServer(data);
 }
 
-function updateData(data){
+function updateData(data) {
   boxRef.value.updateData(data);
 }
 </script>
