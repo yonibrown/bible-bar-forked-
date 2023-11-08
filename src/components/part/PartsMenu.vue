@@ -27,34 +27,34 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from "vue";
+// import { ref, computed, inject } from "vue";
 
-const emit = defineEmits(["updateData"]);
+// const emit = defineEmits(["updateData"]);
 
-const elementAttr = inject("elementAttr");
-const getResearch = inject("getResearch");
+// const elementAttr = inject("elementAttr");
+// const getResearch = inject("getResearch");
 
-const action = ref("choose");
-const displayChangeCat = computed(function () {
-  return action.value == "changeCat";
-});
-const displaySubmit = computed(function () {
-  return action.value != "choose";
-});
+// const action = ref("choose");
+// const displayChangeCat = computed(function () {
+//   return action.value == "changeCat";
+// });
+// const displaySubmit = computed(function () {
+//   return action.value != "choose";
+// });
 
-const research = getResearch(elementAttr.value.res);
+// const research = getResearch(elementAttr.value.res);
 
-const moveToCat = ref(0);
-const hasChanges = computed(function () {
-  return moveToCat.value != 0;
-});
+// const moveToCat = ref(0);
+// const hasChanges = computed(function () {
+//   return moveToCat.value != 0;
+// });
 
-function submitChanges() {
-  emit("updateData", {
-    action: "moveSelectedToCat",
-    newCat: moveToCat.value,
-  });
-}
+// function submitChanges() {
+//   emit("updateData", {
+//     action: "moveSelectedToCat",
+//     newCat: moveToCat.value,
+//   });
+// }
 </script>
 
 <style scoped>

@@ -1,6 +1,10 @@
 <template>
-  <!-- <h3>Parts</h3> -->
-  <div>
+  <parts-menu
+    v-if="displayOptions"
+    :elementAttr="elementAttr"
+    @updateData="updateData"
+  ></parts-menu>
+  <div class="parts">
     <table>
       <tr class="resprt-header">
         <td v-show="displayOptions"></td>
@@ -38,6 +42,7 @@
 
 <script setup>
 import { sendToServer } from "../../server.js";
+import PartsMenu from "../part/PartsMenu.vue";
 import PartsLine from "./PartsLine.vue";
 
 import { reactive, computed, ref, inject, watch } from "vue";
@@ -160,11 +165,11 @@ const checkState = computed(function () {
   return "partial";
 });
 watch(checkState, function (newVal) {
-  if (newVal == 'all') {
+  if (newVal == "all") {
     checkAllRef.value = true;
     checkPartial.value = false;
   } else {
-    if (newVal == 'none') {
+    if (newVal == "none") {
       checkAllRef.value = false;
       checkPartial.value = false;
     } else {
@@ -198,7 +203,7 @@ table {
   /* max-width: 85%; */
 }
 
-div {
+.parts {
   border: 1px solid #9aaab9;
   /* max-width: fit-content; */
   /* max-height: inherit; */

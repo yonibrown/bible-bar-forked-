@@ -24,11 +24,11 @@
         :displayScale="displayScale"
         :enableWholeText="enableWholeText"
       ></sequence-menu>
-      <parts-menu
+      <!-- <parts-menu
         v-if="displayPartsMenu"
         :elementAttr="elementAttr"
         @updateData="updateData"
-      ></parts-menu>
+      ></parts-menu> -->
       <base-droppable
         :drop="addToLinks"
         :dragStruct="['linkId']"
