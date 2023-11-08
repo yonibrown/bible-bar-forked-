@@ -22,16 +22,25 @@
         v-for="prt in parts"
         :prt="prt"
         :key="prt.id"
+        :checkAll="checkAllRef"
       ></parts-line>
     </table>
   </div>
+  <span v-show="displayOptions">
+    <span>בחר הכל:</span>
+    <input
+      type="checkbox"
+      v-model="checkAllRef"
+      :indeterminate="checkPartial"
+    />
+  </span>
 </template>
 
 <script setup>
 import { sendToServer } from "../../server.js";
 import PartsLine from "./PartsLine.vue";
 
-import { reactive, computed, ref, inject } from "vue";
+import { reactive, computed, ref, inject, watch } from "vue";
 
 const displayOptions = inject("displayOptions");
 const props = defineProps(["elementAttr"]);
@@ -107,24 +116,70 @@ function changeSort(newField) {
   });
 }
 
-function updateData(data){
-  if (data.action == 'moveSelectedToCat'){
+function updateData(data) {
+  if (data.action == "moveSelectedToCat") {
     moveSelectedToCat(data.newCat);
   }
 }
 
-const selectedParts = computed(function(){
-  return linesRef.value.filter(function(part){
-    return part.checked;
-  }).map(function(part){
-    return part.id;
-  });
+const selectedParts = computed(function () {
+  return linesRef.value
+    .filter(function (part) {
+      return part.checked;
+    })
+    .map(function (part) {
+      return part.id;
+    });
 });
 
-function moveSelectedToCat(cat){
-  console.log('moveToCat',selectedParts.value,cat);
+async function moveSelectedToCat(cat) {
+  console.log("moveToCat", selectedParts.value, cat);
+  const data = {
+    type: "research",
+    oper: "update_parts",
+    id: researchId,
+    prop: {
+      partList: selectedParts.value,
+      updAttr: { collection_id: cat },
+    },
+  };
+
+  const obj = await sendToServer(data);
+  loadResearchParts();
 }
-defineExpose({updateData});
+
+const checkAllRef = ref(false);
+const checkPartial = ref(false);
+// const checkState = ref('none');
+watch(checkAllRef, function (newVal) {
+  console.log("checkbox checkAll changed");
+  console.log("checkbox checkAll", checkAllRef.value);
+  console.log("checkbox checkPartial", checkPartial.value);
+});
+watch(checkPartial, function (newVal) {
+  console.log("checkbox checkPartial changed");
+  console.log("checkbox checkAll", checkAllRef.value);
+  console.log("checkbox checkPartial", checkPartial.value);
+});
+watch(selectedParts, function (newVal) {
+  console.log('checkbox selected list changed');
+  if (newVal.length == linesRef.value.length) {
+    checkAllRef.value = true;
+    checkPartial.value = false;
+  } else {
+    checkAllRef.value = false;
+    if (newVal.length == 0) {
+      checkPartial.value = false;
+    } else {
+      checkPartial.value = true;
+    }
+  }
+});
+// function changeCheckState(newVal){
+//   checkState.value = newVal;
+// }
+
+defineExpose({ updateData });
 </script>
 
 <style scoped>

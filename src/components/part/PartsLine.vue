@@ -11,8 +11,8 @@
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
-const props = defineProps(["prt"]);
+import { ref, inject,computed,watch } from "vue";
+const props = defineProps(["prt","checkAll"]);
 
 const displayOptions = inject("displayOptions");
 
@@ -21,6 +21,18 @@ defineExpose({
   id: props.prt.id,
   checked,
 });
+
+const checkAll = computed(function(){
+  return props.checkAll;
+});
+watch(checkAll,function(newVal){
+    checked.value = newVal;
+});
+// watch(checked,function(newVal){
+//   if(!newVal && checkAll){
+//     props.changeCheckAll(false);
+//   }
+// });
 </script>
 
 <style scoped>
