@@ -24,6 +24,11 @@
         :displayScale="displayScale"
         :enableWholeText="enableWholeText"
       ></sequence-menu>
+      <parts-menu
+        v-if="displayPartsMenu"
+        :elementAttr="elementAttr"
+        @updateData="updateData"
+      ></parts-menu>
       <base-droppable
         :drop="addToLinks"
         :dragStruct="['linkId']"
@@ -39,12 +44,14 @@
     <component
       :is="element.type + '-box'"
       :elementAttr="elementAttr"
+      ref="boxRef"
     ></component>
   </base-card>
 </template>
 
 <script setup>
 import SequenceMenu from "../sequence/SequenceMenu.vue";
+import PartsMenu from "../part/PartsMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
@@ -56,6 +63,9 @@ const emit = defineEmits(["closeElement"]);
 const getLink = inject("getLink");
 
 const elementAttr = ref(props.element.attr);
+provide('elementAttr',elementAttr);
+
+const boxRef = ref();
 
 const projectId = inject("projectId");
 const elementId = computed(function () {
@@ -99,6 +109,8 @@ function submitName(newName) {
 
 // display menu
 const displayOptions = ref(false);
+provide('displayOptions',displayOptions);
+
 function toggleMenu() {
   displayOptions.value = !displayOptions.value;
 }
@@ -108,6 +120,9 @@ const displayOptionsButton = computed(function () {
 });
 const displaySequenceMenu = computed(function () {
   return props.element.type == "bar" || props.element.type == "text";
+});
+const displayPartsMenu = computed(function () {
+  return props.element.type == "parts";
 });
 const displayScale = computed(function () {
   return props.element.type == "bar";
@@ -138,15 +153,6 @@ function closeElement() {
   emit("closeElement");
 }
 
-// reload element
-const hasToReload = ref(false);
-provide("hasToReload", hasToReload);
-
-function reloaded() {
-  hasToReload.value = false;
-}
-provide("reloaded", reloaded);
-
 async function reloadElement() {
   const data = {
     type: "element",
@@ -157,7 +163,7 @@ async function reloadElement() {
 
   const obj = await sendToServer(data);
   elementAttr.value = obj.data.attr;
-  hasToReload.value = true;
+  boxRef.value.reload();
 }
 // change attributes of element
 async function changeAttr(changedAttr, options) {
@@ -245,6 +251,10 @@ async function unlinkElement(link) {
     prop: { elm: props.element.id },
   };
   const obj = await sendToServer(data);
+}
+
+function updateData(data){
+  boxRef.value.updateData(data);
 }
 </script>
 

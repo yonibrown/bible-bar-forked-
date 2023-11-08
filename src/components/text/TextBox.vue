@@ -12,21 +12,12 @@
 
 <script setup>
 import TextVerse from "./TextVerse.vue";
-import { inject, ref, watch } from "vue";
+import { inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
 const elementId = inject("elementId");
-const hasToReload = inject("hasToReload");
-const reloaded = inject("reloaded");
 
 const verses = ref([]);
-
-watch(hasToReload, function (newVal) {
-  if (newVal) {
-    loadElmText();
-    reloaded();
-  }
-});
 
 loadElmText();
 
@@ -41,4 +32,6 @@ async function loadElmText() {
   const obj = await sendToServer(data);
   verses.value = obj.data.part_list;
 }
+
+defineExpose({ reload: loadElmText });
 </script>

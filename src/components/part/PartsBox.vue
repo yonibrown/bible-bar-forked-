@@ -3,6 +3,7 @@
   <div>
     <table>
       <tr class="resprt-header">
+        <td v-show="displayOptions"></td>
         <td :class="categoryClass" @dblclick="changeSort('col')">
           קטגוריה
           <i v-show="categoryAscending" class="fa fa-arrow-up"></i>
@@ -16,6 +17,7 @@
         <td>טקסט</td>
       </tr>
       <parts-line
+        ref="linesRef"
         class="resprt-part"
         v-for="prt in parts"
         :prt="prt"
@@ -29,19 +31,21 @@
 import { sendToServer } from "../../server.js";
 import PartsLine from "./PartsLine.vue";
 
-import { reactive, computed, ref ,inject} from "vue";
+import { reactive, computed, ref, inject } from "vue";
 
+const displayOptions = inject("displayOptions");
 const props = defineProps(["elementAttr"]);
 
 const changeAttr = inject("changeAttr");
 
 const parts = ref([]);
+const linesRef = ref([]);
 
 const researchId = { res: props.elementAttr.res };
 
-const sort = reactive({
-  field: props.elementAttr.sort, // src/sol/pos
-  ascending: props.elementAttr.ordering=='ASC',
+const attr = reactive({
+  sort: props.elementAttr.sort, // src/sol/pos
+  ordering: props.elementAttr.ordering,
 });
 
 loadResearchParts();
@@ -51,9 +55,9 @@ async function loadResearchParts() {
     type: "research",
     oper: "get_prt_list",
     id: researchId,
-    prop: { 
-      sort:sort.field,
-      ordering: sort.ascending?'ASC':'DESC'
+    prop: {
+      sort: attr.sort,
+      ordering: attr.ordering,
     },
   };
 
@@ -62,46 +66,65 @@ async function loadResearchParts() {
 }
 
 const verseClass = computed(function () {
-  return sort.field == "src" ? "sortingField" : "";
+  return attr.sort == "src" ? "sortingField" : "";
 });
 const categoryClass = computed(function () {
-  return sort.field == "col" ? "sortingField" : "";
+  return attr.sort == "col" ? "sortingField" : "";
 });
 const verseAscending = computed(function () {
-  return (sort.field == "src") & sort.ascending;
+  return (attr.sort == "src") & (attr.ordering == "ASC");
 });
 const verseDescending = computed(function () {
-  return (sort.field == "src") & !sort.ascending;
+  return (attr.sort == "src") & (attr.ordering == "DESC");
 });
 const categoryAscending = computed(function () {
-  return (sort.field == "col") & sort.ascending;
+  return (attr.sort == "col") & (attr.ordering == "ASC");
 });
 const categoryDescending = computed(function () {
-  return (sort.field == "col") & !sort.ascending;
+  return (attr.sort == "col") & (attr.ordering == "DESC");
 });
 function changeSort(newField) {
-  if (sort.field == newField) {
-    sort.ascending = !sort.ascending;
+  if (attr.sort == newField) {
+    attr.ordering = attr.ordering == "ASC" ? "DESC" : "ASC";
     parts.value.reverse();
   } else {
-    sort.ascending = true;
-    if (sort.field == "src") {
-      sort.field = "col";
+    attr.ordering = "ASC";
+    if (attr.sort == "src") {
+      attr.sort = "col";
       parts.value.sort(function (a, b) {
         return a.col_sort_key > b.col_sort_key ? 1 : -1;
       });
     } else {
-      sort.field = "src";
+      attr.sort = "src";
       parts.value.sort(function (a, b) {
         return a.src_sort_key > b.src_sort_key ? 1 : -1;
       });
     }
   }
   changeAttr({
-    sort: 'src',
-    ordering: 'ASC'
+    sort: attr.sort,
+    ordering: attr.ordering,
   });
 }
+
+function updateData(data){
+  if (data.action == 'moveSelectedToCat'){
+    moveSelectedToCat(data.newCat);
+  }
+}
+
+const selectedParts = computed(function(){
+  return linesRef.value.filter(function(part){
+    return part.checked;
+  }).map(function(part){
+    return part.id;
+  });
+});
+
+function moveSelectedToCat(cat){
+  console.log('moveToCat',selectedParts.value,cat);
+}
+defineExpose({updateData});
 </script>
 
 <style scoped>

@@ -13,31 +13,19 @@
           </span>
         </div>
       </base-card>
-      <base-draggable
-        v-for="(elm, dispElmIdx) in dispElements"
-        :key="elm.id"
-        :data="dragData(dispElmIdx)"
-      >
-        <base-droppable
-          :data="dispElmIdx"
-          :drop="moveElement"
-          :dragStruct="['dispElmIdx']"
-        >
-          <element-box
-            :element="elm"
-            @closeElement="closeElement(elm)"
-          ></element-box>
-        </base-droppable>
-      </base-draggable>
+      <element-list :elements="elements" ref="listRef"
+      ></element-list>
     </section>
   </div>
 </template>
 
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
-import ElementBox from "./ElementBox.vue";
+import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref, onUpdated } from "vue";
+import { reactive, provide, computed, ref } from "vue";
+import { useLinks } from "./links.js";
+import { useResearches } from "./researches.js";
 
 const project = reactive({
   id: 1,
@@ -52,21 +40,13 @@ const projectId = computed(function () {
 });
 provide("projectId", projectId);
 
-// elements
-const elements = ref([]);
-const dispElements = computed(function () {
-  return elements.value
-    .filter(function (a) {
-      return +a.position >= 0;
-    })
-    .sort(function (a, b) {
-      return a.position - b.position;
-    });
-});
+const listRef = ref();
 
-//links
-const links = ref([]);
-provide("links", links);
+const elements = ref([]);
+
+
+const links = useLinks();
+const researches = useResearches();
 
 loadProject();
 
@@ -85,6 +65,7 @@ async function loadProject() {
   };
   elements.value = obj.data.elements;
   links.value = obj.data.links;
+  researches.value = obj.data.researches;
 }
 
 // add a new element or reload an element
@@ -111,109 +92,10 @@ async function createElement(attr, options) {
 }
 provide("createElement", createElement);
 
-var tempElementId = -1;
-function openNewElement() {
-  elements.value.push({
-    id: tempElementId--,
-    position: elementPrevPos(0),
-    type: "new",
-    name: "new element",
-  });
-}
-
-// drag and drop elements
-function dragData(dispElmIdx) {
-  const data = { dispElmIdx };
-  const elm = dispElements.value[dispElmIdx];
-  if (elm.type == "link") {
-    data.linkId = elm.attr.link_id;
-  }
-  return data;
-}
-
-function moveElement(dragData, dropIdx) {
-  const dragIdx = +dragData.dispElmIdx;
-
-  // nothing to move
-  if (dropIdx == dragIdx) {
-    return;
-  }
-
-  const dragElm = dispElements.value[dragIdx];
-  const dropElm = dispElements.value[dropIdx];
-  const dragElmPos = +dragElm.position;
-  const dropElmPos = +dropElm.position;
-
-  if (Math.abs(dropIdx - dragIdx) == 1) {
-    // switch following items
-    dragElm.position = dropElmPos;
-    dropElm.position = dragElmPos;
-  } else {
-    dragElm.position = elementPrevPos(dropIdx);
-  }
-  saveElmList();
-}
-
-const positionVersion = ref(0);
-provide("positionVersion", positionVersion);
-onUpdated(function () {
-  positionVersion.value++;
-});
-
-function elementPrevPos(elmIdx) {
-  const elm = dispElements.value[elmIdx];
-  const elmPos = +elm.position;
-  var prevElmPos = 0;
-  if (elmIdx > 0) {
-    prevElmPos = +dispElements.value[elmIdx - 1].position;
-  }
-  return (elmPos - prevElmPos) / 2 + prevElmPos;
-}
-
-async function saveElmList() {
-  const elmList = dispElements.value.map(function (elm, idx) {
-    return {
-      id: elm.id,
-      position: idx + 1,
-    };
-  });
-
-  const data = {
-    type: "project",
-    oper: "save_elements",
-    id: projectId.value,
-    prop: {
-      elements: elmList,
-    },
-  };
-  const obj = await sendToServer(data);
-}
-
-function closeElement(elm) {
-  elm.position = -1;
-  saveElmList();
-}
-
 // link methods
-function getLink(linkId) {
-  const link = links.value.find((pLink) => {
-    return pLink.id == linkId;
-  });
-  return link;
+function openNewElement(){
+  listRef.value.openNewElement();
 }
-provide("getLink", getLink);
-
-function getCategory(linkId, col) {
-  const link = getLink(linkId);
-  if (link == null) {
-    return null;
-  }
-  const cat = link.categories.find((pCat) => {
-    return pCat.col == col;
-  });
-  return cat;
-}
-provide("getCategory", getCategory);
 </script>
 
 <style scoped>

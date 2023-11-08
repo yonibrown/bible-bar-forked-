@@ -125,7 +125,6 @@ const initialFromKey = ref(props.elementAttr.from_key);
 const initialToKey = ref(props.elementAttr.to_key);
 const initialScaleLevel = ref(props.elementAttr.seq_level);
 function removeFilter() {
-  console.log('remove filter');
   initialFromKey.value = null;
   initialToKey.value = null;
   initialScaleLevel.value = null;
