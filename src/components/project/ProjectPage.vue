@@ -64,6 +64,7 @@ async function loadProject() {
   elements.value = obj.data.elements;
   links.value = obj.data.links;
   researches.value = obj.data.researches;
+      console.log(elements.value);
 }
 
 // add a new element or reload an element
@@ -87,7 +88,8 @@ async function createElement(attr, options) {
       elm.attr = obj.data.attr;
     } else {
       // elements = elements.concat([data]);
-      elements.value.push(data);
+      elements.value.push(obj.data);
+      console.log(elements.value);
     }
   }
 }
