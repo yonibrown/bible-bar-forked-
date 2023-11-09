@@ -23,7 +23,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref } from "vue";
+import { reactive, provide, computed, ref ,watch} from "vue";
 import { useLinks } from "./links.js";
 import { useResearches } from "./researches.js";
 
@@ -44,7 +44,6 @@ const listRef = ref();
 
 const elements = ref([]);
 
-
 const links = useLinks();
 const researches = useResearches();
 
@@ -58,7 +57,6 @@ async function loadProject() {
     prop: { dummy: "" },
   };
   const obj = await sendToServer(data);
-
   project.attr = {
     name: obj.data.name,
     desc: obj.data.desc,
@@ -87,6 +85,9 @@ async function createElement(attr, options) {
       elm.type = attr.type;
       elm.id = obj.data.id;
       elm.attr = obj.data.attr;
+    } else {
+      // elements = elements.concat([data]);
+      elements.value.push(data);
     }
   }
 }

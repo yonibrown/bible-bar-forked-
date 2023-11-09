@@ -28,11 +28,6 @@ const checkAll = computed(function(){
 watch(checkAll,function(newVal){
     checked.value = newVal;
 });
-// watch(checked,function(newVal){
-//   if(!newVal && checkAll){
-//     props.changeCheckAll(false);
-//   }
-// });
 </script>
 
 <style scoped>

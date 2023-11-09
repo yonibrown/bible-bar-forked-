@@ -4,6 +4,8 @@
     <select v-model="action">
       <option value="choose">בחר...</option>
       <option value="changeCat">העבר לקטגוריה</option>
+      <option value="duplicate">העתק לרשימה חדשה</option>
+      <option value="remove">מחק מהרשימה</option>
     </select>
     <span v-if="displayChangeCat">
       <span>קטגוריה:</span>
@@ -13,13 +15,14 @@
           {{ col.name }}
         </option>
       </select>
-      <input
-        type="submit"
-        value="החל"
-        @click="submitChanges"
-        :disabled="!hasChanges"
-      />
     </span>
+    <input
+      v-if="displaySubmit"
+      type="submit"
+      value="החל"
+      @click="submitChanges"
+      :disabled="!hasChanges"
+    />
   </base-menu>
 </template>
 
@@ -35,18 +38,35 @@ const action = ref("choose");
 const displayChangeCat = computed(function () {
   return action.value == "changeCat";
 });
+const displaySubmit = computed(function () {
+  return action.value != "choose";
+});
 
 const research = getResearch(elementAttr.value.res);
 
 const moveToCat = ref(0);
 const hasChanges = computed(function () {
-  return moveToCat.value != 0;
+  if (action.value == "changeCat"){
+    return moveToCat.value != 0;
+  }
+  return action.value != "choose";
 });
 
 function submitChanges() {
+  let act, prop;
+  switch (action.value) {
+    case "changeCat":
+      act = "moveSelectedToCat";
+      prop = moveToCat.value;
+      break;
+    case "duplicate":
+      act = "duplicate";
+      prop = { dummy: "" };
+      break;
+  }
   emit("updateData", {
-    action: "moveSelectedToCat",
-    newCat: moveToCat.value,
+    action: act,
+    newCat: prop,
   });
 }
 </script>

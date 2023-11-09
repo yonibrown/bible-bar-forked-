@@ -117,8 +117,13 @@ function changeSort(newField) {
 }
 
 function updateData(data) {
-  if (data.action == "moveSelectedToCat") {
-    moveSelectedToCat(data.newCat);
+  switch (data.action) {
+    case "moveSelectedToCat":
+      moveSelectedToCat(data.newCat);
+      break;
+    case "duplicate":
+      duplicateSelected();
+      break;
   }
 }
 
@@ -133,7 +138,6 @@ const selectedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  console.log("moveToCat", selectedParts.value, cat);
   const data = {
     type: "research",
     oper: "update_parts",
@@ -148,36 +152,50 @@ async function moveSelectedToCat(cat) {
   loadResearchParts();
 }
 
+const createElement = inject('createElement');
+async function duplicateSelected() {
+  const data = {
+    type: "research",
+    oper: "duplicate",
+    id: researchId,
+    prop: {
+      partList: selectedParts.value,
+    },
+  };
+
+  const obj = await sendToServer(data);
+  createElement({
+    type: 'parts',
+    res: obj.data.new_res_id,
+  });
+}
+
+
 const checkAllRef = ref(false);
 const checkPartial = ref(false);
-// const checkState = ref('none');
-watch(checkAllRef, function (newVal) {
-  console.log("checkbox checkAll changed");
-  console.log("checkbox checkAll", checkAllRef.value);
-  console.log("checkbox checkPartial", checkPartial.value);
+const checkState = computed(function () {
+  const len = selectedParts.value.length;
+  if (len == 0) {
+    return "none";
+  }
+  if (len == linesRef.value.length) {
+    return "all";
+  }
+  return "partial";
 });
-watch(checkPartial, function (newVal) {
-  console.log("checkbox checkPartial changed");
-  console.log("checkbox checkAll", checkAllRef.value);
-  console.log("checkbox checkPartial", checkPartial.value);
-});
-watch(selectedParts, function (newVal) {
-  console.log('checkbox selected list changed');
-  if (newVal.length == linesRef.value.length) {
+watch(checkState, function (newVal) {
+  if (newVal == "all") {
     checkAllRef.value = true;
     checkPartial.value = false;
   } else {
-    checkAllRef.value = false;
-    if (newVal.length == 0) {
+    if (newVal == "none") {
+      checkAllRef.value = false;
       checkPartial.value = false;
     } else {
       checkPartial.value = true;
     }
   }
 });
-// function changeCheckState(newVal){
-//   checkState.value = newVal;
-// }
 
 defineExpose({ updateData });
 </script>

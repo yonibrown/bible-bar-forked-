@@ -7,7 +7,11 @@
     :moveElement="moveElement"
     :dragStruct="['dispElmIdx']"
   >
-    <element-box :element="elm" @closeElement="closeElement(elm)"></element-box>
+    <element-box
+      :element="elm"
+      @closeElement="closeElement(elm)"
+      :nextPos="elementNextPos(dispElmIdx)"
+    ></element-box>
   </sortable-cell>
 </template>
 
@@ -15,7 +19,7 @@
 import ElementBox from "./ElementBox.vue";
 import SortableCell from "../ui/SortableCell.vue";
 import { sendToServer } from "../../server.js";
-import { provide, computed, ref, onUpdated ,inject} from "vue";
+import { provide, computed, ref, onUpdated, inject } from "vue";
 
 const props = defineProps(["elements"]);
 
@@ -79,6 +83,16 @@ function elementPrevPos(elmIdx) {
   return (elmPos - prevElmPos) / 2 + prevElmPos;
 }
 
+function elementNextPos(elmIdx) {
+  const elm = dispElements.value[elmIdx];
+  const elmPos = +elm.position;
+  var nextElmPos = elmPos+2;
+  if (elmIdx < dispElements.value.length-1) {
+    nextElmPos = +dispElements.value[elmIdx + 1].position;
+  }
+  return (nextElmPos - elmPos) / 2 + elmPos;
+}
+
 async function saveElmList() {
   const elmList = dispElements.value.map(function (elm, idx) {
     return {
@@ -112,5 +126,5 @@ function openNewElement() {
     name: "new element",
   });
 }
-defineExpose({openNewElement});
+defineExpose({ openNewElement });
 </script>
