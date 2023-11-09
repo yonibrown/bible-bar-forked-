@@ -11,6 +11,7 @@ const scrollable = ref(null);
 var scrollTop = 0;
 
 function scrollIn(elm) {
+  console.log('scrollIn',elm);
   if (elm != null){
     scrollTop = elm.offsetTop - scrollable.value.offsetTop;
     // elm.classList.add("scrollable-anchor");

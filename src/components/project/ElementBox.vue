@@ -198,7 +198,6 @@ function createElementFromElement(attr) {
     newAttr.opening_element = props.element.id;
     newAttr.name = "";
     newAttr.position = props.nextPos;
-    console.log(props.nextPos);
   }
   createElement(newAttr, options);
 }
