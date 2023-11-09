@@ -190,10 +190,10 @@ const createElement = inject("createElement");
 function createElementFromElement(attr) {
   const newAttr = { ...attr };
   const options = {};
+  options.openingElement = props.element;
   if (props.element.type == "new") {
     newAttr.position = props.element.position;
     newAttr.name = elementName.value;
-    options.openingElement = props.element;
   } else {
     newAttr.opening_element = props.element.id;
     newAttr.name = "";
