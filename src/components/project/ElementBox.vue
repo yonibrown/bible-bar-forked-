@@ -17,13 +17,6 @@
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
-    <div v-show="displayOptions">
-      <links-menu
-        v-if="displayLinksMenu"
-        @addLink="linkElement"
-        @removeLink="unlinkElement"
-      ></links-menu>
-    </div>
     <component
       :is="element.type + '-box'"
       :elementAttr="elementAttr"
@@ -33,8 +26,6 @@
 </template>
 
 <script setup>
-import LinksMenu from "../link/LinksMenu.vue";
-
 import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
@@ -98,9 +89,6 @@ function toggleMenu() {
 
 const displayOptionsButton = computed(function () {
   return props.element.type != "new";
-});
-const displayLinksMenu = computed(function () {
-  return props.element.type != "link";
 });
 
 // close element button
@@ -175,40 +163,6 @@ const linkIds = computed(function () {
   });
 });
 provide("linkIds", linkIds);
-
-async function linkElement(link) {
-  if (!link.elements.includes(props.element.id)) {
-    link.elements.push(props.element.id);
-  }
-
-  const data = {
-    type: "link",
-    oper: "add_elm",
-    id: {
-      proj: projectId.value.proj,
-      link: link.id,
-    },
-    prop: { elm: props.element.id },
-  };
-  const obj = await sendToServer(data);
-}
-
-async function unlinkElement(link) {
-  link.elements = link.elements.filter(function (arrElmId) {
-    return arrElmId != props.element.id;
-  });
-
-  const data = {
-    type: "link",
-    oper: "remove_elm",
-    id: {
-      proj: projectId.value.proj,
-      link: link.id,
-    },
-    prop: { elm: props.element.id },
-  };
-  const obj = await sendToServer(data);
-}
 </script>
 
 <style scoped>

@@ -1,10 +1,13 @@
 <template>
-  <sequence-menu
-    v-show="displayOptions"
-    :elementAttr="elementAttr"
-    :displayScale="false"
-    :enableWholeText="false"
-  ></sequence-menu>
+  <div v-show="displayOptions">
+    <sequence-menu
+      v-show="displayOptions"
+      :elementAttr="elementAttr"
+      :displayScale="false"
+      :enableWholeText="false"
+    ></sequence-menu>
+    <links-menu></links-menu>
+  </div>
   <base-scrollable class="bible-text">
     <div>
       <text-verse
@@ -17,6 +20,7 @@
 </template>
 
 <script setup>
+import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
 import { inject, ref } from "vue";

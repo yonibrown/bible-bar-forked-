@@ -20,9 +20,11 @@
 <script setup>
 import { inject,ref } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
+import { sendToServer } from "../../server.js";
 
-const emit = defineEmits(['addLink','removeLink']);
 const getLink = inject("getLink");
+const projectId = inject("projectId");
+const elementId = inject("elementId");
 
 const links = inject("links");
 const hilightMenu = ref(false);
@@ -37,17 +39,51 @@ function addToLinks(dragData) {
   const linkId = +dragData.linkId;
   if (linkId != 0) {
     const link = getLink(linkId);
-    emit('addLink',link);
+    linkElement(link);
   }
 }
 
 function removeFromLinks(link){
-  emit('removeLink',link);
+  unlinkElement(link);
+}
+
+async function linkElement(link) {
+  if (!link.elements.includes(elementId.value.elm)) {
+    link.elements.push(elementId.value.elm);
+  }
+
+  const data = {
+    type: "link",
+    oper: "add_elm",
+    id: {
+      proj: projectId.value.proj,
+      link: link.id,
+    },
+    prop: { elm: elementId.value.elm },
+  };
+  const obj = await sendToServer(data);
+}
+
+async function unlinkElement(link) {
+  link.elements = link.elements.filter(function (arrElmId) {
+    return arrElmId != elementId.value.elm;
+  });
+
+  const data = {
+    type: "link",
+    oper: "remove_elm",
+    id: {
+      proj: projectId.value.proj,
+      link: link.id,
+    },
+    prop: { elm: elementId.value.elm },
+  };
+  const obj = await sendToServer(data);
 }
 </script>
 
 <style scoped>
-div * {
+.menu * {
   margin-left: 3px;
 }
 </style>

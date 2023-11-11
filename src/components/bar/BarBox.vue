@@ -1,10 +1,13 @@
 <template>
-  <sequence-menu
-    v-show="displayOptions"
-    :elementAttr="elementAttr"
-    :displayScale="true"
-    :enableWholeText="true"
-  ></sequence-menu>
+  <div v-show="displayOptions">
+    <sequence-menu
+      v-show="displayOptions"
+      :elementAttr="elementAttr"
+      :displayScale="true"
+      :enableWholeText="true"
+    ></sequence-menu>
+    <links-menu></links-menu>
+  </div>
   <div class="in_body">
     <div class="bar_header">
       <div class="bar_area">
@@ -36,6 +39,7 @@
 </template>
 
 <script setup>
+import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
