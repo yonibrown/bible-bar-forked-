@@ -18,11 +18,6 @@
       </span>
     </div>
     <div v-show="displayOptions">
-      <parts-menu
-        v-if="displayPartsMenu"
-        :elementAttr="elementAttr"
-        @updateData="updateData"
-      ></parts-menu>
       <base-droppable
         :drop="addToLinks"
         :dragStruct="['linkId']"
@@ -110,9 +105,6 @@ function toggleMenu() {
 
 const displayOptionsButton = computed(function () {
   return props.element.type != "new";
-});
-const displayPartsMenu = computed(function () {
-  return props.element.type == "parts";
 });
 const displayLinksMenu = computed(function () {
   return props.element.type != "link";
@@ -237,10 +229,6 @@ async function unlinkElement(link) {
     prop: { elm: props.element.id },
   };
   const obj = await sendToServer(data);
-}
-
-function updateData(data) {
-  boxRef.value.updateData(data);
 }
 </script>
 
