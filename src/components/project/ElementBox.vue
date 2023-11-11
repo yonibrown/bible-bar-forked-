@@ -18,17 +18,11 @@
       </span>
     </div>
     <div v-show="displayOptions">
-      <base-droppable
-        :drop="addToLinks"
-        :dragStruct="['linkId']"
-        :dragEnter="enterLinksMenu"
-        :dragLeave="leaveLinksMenu"
-        ><links-menu
-          v-if="displayLinksMenu"
-          @removeLink="unlinkElement"
-          :hilightMenu="hilightLinksMenu"
-        ></links-menu>
-      </base-droppable>
+      <links-menu
+        v-if="displayLinksMenu"
+        @addLink="linkElement"
+        @removeLink="unlinkElement"
+      ></links-menu>
     </div>
     <component
       :is="element.type + '-box'"
@@ -39,7 +33,6 @@
 </template>
 
 <script setup>
-import PartsMenu from "../part/PartsMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
 import MenuButton from "../ui/MenuButton.vue";
@@ -109,20 +102,6 @@ const displayOptionsButton = computed(function () {
 const displayLinksMenu = computed(function () {
   return props.element.type != "link";
 });
-const hilightLinksMenu = ref(false);
-function enterLinksMenu() {
-  hilightLinksMenu.value = true;
-}
-function leaveLinksMenu() {
-  hilightLinksMenu.value = false;
-}
-function addToLinks(dragData) {
-  const linkId = +dragData.linkId;
-  if (linkId != 0) {
-    const link = getLink(linkId);
-    linkElement(link);
-  }
-}
 
 // close element button
 function closeElement() {

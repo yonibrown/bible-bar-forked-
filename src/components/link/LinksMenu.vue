@@ -1,22 +1,49 @@
 <template>
-  <base-menu :hilightMenu="hilightMenu">
-    <span>הדגשות:</span>
-    <links-menu-obj
-      v-for="link in links"
-      :key="link.id"
-      :link="link"
-      @removeLink="$emit('removeLink',link)"
-    ></links-menu-obj>
-  </base-menu>
+  <base-droppable
+    :drop="addToLinks"
+    :dragStruct="['linkId']"
+    :dragEnter="enterLinksMenu"
+    :dragLeave="leaveLinksMenu"
+  >
+    <base-menu :hilightMenu="hilightMenu">
+      <span>הדגשות:</span>
+      <links-menu-obj
+        v-for="link in links"
+        :key="link.id"
+        :link="link"
+        @removeLink="removeFromLinks(link)"
+      ></links-menu-obj>
+    </base-menu>
+  </base-droppable>
 </template>
 
 <script setup>
-import { inject } from "vue";
+import { inject,ref } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
 
-const props = defineProps(['hilightMenu']);
+const emit = defineEmits(['addLink','removeLink']);
+const getLink = inject("getLink");
 
 const links = inject("links");
+const hilightMenu = ref(false);
+
+function enterLinksMenu() {
+  hilightMenu.value = true;
+}
+function leaveLinksMenu() {
+  hilightMenu.value = false;
+}
+function addToLinks(dragData) {
+  const linkId = +dragData.linkId;
+  if (linkId != 0) {
+    const link = getLink(linkId);
+    emit('addLink',link);
+  }
+}
+
+function removeFromLinks(link){
+  emit('removeLink',link);
+}
 </script>
 
 <style scoped>
