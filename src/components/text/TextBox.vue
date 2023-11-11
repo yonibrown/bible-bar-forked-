@@ -7,6 +7,7 @@
       :enableWholeText="false"
     ></sequence-menu>
     <links-menu></links-menu>
+    <text-menu></text-menu>
   </div>
   <base-scrollable class="bible-text">
     <div>
@@ -20,6 +21,7 @@
 </template>
 
 <script setup>
+import TextMenu from "./TextMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
