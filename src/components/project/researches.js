@@ -24,25 +24,5 @@ export function useResearches() {
   }
   provide("getCollection", getCollection);
 
-  const collections = computed(function () {
-    const arr = [];
-    researches.value.forEach(function (res) {
-      arr.push({
-        resId: res.id,
-        id: 0,
-        name: res.name,
-      });
-      res.collections.forEach(function (col) {
-        arr.push({
-          resId: res.id,
-          id: col.id,
-          name: col.name,
-        });
-      });
-    });
-    return arr;
-  });
-  provide("collections", collections);
-
   return researches;
 }

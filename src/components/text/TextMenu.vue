@@ -9,11 +9,11 @@
       <span>קטגוריה:</span>
       <select v-model="moveToCat">
         <option value="0">בחר...</option>
-        <text-col-option
-          v-for="(col, idx) in collections"
-          :col="col"
-          :key="idx"
-        ></text-col-option>
+        <optgroup v-for="res in researches" :label="res.name">
+          <option :value="col.id" v-for="col in res.collections">
+            {{ col.name }}
+          </option>
+        </optgroup>
       </select>
     </span>
     <input
@@ -28,12 +28,10 @@
 
 <script setup>
 import { ref, computed, inject } from "vue";
-import TextColOption from "./TextColOption.vue";
 
 const emit = defineEmits(["updateData"]);
 
-const collections = inject("collections");
-console.log(collections);
+const researches = inject("researches");
 
 const action = ref("choose");
 const displayChangeCat = computed(function () {
