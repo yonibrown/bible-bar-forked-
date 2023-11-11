@@ -1,5 +1,10 @@
 <template>
-  <!-- <h3>Bar</h3> -->
+  <sequence-menu
+    v-show="displayOptions"
+    :elementAttr="elementAttr"
+    :displayScale="true"
+    :enableWholeText="true"
+  ></sequence-menu>
   <div class="in_body">
     <div class="bar_header">
       <div class="bar_area">
@@ -31,13 +36,15 @@
 </template>
 
 <script setup>
+import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
 import { sendToServer } from "../../server.js";
-
 import { inject, ref } from "vue";
 
+const props = defineProps(["elementAttr"]);
+const displayOptions = inject("displayOptions");
 const elementId = inject("elementId");
 const links = inject("links");
 

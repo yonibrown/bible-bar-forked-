@@ -18,12 +18,6 @@
       </span>
     </div>
     <div v-show="displayOptions">
-      <sequence-menu
-        v-if="displaySequenceMenu"
-        :elementAttr="elementAttr"
-        :displayScale="displayScale"
-        :enableWholeText="enableWholeText"
-      ></sequence-menu>
       <parts-menu
         v-if="displayPartsMenu"
         :elementAttr="elementAttr"
@@ -50,7 +44,6 @@
 </template>
 
 <script setup>
-import SequenceMenu from "../sequence/SequenceMenu.vue";
 import PartsMenu from "../part/PartsMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 
@@ -118,17 +111,8 @@ function toggleMenu() {
 const displayOptionsButton = computed(function () {
   return props.element.type != "new";
 });
-const displaySequenceMenu = computed(function () {
-  return props.element.type == "bar" || props.element.type == "text";
-});
 const displayPartsMenu = computed(function () {
   return props.element.type == "parts";
-});
-const displayScale = computed(function () {
-  return props.element.type == "bar";
-});
-const enableWholeText = computed(function () {
-  return props.element.type == "bar";
 });
 const displayLinksMenu = computed(function () {
   return props.element.type != "link";
