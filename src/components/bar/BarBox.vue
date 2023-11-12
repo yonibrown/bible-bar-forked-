@@ -6,7 +6,7 @@
       :displayScale="true"
       :enableWholeText="true"
     ></sequence-menu>
-    <links-menu></links-menu>
+    <links-menu title="הדגשות"></links-menu>
   </div>
   <div class="in_body">
     <div class="bar_header">

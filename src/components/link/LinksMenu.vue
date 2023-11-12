@@ -6,7 +6,7 @@
     :dragLeave="leaveLinksMenu"
   >
     <base-menu :hilightMenu="hilightMenu">
-      <span>הדגשות:</span>
+      <span>{{title}}:</span>
       <links-menu-obj
         v-for="link in links"
         :key="link.id"
@@ -21,6 +21,8 @@
 import { inject,ref } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
 import { sendToServer } from "../../server.js";
+
+const props = defineProps(['title']);
 
 const getLink = inject("getLink");
 const projectId = inject("projectId");
