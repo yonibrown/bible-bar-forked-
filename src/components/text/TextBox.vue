@@ -6,7 +6,7 @@
       :displayScale="false"
       :enableWholeText="false"
     ></sequence-menu>
-    <links-menu></links-menu>
+    <links-menu title="הדגשות"></links-menu>
     <text-menu></text-menu>
   </div>
   <base-scrollable class="bible-text">

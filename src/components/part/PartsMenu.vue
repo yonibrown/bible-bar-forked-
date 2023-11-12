@@ -10,11 +10,22 @@
     <span v-if="displayChangeCat">
       <span>קטגוריה:</span>
       <select v-model="moveToCat">
-        <option value="0">בחר...</option>
+        <option value="choose">בחר...</option>
+        <option value="new">קטגוריה חדשה</option>
+        <option disabled value="">---------</option>
         <option v-for="col in research.collections" :value="col.id">
           {{ col.name }}
         </option>
       </select>
+      <span v-if="displayNewCat">
+        <span>שם:</span>
+        <input
+          type="text"
+          id="newName"
+          :name="category"
+          v-model.trim="newCategory"
+        />
+      </span>
     </span>
     <input
       v-if="displaySubmit"
@@ -44,10 +55,18 @@ const displaySubmit = computed(function () {
 
 const research = getResearch(elementAttr.value.res);
 
-const moveToCat = ref(0);
+const moveToCat = ref('choose');
+const displayNewCat = computed(function () {
+  return moveToCat.value == "new";
+});
+
+const newCategory = ref("");
 const hasChanges = computed(function () {
   if (action.value == "changeCat"){
-    return moveToCat.value != 0;
+    if (moveToCat.value == 'new'){
+      return newCategory.value != "";
+    }
+    return moveToCat.value != 'choose';
   }
   return action.value != "choose";
 });
@@ -57,7 +76,14 @@ function submitChanges() {
   switch (action.value) {
     case "changeCat":
       act = "moveSelectedToCat";
-      prop = moveToCat.value;
+      if (moveToCat.value == 'new'){
+        prop = {
+          collection_id: 0,
+          collection_name: newCategory.value
+        };
+      } else {
+        prop = {collection_id: moveToCat.value};
+      }
       break;
     case "duplicate":
       act = "duplicate";
@@ -66,7 +92,7 @@ function submitChanges() {
   }
   emit("updateData", {
     action: act,
-    newCat: prop,
+    prop,
   });
 }
 </script>
