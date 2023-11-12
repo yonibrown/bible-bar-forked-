@@ -18,7 +18,7 @@ const props = defineProps(['hilightMenu']);
   padding: 5px 15px 5px 15px;
 }
 
-div * {
+.menu * {
   margin-left: 6px;
 }
 .hilight-menu {

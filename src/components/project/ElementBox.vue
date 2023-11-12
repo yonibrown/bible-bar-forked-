@@ -17,30 +17,6 @@
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
-    <div v-show="displayOptions">
-      <sequence-menu
-        v-if="displaySequenceMenu"
-        :elementAttr="elementAttr"
-        :displayScale="displayScale"
-        :enableWholeText="enableWholeText"
-      ></sequence-menu>
-      <parts-menu
-        v-if="displayPartsMenu"
-        :elementAttr="elementAttr"
-        @updateData="updateData"
-      ></parts-menu>
-      <base-droppable
-        :drop="addToLinks"
-        :dragStruct="['linkId']"
-        :dragEnter="enterLinksMenu"
-        :dragLeave="leaveLinksMenu"
-        ><links-menu
-          v-if="displayLinksMenu"
-          @removeLink="unlinkElement"
-          :hilightMenu="hilightLinksMenu"
-        ></links-menu>
-      </base-droppable>
-    </div>
     <component
       :is="element.type + '-box'"
       :elementAttr="elementAttr"
@@ -50,10 +26,6 @@
 </template>
 
 <script setup>
-import SequenceMenu from "../sequence/SequenceMenu.vue";
-import PartsMenu from "../part/PartsMenu.vue";
-import LinksMenu from "../link/LinksMenu.vue";
-
 import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
@@ -118,35 +90,6 @@ function toggleMenu() {
 const displayOptionsButton = computed(function () {
   return props.element.type != "new";
 });
-const displaySequenceMenu = computed(function () {
-  return props.element.type == "bar" || props.element.type == "text";
-});
-const displayPartsMenu = computed(function () {
-  return props.element.type == "parts";
-});
-const displayScale = computed(function () {
-  return props.element.type == "bar";
-});
-const enableWholeText = computed(function () {
-  return props.element.type == "bar";
-});
-const displayLinksMenu = computed(function () {
-  return props.element.type != "link";
-});
-const hilightLinksMenu = ref(false);
-function enterLinksMenu() {
-  hilightLinksMenu.value = true;
-}
-function leaveLinksMenu() {
-  hilightLinksMenu.value = false;
-}
-function addToLinks(dragData) {
-  const linkId = +dragData.linkId;
-  if (linkId != 0) {
-    const link = getLink(linkId);
-    linkElement(link);
-  }
-}
 
 // close element button
 function closeElement() {
@@ -198,7 +141,6 @@ function createElementFromElement(attr) {
     newAttr.opening_element = props.element.id;
     newAttr.name = "";
     newAttr.position = props.nextPos;
-    console.log(props.nextPos);
   }
   createElement(newAttr, options);
 }
@@ -221,44 +163,6 @@ const linkIds = computed(function () {
   });
 });
 provide("linkIds", linkIds);
-
-async function linkElement(link) {
-  if (!link.elements.includes(props.element.id)) {
-    link.elements.push(props.element.id);
-  }
-
-  const data = {
-    type: "link",
-    oper: "add_elm",
-    id: {
-      proj: projectId.value.proj,
-      link: link.id,
-    },
-    prop: { elm: props.element.id },
-  };
-  const obj = await sendToServer(data);
-}
-
-async function unlinkElement(link) {
-  link.elements = link.elements.filter(function (arrElmId) {
-    return arrElmId != props.element.id;
-  });
-
-  const data = {
-    type: "link",
-    oper: "remove_elm",
-    id: {
-      proj: projectId.value.proj,
-      link: link.id,
-    },
-    prop: { elm: props.element.id },
-  };
-  const obj = await sendToServer(data);
-}
-
-function updateData(data) {
-  boxRef.value.updateData(data);
-}
 </script>
 
 <style scoped>

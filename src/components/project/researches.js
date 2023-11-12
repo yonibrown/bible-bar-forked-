@@ -1,4 +1,4 @@
-import { provide, ref } from "vue";
+import { provide, ref, computed } from "vue";
 
 export function useResearches() {
   const researches = ref([]);

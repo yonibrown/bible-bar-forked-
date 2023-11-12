@@ -1,6 +1,10 @@
 <template>
-  <!-- <h3>Parts</h3> -->
-  <div>
+  <parts-menu
+    v-show="displayOptions"
+    :elementAttr="elementAttr"
+    @updateData="updateData"
+  ></parts-menu>
+  <div class="parts-box">
     <table>
       <tr class="resprt-header">
         <td v-show="displayOptions"></td>
@@ -37,8 +41,9 @@
 </template>
 
 <script setup>
-import { sendToServer } from "../../server.js";
+import PartsMenu from "./PartsMenu.vue";
 import PartsLine from "./PartsLine.vue";
+import { sendToServer } from "../../server.js";
 
 import { reactive, computed, ref, inject, watch } from "vue";
 
@@ -152,7 +157,7 @@ async function moveSelectedToCat(cat) {
   loadResearchParts();
 }
 
-const createElement = inject('createElement');
+const createElement = inject("createElement");
 async function duplicateSelected() {
   const data = {
     type: "research",
@@ -165,11 +170,10 @@ async function duplicateSelected() {
 
   const obj = await sendToServer(data);
   createElement({
-    type: 'parts',
+    type: "parts",
     res: obj.data.new_res_id,
   });
 }
-
 
 const checkAllRef = ref(false);
 const checkPartial = ref(false);
@@ -196,8 +200,6 @@ watch(checkState, function (newVal) {
     }
   }
 });
-
-defineExpose({ updateData });
 </script>
 
 <style scoped>
@@ -219,13 +221,13 @@ defineExpose({ updateData });
 table {
   background-color: #e9e9e9;
   text-align: justify;
-  width:100%;
+  width: 100%;
   /* max-width: 85%; */
 }
 
-div {
+.parts-box {
   border: 1px solid #9aaab9;
-  width:100%;
+  width: 100%;
   /* max-width: fit-content; */
   /* max-height: inherit; */
   overflow-x: hidden;

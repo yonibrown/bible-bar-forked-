@@ -1,5 +1,4 @@
 <template>
-  <!-- <h3>Markers</h3> -->
   <div>
     <table class="in_body">
       <link-category
