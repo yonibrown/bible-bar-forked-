@@ -124,7 +124,7 @@ function changeSort(newField) {
 function updateData(data) {
   switch (data.action) {
     case "moveSelectedToCat":
-      moveSelectedToCat(data.newCat);
+      moveSelectedToCat(data.prop);
       break;
     case "duplicate":
       duplicateSelected();
@@ -149,7 +149,7 @@ async function moveSelectedToCat(cat) {
     id: researchId,
     prop: {
       partList: selectedParts.value,
-      updAttr: { collection_id: cat },
+      updAttr: cat,
     },
   };
 
