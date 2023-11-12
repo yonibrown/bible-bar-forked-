@@ -1,9 +1,11 @@
 <template>
-  <parts-menu
-    v-show="displayOptions"
-    :elementAttr="elementAttr"
-    @updateData="updateData"
-  ></parts-menu>
+  <div v-show="displayOptions">
+    <links-menu title="סינון"></links-menu>
+    <parts-menu
+      :elementAttr="elementAttr"
+      @updateData="updateData"
+    ></parts-menu>
+  </div>
   <div class="parts-box">
     <table>
       <tr class="resprt-header">
@@ -23,7 +25,7 @@
       <parts-line
         ref="linesRef"
         class="resprt-part"
-        v-for="prt in parts"
+        v-for="prt in filteredParts"
         :prt="prt"
         :key="prt.id"
         :checkAll="checkAllRef"
@@ -41,6 +43,7 @@
 </template>
 
 <script setup>
+import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 import PartsLine from "./PartsLine.vue";
 import { sendToServer } from "../../server.js";
@@ -78,6 +81,27 @@ async function loadResearchParts() {
   const obj = await sendToServer(data);
   parts.value = obj.data;
 }
+
+const links = inject("links");
+const filteringCols = computed(function(){
+  const arr = [];
+  links.value.forEach(function(link){
+    link.categories.forEach(function(cat){
+      if (cat.res == props.elementAttr.res && cat.display){
+        arr.push(cat.col);
+      }
+    });
+  });
+  return arr;
+});
+const filteredParts = computed(function(){
+  if (links.value.length == 0){
+    return parts.value;
+  }
+  return parts.value.filter(function(prt){
+    return filteringCols.value.includes(prt.col);
+  });
+});
 
 const verseClass = computed(function () {
   return attr.sort == "src" ? "sortingField" : "";
@@ -143,6 +167,7 @@ const selectedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
+  console.log(cat,selectedParts.value);
   const data = {
     type: "research",
     oper: "update_parts",
