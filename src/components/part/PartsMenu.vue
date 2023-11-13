@@ -3,11 +3,12 @@
     <span>פעולה:</span>
     <select v-model="action">
       <option value="choose">בחר...</option>
+      <option value="showCat">הצג קטגוריה</option>
       <option value="changeCat">העבר לקטגוריה</option>
       <option value="duplicate">העתק לרשימה חדשה</option>
       <option value="remove">מחק מהרשימה</option>
     </select>
-    <span v-if="displayChangeCat">
+    <span v-if="displayCatList">
       <span>קטגוריה:</span>
       <select v-model="moveToCat">
         <option value="choose">בחר...</option>
@@ -46,8 +47,8 @@ const elementAttr = inject("elementAttr");
 const getResearch = inject("getResearch");
 
 const action = ref("choose");
-const displayChangeCat = computed(function () {
-  return action.value == "changeCat";
+const displayCatList = computed(function () {
+  return action.value == "changeCat" || action.value == "showCat" ;
 });
 const displaySubmit = computed(function () {
   return action.value != "choose";
@@ -62,7 +63,7 @@ const displayNewCat = computed(function () {
 
 const newCategory = ref("");
 const hasChanges = computed(function () {
-  if (action.value == "changeCat"){
+  if (displayCatList.value){
     if (moveToCat.value == 'new'){
       return newCategory.value != "";
     }
@@ -74,6 +75,17 @@ const hasChanges = computed(function () {
 function submitChanges() {
   let act, prop;
   switch (action.value) {
+    case "showCat":
+      act = "showCat";
+      if (moveToCat.value == 'new'){
+        prop = {
+          collection_id: 0,
+          collection_name: newCategory.value
+        };
+      } else {
+        prop = {collection_id: moveToCat.value};
+      }
+      break;
     case "changeCat":
       act = "moveSelectedToCat";
       if (moveToCat.value == 'new'){

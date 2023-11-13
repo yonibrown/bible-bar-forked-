@@ -23,7 +23,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref ,watch} from "vue";
+import { reactive, provide, computed, ref } from "vue";
 import { useLinks } from "./links.js";
 import { useResearches } from "./researches.js";
 
