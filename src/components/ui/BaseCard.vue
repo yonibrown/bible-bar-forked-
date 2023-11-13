@@ -1,8 +1,12 @@
 <template>
-  <div class="card">
+  <div class="card" :style="{}">
     <slot></slot>
   </div>
 </template>
+
+<script setup>
+const props = defineProps([]);
+</script>
 
 <style scoped>
 .card {

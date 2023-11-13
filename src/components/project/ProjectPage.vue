@@ -27,8 +27,10 @@ import { reactive, provide, computed, ref ,watch} from "vue";
 import { useLinks } from "./links.js";
 import { useResearches } from "./researches.js";
 
+const props = defineProps(['id']);
+
 const project = reactive({
-  id: 1,
+  id: props.id,
   attr: {
     name: "---",
     desc: "",
