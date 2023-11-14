@@ -1,6 +1,6 @@
 <template>
   <base-card>
-    <div class="element-head">
+    <div class="draggable-head">
       <base-editable
         :initialValue="elementName"
         @submitValue="submitName"
@@ -179,12 +179,12 @@ button {
 
 .title {
   cursor: default;
-  float: right;
+  /* float: right; */
   font-weight: bold;
   font-size: 1.17em;
 }
 
-.element-head {
+.draggable-head {
   margin: 0em 0em 1em 0em;
   cursor: grab;
 }
