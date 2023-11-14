@@ -6,8 +6,19 @@
       @updateData="updateData"
     ></parts-menu>
   </div>
+  <div class="tabs">
+    <button
+      v-for="tab in tabList"
+      :class="{ active: tab.name == currentTab }"
+      @click="changeTab(tab.name)"
+    >
+      {{tab.title}}
+    </button>
+    <!-- <button :class="{active:tab=='parts'}" @click="changeTab('parts')">רשימה</button>
+    <button :class="{active:tab=='categories'}" @click="changeTab('categories')">קטגוריות</button> -->
+  </div>
   <div class="parts-box">
-    <table>
+    <table v-if="currentTab=='parts'">
       <tr class="resprt-header">
         <td v-show="displayOptions"></td>
         <td :class="categoryClass" @dblclick="changeSort('col')">
@@ -65,6 +76,18 @@ const attr = reactive({
   ordering: props.elementAttr.ordering,
 });
 
+const currentTab = ref("parts");
+const tabList = [{
+  name:"parts",
+  title:"רשימה"
+  }, {
+    name:"categories",
+    title:"קטגוריות"
+  }];
+function changeTab(newVal) {
+  currentTab.value = newVal;
+}
+
 loadResearchParts();
 
 async function loadResearchParts() {
@@ -83,22 +106,22 @@ async function loadResearchParts() {
 }
 
 const links = inject("links");
-const filteringCols = computed(function(){
+const filteringCols = computed(function () {
   const arr = [];
-  links.value.forEach(function(link){
-    link.categories.forEach(function(cat){
-      if (cat.res == props.elementAttr.res && cat.display){
+  links.value.forEach(function (link) {
+    link.categories.forEach(function (cat) {
+      if (cat.res == props.elementAttr.res && cat.display) {
         arr.push(cat.col);
       }
     });
   });
   return arr;
 });
-const filteredParts = computed(function(){
-  if (links.value.length == 0){
+const filteredParts = computed(function () {
+  if (links.value.length == 0) {
     return parts.value;
   }
-  return parts.value.filter(function(prt){
+  return parts.value.filter(function (prt) {
     return filteringCols.value.includes(prt.col);
   });
 });
@@ -169,7 +192,7 @@ const selectedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  console.log(cat,selectedParts.value);
+  console.log(cat, selectedParts.value);
   const data = {
     type: "research",
     oper: "update_parts",
@@ -259,10 +282,39 @@ table {
   /* max-height: inherit; */
   overflow-x: hidden;
   overflow-y: scroll;
-  margin: 15px auto;
+  margin: 0 auto 15px auto;
 }
 
 .sortingField {
   font-weight: bold;
+}
+
+/* Style the tab */
+.tabs {
+  /* overflow: hidden; */
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+  width: fit-content;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tabs button {
+  background-color: inherit;
+  float: right;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 2px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tabs button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tabs button.active {
+  background-color: #ccc;
 }
 </style>
