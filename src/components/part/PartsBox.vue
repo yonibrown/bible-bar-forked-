@@ -147,6 +147,8 @@ function changeSort(newField) {
 
 function updateData(data) {
   switch (data.action) {
+    case "showCat":
+      break;
     case "moveSelectedToCat":
       moveSelectedToCat(data.prop);
       break;
