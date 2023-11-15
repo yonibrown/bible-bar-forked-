@@ -1,5 +1,5 @@
 <template>
-  <base-card :resizable="true" :dynamicHeight="dynamicHeight">
+  <base-card :resizable="true">
     <div class="draggable-head">
       <base-editable
         :initialValue="elementName"
@@ -163,17 +163,6 @@ const linkIds = computed(function () {
   });
 });
 provide("linkIds", linkIds);
-
-const dynamicHeight = computed(function(){
-  switch (props.element.type){
-    case 'parts':
-      return 150;
-    case 'text':
-      return 150;
-    default:
-      return 0;
-  }
-});
 </script>
 
 <style scoped>
