@@ -4,39 +4,56 @@
     <div
       class="resizer"
       @mousedown="initResize"
-      :style="{ bottom: yGap }"
+      :style="{ bottom: yGap+'px' }"
+      ref="handleRef"
     ></div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref,onMounted } from "vue";
 const props = defineProps([]);
 
 const cardRef = ref();
+const handleRef = ref();
 const yGap = ref(0);
 
-var startX, startY, startWidth, startHeight;
-function initResize(evt) {
-  console.log("initResize");
-  startX = evt.clientX;
-  startY = evt.clientY;
-  startWidth = parseInt(
-    document.defaultView.getComputedStyle(cardRef.value).width,
-    10
-  );
+var startX, startY, startWidth, startHeight,startGap;
+onMounted(function(){
+  // console.log(cardRef,handleRef);
+  // console.log(handleRef.value.offsetTop);
+  // startY = handleRef.value.offsetTop;
   startHeight = parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
     10
   );
+});
+function initResize(evt) {
+  console.log("initResize");
+  console.log(startY,startHeight);
+  // startX = evt.clientX;
+  startY = evt.clientY;
+  // startWidth = parseInt(
+  //   document.defaultView.getComputedStyle(cardRef.value).width,
+  //   10
+  // );
+  startHeight = parseInt(
+    document.defaultView.getComputedStyle(cardRef.value).height,
+    10
+  );
+  startGap = yGap.value;
+  console.log(startY,startHeight);
   document.documentElement.addEventListener("mousemove", doDrag, false);
   document.documentElement.addEventListener("mouseup", stopDrag, false);
 }
 
 function doDrag(evt) {
+  console.log(evt.clientY);
+  var gap = startY - evt.clientY ;
+
+  yGap.value = startGap + gap ;
   /* cardRef.value.style.width = (startWidth + evt.clientX - startX) + 'px' */
-  cardRef.value.style.height = startHeight + evt.clientY - startY + "px";
-  yGap.value = -(evt.clientY - startY) + "px";
+  cardRef.value.style.height = startHeight - gap + "px";
 }
 
 function stopDrag(evt) {
