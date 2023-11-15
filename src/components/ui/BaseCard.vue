@@ -1,55 +1,62 @@
 <template>
-  <div class="card"  ref="cardRef">
+  <div class="card" ref="cardRef">
     <slot></slot>
     <div
-      class="resizer"
-      @mousedown="initResize"
-      :style="{ bottom: yGap+'px' }"
+      v-if="resizable"
+      class="handle"
+      @mousedown="startResize"
       ref="handleRef"
     ></div>
   </div>
 </template>
 
 <script setup>
-import { ref,onMounted } from "vue";
-const props = defineProps([]);
+import { ref, provide } from "vue";
+const props = defineProps(["resizable"]);
 
 const cardRef = ref();
 const handleRef = ref();
-const yGap = ref(0);
 
-var startY, startHeight,startGap;
-onMounted(function(){
-  startHeight = parseInt(
-    document.defaultView.getComputedStyle(cardRef.value).height,
-    10
-  );
-});
-function initResize(evt) {
-  console.log("initResize");
-  console.log(startY,startHeight);
+const yAddition = ref(0);
+provide("yAddition", yAddition);
+
+var startY, startHeight, startAddition;
+var initialHeight = null;
+
+function startResize(evt) {
   startY = evt.clientY;
-  startHeight = parseInt(
-    document.defaultView.getComputedStyle(cardRef.value).height,
-    10
-  );
-  startGap = yGap.value;
-  console.log(startY,startHeight);
+  startHeight = getCardHeight();
+  if (!initialHeight) {
+    initialHeight = startHeight;
+  }
+
+  startAddition = yAddition.value;
   document.documentElement.addEventListener("mousemove", doDrag, false);
   document.documentElement.addEventListener("mouseup", stopDrag, false);
 }
 
 function doDrag(evt) {
-  console.log(evt.clientY);
-  var gap = startY - evt.clientY ;
+  var gap = evt.clientY - startY;
 
-  yGap.value = startGap + gap ;
-  cardRef.value.style.height = startHeight - gap + "px";
+  if (startAddition + gap < 0) {
+    yAddition.value = 0;
+    cardRef.value.style.height = initialHeight + "px";
+  } else {
+    yAddition.value = startAddition + gap;
+    cardRef.value.style.height = startHeight + gap + "px";
+  }
 }
 
-function stopDrag(evt) {
+function stopDrag() {
   document.documentElement.removeEventListener("mousemove", doDrag, false);
   document.documentElement.removeEventListener("mouseup", stopDrag, false);
+}
+
+function getCardHeight() {
+  return parseInt(
+    document.defaultView.getComputedStyle(cardRef.value).height,
+    10
+  );
 }
 </script>
 
@@ -57,28 +64,23 @@ function stopDrag(evt) {
 .card {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem;
   margin: 2rem auto;
   max-width: 85%;
-  max-height: 300px;
-  /* max-width: 40rem; */
-
-  /* display: flex;
-  flex-direction: column; */
+  position: relative;
   background-color: #f5f7fa;
-  resize: vertical;
 }
 
-.resizer {
+.handle {
   height: 0.2rem;
-  margin-top: 0.8rem;
   width: 100%;
   cursor: row-resize;
-  position: relative;
-  background-color: bisque;
+  position: absolute;
+  bottom: 0;
+  /* background-color: bisque; */
 }
 
-.resizer:hover {
+.handle:hover {
   background-color: #ddeafd;
 }
 </style>

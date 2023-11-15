@@ -1,5 +1,5 @@
 <template>
-  <base-card>
+  <base-card :resizable="true">
     <div class="draggable-head">
       <base-editable
         :initialValue="elementName"
