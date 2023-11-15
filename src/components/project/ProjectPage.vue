@@ -3,9 +3,9 @@
     <section>
       <base-card>
         <div>
-          <div class="title">
+          <span class="title">
             Project {{ project.id }}: {{ project.attr.name }}
-          </div>
+          </span>
           <span class="menu-buttons">
             <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
             <menu-button type="add" @click="openNewElement"></menu-button>
@@ -107,7 +107,7 @@ function openNewElement(){
 }
 .title {
   cursor: default;
-  float: right;
+  /* float: right; */
   font-weight: bold;
   font-size: 1.5em;
   margin: 0.83em 0;

@@ -1,5 +1,5 @@
 <template>
-  <div ref="scrollable" @scrollend="saveOffset">
+  <div class="scrollable" ref="scrollable" @scrollend="saveOffset">
     <slot> </slot>
   </div>
 </template>
@@ -32,9 +32,10 @@ function saveOffset(){
 </script>
 
 <style scoped>
-div {
+.scrollable {
   overflow-x: hidden;
   overflow-y: scroll;
+  max-height: 150px;
   padding: 15px;
   border: 1px solid #9aaab9;
   background-color: white;

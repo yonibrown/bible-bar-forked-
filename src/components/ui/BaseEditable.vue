@@ -9,9 +9,9 @@
     />
     <button>שמור</button>
   </form>
-  <div v-else @dblclick="starteditValue" class="title">
+  <span v-else @dblclick="starteditValue" class="title">
     {{ initialValue }}
-  </div>
+  </span>
 </template>
 
 <script setup>

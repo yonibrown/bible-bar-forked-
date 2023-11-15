@@ -9,15 +9,17 @@
     <links-menu title="הדגשות"></links-menu>
     <text-menu></text-menu>
   </div>
-  <base-scrollable class="bible-text">
-    <div>
-      <text-verse
-        v-for="vrs in verses"
-        :key="vrs.part_id"
-        :verse="vrs"
-      ></text-verse>
-    </div>
-  </base-scrollable>
+  <div>
+    <base-scrollable class="bible-text">
+      <div>
+        <text-verse
+          v-for="vrs in verses"
+          :key="vrs.part_id"
+          :verse="vrs"
+        ></text-verse>
+      </div>
+    </base-scrollable>
+  </div>
 </template>
 
 <script setup>

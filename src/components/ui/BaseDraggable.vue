@@ -16,7 +16,7 @@ const props = defineProps(["data"]);
 const dragAllowed = ref(false);
 
 function startMouse(evt) {
-  if (evt.target.closest(".element-head")) {
+  if (evt.target.closest(".draggable-head")) {
     dragAllowed.value = true;
   }
 }
