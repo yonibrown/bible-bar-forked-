@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :style="{}" ref="cardRef">
+  <div class="card"  ref="cardRef">
     <slot></slot>
     <div
       class="resizer"
@@ -18,11 +18,8 @@ const cardRef = ref();
 const handleRef = ref();
 const yGap = ref(0);
 
-var startX, startY, startWidth, startHeight,startGap;
+var startY, startHeight,startGap;
 onMounted(function(){
-  // console.log(cardRef,handleRef);
-  // console.log(handleRef.value.offsetTop);
-  // startY = handleRef.value.offsetTop;
   startHeight = parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
     10
@@ -31,12 +28,7 @@ onMounted(function(){
 function initResize(evt) {
   console.log("initResize");
   console.log(startY,startHeight);
-  // startX = evt.clientX;
   startY = evt.clientY;
-  // startWidth = parseInt(
-  //   document.defaultView.getComputedStyle(cardRef.value).width,
-  //   10
-  // );
   startHeight = parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
     10
@@ -52,7 +44,6 @@ function doDrag(evt) {
   var gap = startY - evt.clientY ;
 
   yGap.value = startGap + gap ;
-  /* cardRef.value.style.width = (startWidth + evt.clientX - startX) + 'px' */
   cardRef.value.style.height = startHeight - gap + "px";
 }
 
