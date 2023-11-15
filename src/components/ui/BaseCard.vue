@@ -1,5 +1,5 @@
 <template>
-  <div class="card" :class="{ cardResizable: resizable }" ref="cardRef">
+  <div class="card" ref="cardRef">
     <slot></slot>
     <div
       v-if="resizable"
@@ -26,7 +26,7 @@ var initialHeight = null;
 function startResize(evt) {
   startY = evt.clientY;
   startHeight = getCardHeight();
-  if (!initialHeight){
+  if (!initialHeight) {
     initialHeight = startHeight;
   }
 
