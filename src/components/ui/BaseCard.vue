@@ -1,53 +1,60 @@
 <template>
-  <div class="card"  ref="cardRef">
+  <div class="card" ref="cardRef">
     <slot></slot>
     <div
-      class="resizer"
-      @mousedown="initResize"
-      :style="{ bottom: yGap+'px' }"
+      class="handle"
+      @mousedown="startResize"
+      :style="{ bottom: -yAddition + 'px' }"
       ref="handleRef"
     ></div>
   </div>
 </template>
 
 <script setup>
-import { ref,onMounted } from "vue";
+import { ref, onMounted } from "vue";
 const props = defineProps([]);
 
 const cardRef = ref();
 const handleRef = ref();
-const yGap = ref(0);
 
-var startY, startHeight,startGap;
-onMounted(function(){
-  startHeight = parseInt(
+const yAddition = ref(0);
+
+var startY, startHeight, startAddition, initialHeight;
+
+onMounted(function () {
+  initialHeight = parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
     10
   );
 });
-function initResize(evt) {
-  console.log("initResize");
-  console.log(startY,startHeight);
+
+function startResize(evt) {
   startY = evt.clientY;
   startHeight = parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
     10
   );
-  startGap = yGap.value;
-  console.log(startY,startHeight);
+
+  startAddition = yAddition.value;
   document.documentElement.addEventListener("mousemove", doDrag, false);
   document.documentElement.addEventListener("mouseup", stopDrag, false);
 }
 
 function doDrag(evt) {
-  console.log(evt.clientY);
-  var gap = startY - evt.clientY ;
+  var gap = evt.clientY - startY;
 
-  yGap.value = startGap + gap ;
-  cardRef.value.style.height = startHeight - gap + "px";
+  console.log(startAddition, gap);
+  if (startAddition + gap < 0) {
+    yAddition.value = 0;
+    cardRef.value.style.height = initialHeight + "px";
+  } else {
+    yAddition.value = startAddition + gap;
+    cardRef.value.style.height = startHeight + gap + "px";
+  }
 }
 
-function stopDrag(evt) {
+function stopDrag() {
+  console.log(yAddition.value);
   document.documentElement.removeEventListener("mousemove", doDrag, false);
   document.documentElement.removeEventListener("mouseup", stopDrag, false);
 }
@@ -60,7 +67,7 @@ function stopDrag(evt) {
   padding: 1rem 1rem 0 1rem;
   margin: 2rem auto;
   max-width: 85%;
-  max-height: 300px;
+  /* max-height: 300px; */
   /* max-width: 40rem; */
 
   /* display: flex;
@@ -69,7 +76,7 @@ function stopDrag(evt) {
   resize: vertical;
 }
 
-.resizer {
+.handle {
   height: 0.2rem;
   margin-top: 0.8rem;
   width: 100%;
@@ -78,7 +85,7 @@ function stopDrag(evt) {
   background-color: bisque;
 }
 
-.resizer:hover {
+.handle:hover {
   background-color: #ddeafd;
 }
 </style>
