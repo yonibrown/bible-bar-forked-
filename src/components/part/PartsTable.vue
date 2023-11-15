@@ -245,10 +245,10 @@ table {
   border: 1px solid #9aaab9;
   width: 100%;
   /* max-width: fit-content; */
-  max-height: 100px;
+  max-height: 150px;
   overflow-x: hidden;
   overflow-y: scroll;
-  margin: 0 auto 15px auto;
+  margin: 0 auto 5px auto;
 }
 
 .sortingField {
