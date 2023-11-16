@@ -12,7 +12,6 @@
 
 <script setup>
 import { ref, provide } from "vue";
-// const props = defineProps(["resizable"]);
 
 const cardRef = ref();
 const handleRef = ref();
@@ -60,10 +59,10 @@ function getCardHeight() {
   );
 }
 
-function activateResizable(){
+function activateResizable() {
   resizable.value = true;
 }
-provide('activateResizable',activateResizable);
+provide("activateResizable", activateResizable);
 </script>
 
 <style scoped>
@@ -79,8 +78,7 @@ provide('activateResizable',activateResizable);
 
 .handle {
   height: 0.2rem;
-  width: 100%;
-  /* width: calc(100%-24px); */
+  width: calc(100% - 36px);
   cursor: row-resize;
   position: absolute;
   bottom: 0;
