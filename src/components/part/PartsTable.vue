@@ -1,25 +1,14 @@
 <template>
   <div>
     <base-scrollable>
-      <table>
-        <tr class="resprt-header">
-          <td v-show="displayOptions"></td>
-          <td v-for="fld in tableFields">
-            <span
-              v-if="fld.sortable"
-              @dblclick="changeSort(fld.name)"
-              :class="{ sortingField: sortField == fld.name }"
-            >
-              {{ fld.title }}
-              <i
-                v-show="sortField == fld.name"
-                class="fa"
-                :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
-              ></i>
-            </span>
-            <span v-else>{{ fld.title }}</span>
-          </td>
-        </tr>
+      <base-table
+        :enableSelection="displayOptions"
+        :tableFields="tableFields"
+        :sortField="sortAttr.sort"
+        @changeSortField="changeSortField"
+        :ascending="sortAttr.ordering == 'ASC'"
+        @reverseTable="reverseTable"
+      >
         <parts-line
           ref="linesRef"
           class="resprt-part"
@@ -28,7 +17,7 @@
           :key="prt.id"
           :checkAll="checkAllRef"
         ></parts-line>
-      </table>
+      </base-table>
     </base-scrollable>
     <span v-show="displayOptions">
       <span>בחר הכל:</span>
@@ -42,8 +31,9 @@
 </template>
 
 <script setup>
+import BaseTable from "../ui/BaseTable.vue";
 import PartsLine from "./PartsLine.vue";
-import {  computed, ref, inject, watch } from "vue";
+import { computed, ref, inject, watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
@@ -55,6 +45,7 @@ const links = inject("links");
 const changeAttr = inject("changeAttr");
 const linesRef = ref([]);
 
+// table properties
 const tableFields = [
   {
     name: "col",
@@ -72,32 +63,22 @@ const tableFields = [
     sortable: false,
   },
 ];
-
-const sortField = ref(elementAttr.value.sort);
-const ascending = ref(elementAttr.value.ordering == "ASC");
-
-function changeSort(newField) {
-  if (sortField.value == newField) {
-    ascending.value = !ascending.value;
-    parts.value.reverse();
-  } else {
-    ascending.value = true;
-    if (sortField.value == "src") {
-      sortField.value = "col";
-      parts.value.sort(function (a, b) {
-        return a.col_sort_key > b.col_sort_key ? 1 : -1;
-      });
-    } else {
-      sortField.value = "src";
-      parts.value.sort(function (a, b) {
-        return a.src_sort_key > b.src_sort_key ? 1 : -1;
-      });
-    }
-  }
-  changeAttr({
-    sort: sortField.value,
-    ordering: ascending.value?'ASC':'DESC',
+const sortAttr = ref({
+  sort: elementAttr.value.sort,
+  ordering: elementAttr.value.ordering,
+});
+function reverseTable() {
+  sortAttr.value.ordering = sortAttr.value.ordering == "DESC" ? "ASC" : "DESC";
+  parts.value.reverse();
+  changeAttr(sortAttr.value);
+}
+function changeSortField(newField) {
+  sortAttr.value.ordering = "ASC";
+  sortAttr.value.sort = newField;
+  parts.value.sort(function (a, b) {
+    return a.sort_key[newField] > b.sort_key[newField] ? 1 : -1;
   });
+  changeAttr(sortAttr.value);
 }
 
 // load data
@@ -108,10 +89,7 @@ async function loadResearchParts() {
     type: "research",
     oper: "get_prt_list",
     id: researchId,
-    prop: {
-      sort: sortField.value,
-      ordering: ascending.value?'ASC':'DESC',
-    },
+    prop: sortAttr.value,
   };
 
   const obj = await sendToServer(data);
@@ -212,31 +190,3 @@ watch(checkState, function (newVal) {
 
 defineExpose({ moveSelectedToCat, duplicateSelected });
 </script>
-
-<style scoped>
-.resprt-header {
-  background-color: #ebebeb;
-  user-select: none;
-}
-
-.resprt-header td {
-  background-color: #ebebeb;
-  padding: 2px 0 5px 0;
-  /* border-bottom: 2px solid #e9e9e9; */
-  font-size: 70%;
-  position: sticky;
-  top: 0;
-  /* cursor: pointer; */
-}
-
-table {
-  background-color: #e9e9e9;
-  text-align: justify;
-  width: 100%;
-  /* max-width: 85%; */
-}
-
-.sortingField {
-  font-weight: bold;
-}
-</style>
