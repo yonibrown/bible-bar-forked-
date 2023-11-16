@@ -1,20 +1,24 @@
 <template>
-  <div class="parts-scroll">
+  <div>
     <base-scrollable>
       <table>
         <tr class="resprt-header">
           <td v-show="displayOptions"></td>
-          <td :class="categoryClass" @dblclick="changeSort('col')">
-            קטגוריה
-            <i v-show="categoryAscending" class="fa fa-arrow-up"></i>
-            <i v-show="categoryDescending" class="fa fa-arrow-down"></i>
+          <td v-for="fld in tableFields">
+            <span
+              v-if="fld.sortable"
+              @dblclick="changeSort(fld.name)"
+              :class="{ sortingField: sortField == fld.name }"
+            >
+              {{ fld.title }}
+              <i
+                v-show="sortField == fld.name"
+                class="fa"
+                :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
+              ></i>
+            </span>
+            <span v-else>{{ fld.title }}</span>
           </td>
-          <td :class="verseClass" @dblclick="changeSort('src')">
-            פסוק
-            <i v-show="verseAscending" class="fa fa-arrow-up"></i>
-            <i v-show="verseDescending" class="fa fa-arrow-down"></i>
-          </td>
-          <td>טקסט</td>
         </tr>
         <parts-line
           ref="linesRef"
@@ -39,11 +43,11 @@
 
 <script setup>
 import PartsLine from "./PartsLine.vue";
-import { reactive, computed, ref, inject, watch } from "vue";
+import {  computed, ref, inject, watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
-const elementAttr = inject('elementAttr');
+const elementAttr = inject("elementAttr");
 
 const researchId = { res: elementAttr.value.res };
 const parts = ref([]);
@@ -51,10 +55,50 @@ const links = inject("links");
 const changeAttr = inject("changeAttr");
 const linesRef = ref([]);
 
-const attr = reactive({
-  sort: elementAttr.value.sort, // src/sol/pos
-  ordering: elementAttr.value.ordering,
-});
+const tableFields = [
+  {
+    name: "col",
+    title: "קטגוריה",
+    sortable: true,
+  },
+  {
+    name: "src",
+    title: "פסוק",
+    sortable: true,
+  },
+  {
+    name: "text",
+    title: "טקסט",
+    sortable: false,
+  },
+];
+
+const sortField = ref(elementAttr.value.sort);
+const ascending = ref(elementAttr.value.ordering == "ASC");
+
+function changeSort(newField) {
+  if (sortField.value == newField) {
+    ascending.value = !ascending.value;
+    parts.value.reverse();
+  } else {
+    ascending.value = true;
+    if (sortField.value == "src") {
+      sortField.value = "col";
+      parts.value.sort(function (a, b) {
+        return a.col_sort_key > b.col_sort_key ? 1 : -1;
+      });
+    } else {
+      sortField.value = "src";
+      parts.value.sort(function (a, b) {
+        return a.src_sort_key > b.src_sort_key ? 1 : -1;
+      });
+    }
+  }
+  changeAttr({
+    sort: sortField.value,
+    ordering: ascending.value?'ASC':'DESC',
+  });
+}
 
 // load data
 loadResearchParts();
@@ -65,8 +109,8 @@ async function loadResearchParts() {
     oper: "get_prt_list",
     id: researchId,
     prop: {
-      sort: attr.sort,
-      ordering: attr.ordering,
+      sort: sortField.value,
+      ordering: ascending.value?'ASC':'DESC',
     },
   };
 
@@ -83,48 +127,6 @@ const filteredParts = computed(function () {
     return filteringCols.value.includes(prt.col);
   });
 });
-
-const verseClass = computed(function () {
-  return attr.sort == "src" ? "sortingField" : "";
-});
-const categoryClass = computed(function () {
-  return attr.sort == "col" ? "sortingField" : "";
-});
-const verseAscending = computed(function () {
-  return (attr.sort == "src") & (attr.ordering == "ASC");
-});
-const verseDescending = computed(function () {
-  return (attr.sort == "src") & (attr.ordering == "DESC");
-});
-const categoryAscending = computed(function () {
-  return (attr.sort == "col") & (attr.ordering == "ASC");
-});
-const categoryDescending = computed(function () {
-  return (attr.sort == "col") & (attr.ordering == "DESC");
-});
-function changeSort(newField) {
-  if (attr.sort == newField) {
-    attr.ordering = attr.ordering == "ASC" ? "DESC" : "ASC";
-    parts.value.reverse();
-  } else {
-    attr.ordering = "ASC";
-    if (attr.sort == "src") {
-      attr.sort = "col";
-      parts.value.sort(function (a, b) {
-        return a.col_sort_key > b.col_sort_key ? 1 : -1;
-      });
-    } else {
-      attr.sort = "src";
-      parts.value.sort(function (a, b) {
-        return a.src_sort_key > b.src_sort_key ? 1 : -1;
-      });
-    }
-  }
-  changeAttr({
-    sort: attr.sort,
-    ordering: attr.ordering,
-  });
-}
 
 const filteringCols = computed(function () {
   const arr = [];
@@ -232,14 +234,6 @@ table {
   text-align: justify;
   width: 100%;
   /* max-width: 85%; */
-}
-
-.parts-scroll{
-    width: 100%;
-    /* overflow-y: scroll;
-    overflow-x: hidden;
-    border: 1px solid #9aaab9;
-    margin: 0 auto 15px auto; */
 }
 
 .sortingField {
