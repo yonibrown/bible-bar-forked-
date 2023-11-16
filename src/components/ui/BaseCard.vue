@@ -40,10 +40,10 @@ function doDrag(evt) {
 
   if (startAddition + gap < 0) {
     yAddition.value = 0;
-    cardRef.value.style.height = initialHeight + "px";
+    cardRef.value.style.minheight = initialHeight + "px";
   } else {
     yAddition.value = startAddition + gap;
-    cardRef.value.style.height = startHeight + gap + "px";
+    cardRef.value.style.minheight = startHeight + gap + "px";
   }
 }
 
