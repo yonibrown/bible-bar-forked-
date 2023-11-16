@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="scrollable"
-    ref="scrollable"
-    @scrollend="saveOffset"
-  >
+  <div class="scrollable" ref="scrollable" @scrollend="saveOffset">
     <slot> </slot>
   </div>
 </template>
@@ -42,11 +38,13 @@ const yAddition = inject("yAddition");
 // //   return initialHeight ;
 // // });
 
-watch(yAddition,function(newVal){
-   console.log('Height',initialHeight,newVal);
-//   // height.value = initialHeight + newVal;
+watch(yAddition, function (newVal) {
+  // console.log("Height", initialHeight, newVal);
+  //   // height.value = initialHeight + newVal;
   scrollable.value.style.height = initialHeight + newVal + "px";
 });
+const activateResizable = inject("activateResizable");
+activateResizable();
 </script>
 
 <style scoped>
@@ -55,10 +53,12 @@ watch(yAddition,function(newVal){
   overflow-y: scroll;
   /* max-height: 150px; */
   height: 150px;
-  padding: 15px;
+  /* padding: 15px; */
   border: 1px solid #9aaab9;
   background-color: white;
   text-align: justify;
-  margin: 15px auto;
+  /* margin: 15px auto; */
+    margin: 0 auto 5px auto;
+  width: 100%;
 }
 </style>
