@@ -11,7 +11,7 @@
   </div>
   <div>
     <base-scrollable class="bible-text">
-      <div>
+      <div class="text-box">
         <text-verse
           v-for="vrs in verses"
           :key="vrs.part_id"
@@ -52,3 +52,9 @@ async function loadElmText() {
 
 defineExpose({ reload: loadElmText });
 </script>
+
+<style scoped>
+.text-box{
+  padding:15px;
+}
+</style>
