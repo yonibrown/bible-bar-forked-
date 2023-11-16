@@ -43,17 +43,17 @@ import { reactive, computed, ref, inject, watch } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
-const props = defineProps(["elementAttr"]);
+const elementAttr = inject('elementAttr');
 
-const researchId = { res: props.elementAttr.res };
+const researchId = { res: elementAttr.value.res };
 const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
 const linesRef = ref([]);
 
 const attr = reactive({
-  sort: props.elementAttr.sort, // src/sol/pos
-  ordering: props.elementAttr.ordering,
+  sort: elementAttr.value.sort, // src/sol/pos
+  ordering: elementAttr.value.ordering,
 });
 
 // load data
@@ -130,7 +130,7 @@ const filteringCols = computed(function () {
   const arr = [];
   links.value.forEach(function (link) {
     link.categories.forEach(function (cat) {
-      if (cat.res == props.elementAttr.res && cat.display) {
+      if (cat.res == elementAttr.value.res && cat.display) {
         arr.push(cat.col);
       }
     });

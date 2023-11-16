@@ -2,7 +2,6 @@
   <div v-show="displayOptions">
     <sequence-menu
       v-show="displayOptions"
-      :elementAttr="elementAttr"
       :displayScale="true"
       :enableWholeText="true"
     ></sequence-menu>
@@ -47,7 +46,6 @@ import BarLinkPoints from "./BarLinkPoints.vue";
 import { sendToServer } from "../../server.js";
 import { inject, ref } from "vue";
 
-const props = defineProps(["elementAttr"]);
 const displayOptions = inject("displayOptions");
 const elementId = inject("elementId");
 const links = inject("links");

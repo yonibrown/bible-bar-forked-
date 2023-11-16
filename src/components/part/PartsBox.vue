@@ -2,7 +2,6 @@
   <div v-show="displayOptions">
     <links-menu title="סינון"></links-menu>
     <parts-menu
-      :elementAttr="elementAttr"
       @updateData="updateData"
     ></parts-menu>
   </div>
@@ -19,7 +18,6 @@
   </div>
   <parts-table
     v-show="currentTab == 'parts'"
-    :elementAttr="elementAttr"
     ref="partsTabRef"
   ></parts-table>
 </template>
@@ -32,7 +30,6 @@ import PartsMenu from "./PartsMenu.vue";
 import { ref, inject } from "vue";
 
 const displayOptions = inject("displayOptions");
-const props = defineProps(["elementAttr"]);
 
 const partsTabRef = ref();
 
