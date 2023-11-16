@@ -1,6 +1,7 @@
 <template>
   <div class="parts-scroll">
-    <div class="parts-box">
+    <!-- <div class="parts-box"> -->
+    <base-scrollable>
       <table>
         <tr class="resprt-header">
           <td v-show="displayOptions"></td>
@@ -25,7 +26,8 @@
           :checkAll="checkAllRef"
         ></parts-line>
       </table>
-    </div>
+    </base-scrollable>
+    <!-- </div> -->
     <span v-show="displayOptions">
       <span>בחר הכל:</span>
       <input
@@ -241,15 +243,16 @@ table {
     border: 1px solid #9aaab9;
     margin: 0 auto 15px auto; */
 }
-.parts-box {
+/* .parts-box {
   border: 1px solid #9aaab9;
   width: 100%;
-  /* max-width: fit-content; */
+  // max-width: fit-content; 
   max-height: 150px;
   overflow-x: hidden;
   overflow-y: scroll;
   margin: 0 auto 5px auto;
-}
+} 
+*/
 
 .sortingField {
   font-weight: bold;
