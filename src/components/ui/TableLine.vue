@@ -4,7 +4,12 @@
       <input type="checkbox" v-model="checked" />
     </td>
     <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
-      <component :is="lineComponent" :line="line" :field="fld"></component>
+      <component
+        :is="lineComponent"
+        :line="line"
+        :field="fld"
+        :enableSelection="enableSelection"
+      ></component>
     </td>
   </tr>
 </template>
