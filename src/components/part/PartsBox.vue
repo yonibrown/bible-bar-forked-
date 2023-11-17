@@ -13,15 +13,15 @@
     </button>
   </div>
   <parts-table v-show="currentTab == 'parts'" ref="partsTabRef"></parts-table>
-  <!-- <collections-table
+  <collections-table
     v-show="currentTab == 'collections'"
     ref="colsTabRef"
-  ></collections-table> -->
+  ></collections-table>
 </template>
 
 <script setup>
 import PartsTable from "./PartsTable.vue";
-// import CollectionsTable from "./CollectionsTable.vue";
+import CollectionsTable from "./CollectionsTable.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 

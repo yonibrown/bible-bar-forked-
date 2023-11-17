@@ -1,22 +1,22 @@
 <template>
   <tr class="table-line">
-    <td v-show="enableSelection">
+    <td v-show="enableSelection" class="fit-column">
       <input type="checkbox" v-model="checked" />
     </td>
-    <td v-for="fld in tableFields">
+    <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
       <component :is="lineComponent" :line="line" :field="fld"></component>
     </td>
   </tr>
 </template>
 
 <script setup>
-import { ref,  computed, watch } from "vue";
+import { ref, computed, watch } from "vue";
 const props = defineProps([
   "line",
   "checkAll",
   "enableSelection",
   "tableFields",
-  "lineComponent"
+  "lineComponent",
 ]);
 
 const checked = ref(false);
@@ -40,5 +40,10 @@ td {
 
 .table-line {
   background-color: white;
+}
+
+.fit-column {
+  width: 1px;
+  white-space: nowrap;
 }
 </style>

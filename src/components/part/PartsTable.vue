@@ -33,16 +33,19 @@ const tableFields = [
     name: "col",
     title: "קטגוריה",
     sortable: true,
+    fit: true,
   },
   {
     name: "src",
     title: "פסוק",
     sortable: true,
+    fit: true,
   },
   {
     name: "text",
     title: "טקסט",
     sortable: false,
+    fit: false,
   },
 ];
 const sortAttr = ref({

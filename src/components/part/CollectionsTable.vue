@@ -1,37 +1,40 @@
 <template>
-  <div>
-    <base-scrollable>
-      <base-table
-        :enableSelection="displayOptions"
-        :tableFields="tableFields"
-      >
-        <collection-line
-          ref="linesRef"
-          v-for="col in filteredCollections"
-          :col="col"
-          :key="col.id"
-          :checkAll="checkAllRef"
-        ></collection-line>
-      </base-table>
-    </base-scrollable>
-    <span v-show="displayOptions">
-      <span>בחר הכל:</span>
-      <input
-        type="checkbox"
-        v-model="checkAllRef"
-        :indeterminate="checkPartial"
-      />
-    </span>
-  </div>
+  <base-table
+    :enableSelection="displayOptions"
+    :tableFields="tableFields"
+    :lines="collections"
+    lineComponent="collection-line"
+    ref="tableRef"
+  >
+  </base-table>
 </template>
 
 <script setup>
 import BaseTable from "../ui/BaseTable.vue";
-import CollectionLine from "./CollectionLine.vue";
-import { computed, ref, inject, watch } from "vue";
+import { computed, ref, inject } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
+const elementAttr = inject("elementAttr");
+
+const researchId = { res: elementAttr.value.res };
+
+const collections = ref([]);
+
+// load data
+loadResearchCollections();
+
+async function loadResearchCollections() {
+  const data = {
+    type: "research",
+    oper: "get_col_list",
+    id: researchId,
+    prop: { dummy: "" },
+  };
+
+  const obj = await sendToServer(data);
+  collections.value = obj.data;
+}
 
 // table properties
 const tableFields = [
@@ -39,12 +42,13 @@ const tableFields = [
     name: "name",
     title: "קטגוריה",
     sortable: false,
+    fit: true,
   },
   {
     name: "description",
     title: "הערות",
     sortable: false,
+    fit: false,
   },
 ];
-
 </script>
