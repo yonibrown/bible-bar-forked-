@@ -11,7 +11,6 @@
       >
         <parts-line
           ref="linesRef"
-          class="resprt-part"
           v-for="prt in filteredParts"
           :prt="prt"
           :key="prt.id"
