@@ -25,9 +25,13 @@ import CollectionsTable from "./CollectionsTable.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 
-import { ref, inject } from "vue";
+import { ref, inject ,provide} from "vue";
 
 const displayOptions = inject("displayOptions");
+
+const elementAttr = inject("elementAttr");
+const researchId = { res: elementAttr.value.res };
+provide('researchId',researchId);
 
 const partsTabRef = ref();
 

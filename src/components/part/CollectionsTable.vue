@@ -15,9 +15,7 @@ import { computed, ref, inject } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
-const elementAttr = inject("elementAttr");
-
-const researchId = { res: elementAttr.value.res };
+const researchId = inject("researchId");
 
 const collections = ref([]);
 

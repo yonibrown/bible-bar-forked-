@@ -15,13 +15,14 @@
 
 <script setup>
 import BaseTable from "../ui/BaseTable.vue";
-import { computed, ref, inject } from "vue";
+import { computed, ref, inject,provide } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
 
-const researchId = { res: elementAttr.value.res };
+const researchId = inject("researchId");
+
 const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
