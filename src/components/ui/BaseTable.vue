@@ -26,6 +26,9 @@
           :line="line"
           :key="line.id"
           :checkAll="checkAllRef"
+          :enableSelection="enableSelection"
+          :tableFields="tableFields"
+          :lineComponent="lineComponent"
         ></table-line>
       </table>
     </base-scrollable>
@@ -48,7 +51,8 @@ const props = defineProps([
   "tableFields",
   "sortField",
   "ascending",
-  "lines"
+  "lines",
+  "lineComponent"
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
 

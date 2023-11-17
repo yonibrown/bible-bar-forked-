@@ -30,6 +30,7 @@ import BaseTable from "../ui/BaseTable.vue";
 import CollectionLine from "./CollectionLine.vue";
 import { computed, ref, inject, watch } from "vue";
 import { sendToServer } from "../../server.js";
+
 const displayOptions = inject("displayOptions");
 
 // table properties

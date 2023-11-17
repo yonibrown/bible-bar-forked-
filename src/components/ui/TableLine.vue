@@ -1,20 +1,23 @@
 <template>
   <tr class="table-line">
-    <td v-show="displayOptions"><input type="checkbox" v-model="checked" /></td>
-    <td class="disp_view">{{ line.col_name }}</td>
-    <td>{{ line.src_name.replaceAll(",", " ") }}</td>
-    <td class="bible-text">
-      {{ line.text_before }}<b>{{ line.text_part }}</b
-      >{{ line.text_after }}
+    <td v-show="enableSelection">
+      <input type="checkbox" v-model="checked" />
+    </td>
+    <td v-for="fld in tableFields">
+      <component :is="lineComponent" :line="line" :field="fld"></component>
     </td>
   </tr>
 </template>
 
 <script setup>
-import { ref, inject,computed,watch } from "vue";
-const props = defineProps(["line","checkAll"]);
-
-const displayOptions = inject("displayOptions");
+import { ref,  computed, watch } from "vue";
+const props = defineProps([
+  "line",
+  "checkAll",
+  "enableSelection",
+  "tableFields",
+  "lineComponent"
+]);
 
 const checked = ref(false);
 defineExpose({
@@ -22,11 +25,11 @@ defineExpose({
   checked,
 });
 
-const checkAll = computed(function(){
+const checkAll = computed(function () {
   return props.checkAll;
 });
-watch(checkAll,function(newVal){
-    checked.value = newVal;
+watch(checkAll, function (newVal) {
+  checked.value = newVal;
 });
 </script>
 

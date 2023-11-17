@@ -7,6 +7,7 @@
     :ascending="sortAttr.ordering == 'ASC'"
     @reverseTable="reverseTable"
     :lines="filteredParts"
+    lineComponent="parts-line"
     ref="tableRef"
   >
   </base-table>
