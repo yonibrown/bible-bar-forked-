@@ -1,35 +1,58 @@
 <template>
-  <table>
-    <tr class="header">
-      <td v-show="enableSelection"></td>
-      <td v-for="fld in tableFields">
-        <span
-          v-if="fld.sortable"
-          @dblclick="changeSort(fld.name)"
-          :class="{ sortingField: sortField == fld.name }"
-        >
-          {{ fld.title }}
-          <i
-            v-show="sortField == fld.name"
-            class="fa"
-            :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
-          ></i>
-        </span>
-        <span v-else>{{ fld.title }}</span>
-      </td>
-    </tr>
-    <slot></slot>
-  </table>
+  <div>
+    <base-scrollable>
+      <table>
+        <tr class="header">
+          <td v-show="enableSelection"></td>
+          <td v-for="fld in tableFields">
+            <span
+              v-if="fld.sortable"
+              @dblclick="changeSort(fld.name)"
+              :class="{ sortingField: sortField == fld.name }"
+            >
+              {{ fld.title }}
+              <i
+                v-show="sortField == fld.name"
+                class="fa"
+                :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
+              ></i>
+            </span>
+            <span v-else>{{ fld.title }}</span>
+          </td>
+        </tr>
+        <table-line
+          ref="linesRef"
+          v-for="line in lines"
+          :line="line"
+          :key="line.id"
+          :checkAll="checkAllRef"
+        ></table-line>
+      </table>
+    </base-scrollable>
+    <span v-show="enableSelection">
+      <span>בחר הכל:</span>
+      <input
+        type="checkbox"
+        v-model="checkAllRef"
+        :indeterminate="checkPartial"
+      />
+    </span>
+  </div>
 </template>
 
 <script setup>
+import TableLine from "./TableLine.vue";
+import { computed, ref, watch } from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
   "sortField",
   "ascending",
+  "lines"
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
+
+const linesRef = ref([]);
 
 function changeSort(newField) {
   if (props.sortField == newField) {
@@ -38,6 +61,46 @@ function changeSort(newField) {
     emit("changeSortField", newField);
   }
 }
+
+const checkAllRef = ref(false);
+const checkPartial = ref(false);
+
+const selectedLines = computed(function () {
+  return linesRef.value
+    .filter(function (line) {
+      return line.checked;
+    })
+    .map(function (line) {
+      return line.id;
+    });
+});
+
+
+const checkState = computed(function () {
+  const len = selectedLines.value.length;
+  if (len == 0) {
+    return "none";
+  }
+  if (len == linesRef.value.length) {
+    return "all";
+  }
+  return "partial";
+});
+watch(checkState, function (newVal) {
+  if (newVal == "all") {
+    checkAllRef.value = true;
+    checkPartial.value = false;
+  } else {
+    if (newVal == "none") {
+      checkAllRef.value = false;
+      checkPartial.value = false;
+    } else {
+      checkPartial.value = true;
+    }
+  }
+});
+
+defineExpose({ selectedLines });
 </script>
 
 <style scoped>

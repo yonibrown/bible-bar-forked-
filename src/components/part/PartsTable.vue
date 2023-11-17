@@ -1,38 +1,20 @@
 <template>
-  <div>
-    <base-scrollable>
-      <base-table
-        :enableSelection="displayOptions"
-        :tableFields="tableFields"
-        :sortField="sortAttr.sort"
-        @changeSortField="changeSortField"
-        :ascending="sortAttr.ordering == 'ASC'"
-        @reverseTable="reverseTable"
-      >
-        <parts-line
-          ref="linesRef"
-          v-for="prt in filteredParts"
-          :prt="prt"
-          :key="prt.id"
-          :checkAll="checkAllRef"
-        ></parts-line>
-      </base-table>
-    </base-scrollable>
-    <span v-show="displayOptions">
-      <span>בחר הכל:</span>
-      <input
-        type="checkbox"
-        v-model="checkAllRef"
-        :indeterminate="checkPartial"
-      />
-    </span>
-  </div>
+  <base-table
+    :enableSelection="displayOptions"
+    :tableFields="tableFields"
+    :sortField="sortAttr.sort"
+    @changeSortField="changeSortField"
+    :ascending="sortAttr.ordering == 'ASC'"
+    @reverseTable="reverseTable"
+    :lines="filteredParts"
+    ref="tableRef"
+  >
+  </base-table>
 </template>
 
 <script setup>
 import BaseTable from "../ui/BaseTable.vue";
-import PartsLine from "./PartsLine.vue";
-import { computed, ref, inject, watch } from "vue";
+import { computed, ref, inject } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
@@ -42,7 +24,7 @@ const researchId = { res: elementAttr.value.res };
 const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
-const linesRef = ref([]);
+const tableRef = ref([]);
 
 // table properties
 const tableFields = [
@@ -117,24 +99,13 @@ const filteringCols = computed(function () {
   return arr;
 });
 
-const selectedParts = computed(function () {
-  return linesRef.value
-    .filter(function (part) {
-      return part.checked;
-    })
-    .map(function (part) {
-      return part.id;
-    });
-});
-
 async function moveSelectedToCat(cat) {
-  console.log(cat, selectedParts.value);
   const data = {
     type: "research",
     oper: "update_parts",
     id: researchId,
     prop: {
-      partList: selectedParts.value,
+      partList: tableRef.value.selectedLines,
       updAttr: cat,
     },
   };
@@ -150,7 +121,7 @@ async function duplicateSelected() {
     oper: "duplicate",
     id: researchId,
     prop: {
-      partList: selectedParts.value,
+      partList: tableRef.value.selectedLines,
     },
   };
 
@@ -160,32 +131,6 @@ async function duplicateSelected() {
     res: obj.data.new_res_id,
   });
 }
-
-const checkAllRef = ref(false);
-const checkPartial = ref(false);
-const checkState = computed(function () {
-  const len = selectedParts.value.length;
-  if (len == 0) {
-    return "none";
-  }
-  if (len == linesRef.value.length) {
-    return "all";
-  }
-  return "partial";
-});
-watch(checkState, function (newVal) {
-  if (newVal == "all") {
-    checkAllRef.value = true;
-    checkPartial.value = false;
-  } else {
-    if (newVal == "none") {
-      checkAllRef.value = false;
-      checkPartial.value = false;
-    } else {
-      checkPartial.value = true;
-    }
-  }
-});
 
 defineExpose({ moveSelectedToCat, duplicateSelected });
 </script>
