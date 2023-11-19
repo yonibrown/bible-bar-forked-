@@ -19,7 +19,6 @@
     </div>
     <component
       :is="element.type + '-box'"
-      :elementAttr="elementAttr"
       ref="boxRef"
     ></component>
   </base-card>

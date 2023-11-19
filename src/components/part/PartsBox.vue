@@ -1,38 +1,37 @@
 <template>
   <div v-show="displayOptions">
     <links-menu title="סינון"></links-menu>
-    <parts-menu
-      :elementAttr="elementAttr"
-      @updateData="updateData"
-    ></parts-menu>
+    <parts-menu @updateData="updateData"></parts-menu>
   </div>
   <div class="tabs">
     <button
       v-for="tab in tabList"
-      :class="{ active: (tab.name == currentTab) }"
+      :class="{ active: tab.name == currentTab }"
       @click="changeTab(tab.name)"
     >
       {{ tab.title }}
     </button>
-    <!-- <button :class="{active:tab=='parts'}" @click="changeTab('parts')">רשימה</button>
-    <button :class="{active:tab=='categories'}" @click="changeTab('categories')">קטגוריות</button> -->
   </div>
-  <parts-table
-    v-show="currentTab == 'parts'"
-    :elementAttr="elementAttr"
-    ref="partsTabRef"
-  ></parts-table>
+  <parts-table v-show="currentTab == 'parts'" ref="partsTabRef"></parts-table>
+  <collections-table
+    v-show="currentTab == 'collections'"
+    ref="colsTabRef"
+  ></collections-table>
 </template>
 
 <script setup>
 import PartsTable from "./PartsTable.vue";
+import CollectionsTable from "./CollectionsTable.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 
-import { ref, inject } from "vue";
+import { ref, inject ,provide} from "vue";
 
 const displayOptions = inject("displayOptions");
-const props = defineProps(["elementAttr"]);
+
+const elementAttr = inject("elementAttr");
+const researchId = { res: elementAttr.value.res };
+provide('researchId',researchId);
 
 const partsTabRef = ref();
 
@@ -44,7 +43,7 @@ const tabList = [
     title: "רשימה",
   },
   {
-    name: "categories",
+    name: "collections",
     title: "קטגוריות",
   },
 ];
@@ -56,7 +55,7 @@ function changeTab(newVal) {
 function updateData(data) {
   switch (data.action) {
     case "showCat":
-      console.log('showCat: not yet implemented');
+      console.log("showCat: not yet implemented");
       break;
     case "moveSelectedToCat":
       partsTabRef.value.moveSelectedToCat(data.prop);
@@ -69,7 +68,6 @@ function updateData(data) {
 </script>
 
 <style scoped>
-/* Style the tab */
 .tabs {
   /* overflow: hidden; */
   border: 1px solid #ccc;

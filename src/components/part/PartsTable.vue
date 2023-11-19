@@ -1,62 +1,71 @@
 <template>
-  <div class="parts-scroll">
-    <!-- <div class="parts-box"> -->
-    <base-scrollable>
-      <table>
-        <tr class="resprt-header">
-          <td v-show="displayOptions"></td>
-          <td :class="categoryClass" @dblclick="changeSort('col')">
-            קטגוריה
-            <i v-show="categoryAscending" class="fa fa-arrow-up"></i>
-            <i v-show="categoryDescending" class="fa fa-arrow-down"></i>
-          </td>
-          <td :class="verseClass" @dblclick="changeSort('src')">
-            פסוק
-            <i v-show="verseAscending" class="fa fa-arrow-up"></i>
-            <i v-show="verseDescending" class="fa fa-arrow-down"></i>
-          </td>
-          <td>טקסט</td>
-        </tr>
-        <parts-line
-          ref="linesRef"
-          class="resprt-part"
-          v-for="prt in filteredParts"
-          :prt="prt"
-          :key="prt.id"
-          :checkAll="checkAllRef"
-        ></parts-line>
-      </table>
-    </base-scrollable>
-    <!-- </div> -->
-    <span v-show="displayOptions">
-      <span>בחר הכל:</span>
-      <input
-        type="checkbox"
-        v-model="checkAllRef"
-        :indeterminate="checkPartial"
-      />
-    </span>
-  </div>
+  <base-table
+    :enableSelection="displayOptions"
+    :tableFields="tableFields"
+    :sortField="sortAttr.sort"
+    @changeSortField="changeSortField"
+    :ascending="sortAttr.ordering == 'ASC'"
+    @reverseTable="reverseTable"
+    :lines="filteredParts"
+    lineComponent="parts-line"
+    ref="tableRef"
+  >
+  </base-table>
 </template>
 
 <script setup>
-import PartsLine from "./PartsLine.vue";
-import { reactive, computed, ref, inject, watch } from "vue";
+import BaseTable from "../ui/BaseTable.vue";
+import { computed, ref, inject,provide } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
-const props = defineProps(["elementAttr"]);
+const elementAttr = inject("elementAttr");
 
-const researchId = { res: props.elementAttr.res };
+const researchId = inject("researchId");
+
 const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
-const linesRef = ref([]);
+const tableRef = ref([]);
 
-const attr = reactive({
-  sort: props.elementAttr.sort, // src/sol/pos
-  ordering: props.elementAttr.ordering,
+// table properties
+const tableFields = [
+  {
+    name: "col",
+    title: "קטגוריה",
+    sortable: true,
+    fit: true,
+  },
+  {
+    name: "src",
+    title: "פסוק",
+    sortable: true,
+    fit: true,
+  },
+  {
+    name: "text",
+    title: "טקסט",
+    sortable: false,
+    fit: false,
+  },
+];
+const sortAttr = ref({
+  sort: elementAttr.value.sort,
+  ordering: elementAttr.value.ordering,
 });
+function reverseTable() {
+  sortAttr.value.ordering = sortAttr.value.ordering == "DESC" ? "ASC" : "DESC";
+  parts.value.reverse();
+  changeAttr(sortAttr.value);
+}
+function changeSortField(newField) {
+  sortAttr.value.ordering = "ASC";
+  sortAttr.value.sort = newField;
+  parts.value.sort(function (a, b) {
+    return a.sort_key[newField] > b.sort_key[newField] ? 1 : -1;
+  });
+  changeAttr(sortAttr.value);
+}
 
 // load data
 loadResearchParts();
@@ -66,10 +75,7 @@ async function loadResearchParts() {
     type: "research",
     oper: "get_prt_list",
     id: researchId,
-    prop: {
-      sort: attr.sort,
-      ordering: attr.ordering,
-    },
+    prop: sortAttr.value,
   };
 
   const obj = await sendToServer(data);
@@ -86,53 +92,11 @@ const filteredParts = computed(function () {
   });
 });
 
-const verseClass = computed(function () {
-  return attr.sort == "src" ? "sortingField" : "";
-});
-const categoryClass = computed(function () {
-  return attr.sort == "col" ? "sortingField" : "";
-});
-const verseAscending = computed(function () {
-  return (attr.sort == "src") & (attr.ordering == "ASC");
-});
-const verseDescending = computed(function () {
-  return (attr.sort == "src") & (attr.ordering == "DESC");
-});
-const categoryAscending = computed(function () {
-  return (attr.sort == "col") & (attr.ordering == "ASC");
-});
-const categoryDescending = computed(function () {
-  return (attr.sort == "col") & (attr.ordering == "DESC");
-});
-function changeSort(newField) {
-  if (attr.sort == newField) {
-    attr.ordering = attr.ordering == "ASC" ? "DESC" : "ASC";
-    parts.value.reverse();
-  } else {
-    attr.ordering = "ASC";
-    if (attr.sort == "src") {
-      attr.sort = "col";
-      parts.value.sort(function (a, b) {
-        return a.col_sort_key > b.col_sort_key ? 1 : -1;
-      });
-    } else {
-      attr.sort = "src";
-      parts.value.sort(function (a, b) {
-        return a.src_sort_key > b.src_sort_key ? 1 : -1;
-      });
-    }
-  }
-  changeAttr({
-    sort: attr.sort,
-    ordering: attr.ordering,
-  });
-}
-
 const filteringCols = computed(function () {
   const arr = [];
   links.value.forEach(function (link) {
     link.categories.forEach(function (cat) {
-      if (cat.res == props.elementAttr.res && cat.display) {
+      if (cat.res == elementAttr.value.res && cat.display) {
         arr.push(cat.col);
       }
     });
@@ -140,24 +104,13 @@ const filteringCols = computed(function () {
   return arr;
 });
 
-const selectedParts = computed(function () {
-  return linesRef.value
-    .filter(function (part) {
-      return part.checked;
-    })
-    .map(function (part) {
-      return part.id;
-    });
-});
-
 async function moveSelectedToCat(cat) {
-  console.log(cat, selectedParts.value);
   const data = {
     type: "research",
     oper: "update_parts",
     id: researchId,
     prop: {
-      partList: selectedParts.value,
+      partList: tableRef.value.selectedLines,
       updAttr: cat,
     },
   };
@@ -173,7 +126,7 @@ async function duplicateSelected() {
     oper: "duplicate",
     id: researchId,
     prop: {
-      partList: selectedParts.value,
+      partList: tableRef.value.selectedLines,
     },
   };
 
@@ -184,77 +137,5 @@ async function duplicateSelected() {
   });
 }
 
-const checkAllRef = ref(false);
-const checkPartial = ref(false);
-const checkState = computed(function () {
-  const len = selectedParts.value.length;
-  if (len == 0) {
-    return "none";
-  }
-  if (len == linesRef.value.length) {
-    return "all";
-  }
-  return "partial";
-});
-watch(checkState, function (newVal) {
-  if (newVal == "all") {
-    checkAllRef.value = true;
-    checkPartial.value = false;
-  } else {
-    if (newVal == "none") {
-      checkAllRef.value = false;
-      checkPartial.value = false;
-    } else {
-      checkPartial.value = true;
-    }
-  }
-});
-
 defineExpose({ moveSelectedToCat, duplicateSelected });
 </script>
-
-<style scoped>
-.resprt-header {
-  background-color: #ebebeb;
-  user-select: none;
-}
-
-.resprt-header td {
-  background-color: #ebebeb;
-  padding: 2px 0 5px 0;
-  /* border-bottom: 2px solid #e9e9e9; */
-  font-size: 70%;
-  position: sticky;
-  top: 0;
-  /* cursor: pointer; */
-}
-
-table {
-  background-color: #e9e9e9;
-  text-align: justify;
-  width: 100%;
-  /* max-width: 85%; */
-}
-
-.parts-scroll{
-    width: 100%;
-    /* overflow-y: scroll;
-    overflow-x: hidden;
-    border: 1px solid #9aaab9;
-    margin: 0 auto 15px auto; */
-}
-/* .parts-box {
-  border: 1px solid #9aaab9;
-  width: 100%;
-  // max-width: fit-content; 
-  max-height: 150px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  margin: 0 auto 5px auto;
-} 
-*/
-
-.sortingField {
-  font-weight: bold;
-}
-</style>

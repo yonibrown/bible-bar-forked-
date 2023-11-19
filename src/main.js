@@ -16,6 +16,9 @@ import TextBox from './components/text/TextBox.vue';
 import PartsBox from './components/part/PartsBox.vue';
 import NewBox from './components/project/NewBox.vue';
 
+import PartsLine from './components/part/PartsLine.vue';
+import CollectionLine from './components/part/CollectionLine.vue';
+
 const app = createApp(App)
 
 app.use(router);
@@ -32,5 +35,8 @@ app.component('bar-box', BarBox);
 app.component('text-box', TextBox);
 app.component('parts-box', PartsBox);
 app.component('new-box', NewBox);
+
+app.component('parts-line', PartsLine);
+app.component('collection-line', CollectionLine);
 
 app.mount('#app');

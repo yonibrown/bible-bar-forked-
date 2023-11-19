@@ -12,7 +12,6 @@
 
 <script setup>
 import { ref, provide } from "vue";
-// const props = defineProps(["resizable"]);
 
 const cardRef = ref();
 const handleRef = ref();
@@ -41,10 +40,10 @@ function doDrag(evt) {
 
   if (startAddition + gap < 0) {
     yAddition.value = 0;
-    cardRef.value.style.height = initialHeight + "px";
+    cardRef.value.style.minheight = initialHeight + "px";
   } else {
     yAddition.value = startAddition + gap;
-    cardRef.value.style.height = startHeight + gap + "px";
+    cardRef.value.style.minheight = startHeight + gap + "px";
   }
 }
 
@@ -60,10 +59,10 @@ function getCardHeight() {
   );
 }
 
-function activateResizable(){
+function activateResizable() {
   resizable.value = true;
 }
-provide('activateResizable',activateResizable);
+provide("activateResizable", activateResizable);
 </script>
 
 <style scoped>
@@ -79,8 +78,7 @@ provide('activateResizable',activateResizable);
 
 .handle {
   height: 0.2rem;
-  width: 100%;
-  /* width: calc(100%-24px); */
+  width: calc(100% - 36px);
   cursor: row-resize;
   position: absolute;
   bottom: 0;
