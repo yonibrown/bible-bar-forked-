@@ -26,8 +26,6 @@ export function useResearches() {
   provide("getCollection", getCollection);
 
   async function updateCollection(col,newAttr){
-    // console.log(col);
-    // col.name = newAttr.name;
     Object.assign(col, newAttr);
     const data = {
       type: "research",
@@ -38,10 +36,27 @@ export function useResearches() {
         ...newAttr
       },
     };
-    // console.log(data);
+
     const obj = await sendToServer(data);
   }
   provide("updateCollection", updateCollection);
+
+  async function newCollection(col,newAttr){
+    console.log('not yet implemented');
+    // Object.assign(col, newAttr);
+    // const data = {
+    //   type: "research",
+    //   oper: "update_collection",
+    //   id: {res: col.res},
+    //   prop: {
+    //     col: col.id,
+    //     ...newAttr
+    //   },
+    // };
+
+    // const obj = await sendToServer(data);
+  }
+  provide("newCollection", newCollection);
 
   return researches;
 }
