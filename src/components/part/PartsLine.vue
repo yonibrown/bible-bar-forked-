@@ -10,10 +10,13 @@
 </template>
 
 <script setup>
-import { inject } from "vue";
+import { inject,computed } from "vue";
 const props = defineProps(["line", "field"]);
 
 const researchId = inject("researchId");
 const getCollection = inject("getCollection");
-const collection = getCollection(researchId.res, props.line.col);
+const collection = computed(function(){
+    return getCollection(researchId.res, props.line.col);
+});
+
 </script>
