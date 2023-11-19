@@ -18,7 +18,7 @@ export function useResearches() {
       return null;
     }
     const col = research.collections.find((pCol) => {
-      return pCol.col == colId;
+      return pCol.id == colId;
     });
     return col;
   }
