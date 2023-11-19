@@ -1,17 +1,19 @@
 <template>
-  <form @submit.prevent="submitValue" class="menu" v-if="editingValue">
+  <form @submit.prevent="submitValue" class="menu" v-if="editing">
     <input
       type="text"
       id="editable"
       :name="name"
       ref="input"
-      v-model.trim="editableValue"
+      v-model.trim="currentValue"
+      @focusout="inputFocusout"
+      @keydown="inputKeydown"
     />
     <button>שמור</button>
   </form>
   <span
     v-else
-    @dblclick="starteditValue"
+    @dblclick="startEdit"
     :class="{ placeholder: noTitle }"
     class="title"
   >
@@ -32,8 +34,8 @@ const props = defineProps([
 ]);
 const emit = defineEmits(["submitValue"]);
 
-const editingValue = ref(false);
-const editableValue = ref(props.initialValue);
+const editing = ref(false);
+const currentValue = ref(props.initialValue);
 
 const title = computed(function () {
   if (props.initialValue == "" && !props.disabled) {
@@ -54,18 +56,34 @@ watch(input, function (newVal) {
 });
 
 function submitValue() {
-  console.log(props);
-  if (editableValue.value == "" && !props.blankable) {
-    editableValue.value = props.defaultValue;
+  console.log("submit");
+  if (currentValue.value == "" && !props.blankable) {
+    currentValue.value = props.defaultValue;
   }
 
-  editingValue.value = false;
-  emit("submitValue", editableValue.value);
+  leaveEdit();
+  emit("submitValue", currentValue.value);
 }
 
-function starteditValue() {
+function startEdit() {
   if (!props.disabled) {
-    editingValue.value = true;
+    editing.value = true;
+  }
+}
+
+function leaveEdit(){
+  editing.value = false;
+}
+
+function inputFocusout(evt) {
+  if (!evt.relatedTarget){
+    leaveEdit();
+  }
+}
+
+function inputKeydown(evt){
+  if (evt.keyCode == 27){
+    leaveEdit();
   }
 }
 </script>

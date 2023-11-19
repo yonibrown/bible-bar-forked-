@@ -38,7 +38,7 @@ export function useResearches() {
         ...newAttr
       },
     };
-    console.log(data);
+    // console.log(data);
     const obj = await sendToServer(data);
   }
   provide("updateCollection", updateCollection);
