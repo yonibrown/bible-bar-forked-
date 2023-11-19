@@ -11,29 +11,28 @@
 
 <script setup>
 import BaseTable from "../ui/BaseTable.vue";
-import { computed, ref, inject } from "vue";
+import {  ref, inject } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
 const researchId = inject("researchId");
-const research = inject("research");
 
-const collections = research.collections;
+const collections = ref([]);
 
 // load data
-// loadResearchCollections();
+loadResearchCollections();
 
-// async function loadResearchCollections() {
-//   const data = {
-//     type: "research",
-//     oper: "get_col_list",
-//     id: researchId,
-//     prop: { dummy: "" },
-//   };
+async function loadResearchCollections() {
+  const data = {
+    type: "research",
+    oper: "get_col_list",
+    id: researchId,
+    prop: { dummy: "" },
+  };
 
-//   const obj = await sendToServer(data);
-//   collections.value = obj.data;
-// }
+  const obj = await sendToServer(data);
+  collections.value = obj.data;
+}
 
 // table properties
 const tableFields = [

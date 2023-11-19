@@ -1,4 +1,5 @@
 import { provide, ref, computed } from "vue";
+import { sendToServer } from "../../server.js";
 
 export function useResearches() {
   const researches = ref([]);
@@ -23,6 +24,22 @@ export function useResearches() {
     return col;
   }
   provide("getCollection", getCollection);
+
+  async function updateCollection(col,newAttr){
+    Object.assign(col, newAttr);
+    const data = {
+      type: "research",
+      oper: "update_collection",
+      id: {res: col.res},
+      prop: {
+        col: col.id,
+        ...newAttr
+      },
+    };
+    console.log(data);
+    const obj = await sendToServer(data);
+  }
+  provide("updateCollection", updateCollection);
 
   return researches;
 }
