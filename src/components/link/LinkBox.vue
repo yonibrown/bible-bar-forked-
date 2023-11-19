@@ -16,13 +16,12 @@ import LinkCategory from './LinkCategory.vue';
 import { computed, inject } from 'vue';
 import { sendToServer } from '../../server.js';
 
-const props = defineProps(['elementAttr']);
-
 const projectId = inject('projectId');
 const getLink = inject('getLink');
+const elementAttr = inject('elementAttr');
 
 const linkId = computed(function () {
-  return props.elementAttr.link_id;
+  return elementAttr.value.link_id;
 });
 
 const link = computed(function () {

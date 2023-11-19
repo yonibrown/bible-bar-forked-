@@ -52,15 +52,16 @@ import SequenceScale from "./SequenceScale.vue";
 
 import { computed, provide, inject, ref } from "vue";
 
-const props = defineProps(["elementAttr", "displayScale", "enableWholeText"]);
+const props = defineProps(["displayScale", "enableWholeText"]);
 
+const elementAttr = inject('elementAttr');
 const changeAttr = inject("changeAttr");
 
 const seqIndex = computed(function () {
   return {
-    res: props.elementAttr.research_id,
-    col: props.elementAttr.collection_id,
-    idx: props.elementAttr.seq_index,
+    res: elementAttr.value.research_id,
+    col: elementAttr.value.collection_id,
+    idx: elementAttr.value.seq_index,
   };
 });
 provide("seqIndex", seqIndex);
@@ -78,7 +79,7 @@ async function submitChanges() {
     return;
   }
 
-  const fromKey = props.elementAttr.from_key;
+  const fromKey = elementAttr.value.from_key;
   var fromDiv;
   if (changedAttr["from_div"] != null) {
     fromDiv = +changedAttr["from_div"];
@@ -86,7 +87,7 @@ async function submitChanges() {
     fromDiv = +fromKey[fromKey.length - 1].division_id;
   }
 
-  const toKey = props.elementAttr.to_key;
+  const toKey = elementAttr.value.to_key;
   var toDiv;
   if (changedAttr["to_div"] != null) {
     toDiv = +changedAttr["to_div"];
@@ -121,9 +122,9 @@ const filterText = computed(function () {
   return "מיקוד " + (displayFilter.value ? "<<" : ">>");
 });
 
-const initialFromKey = ref(props.elementAttr.from_key);
-const initialToKey = ref(props.elementAttr.to_key);
-const initialScaleLevel = ref(props.elementAttr.seq_level);
+const initialFromKey = ref(elementAttr.value.from_key);
+const initialToKey = ref(elementAttr.value.to_key);
+const initialScaleLevel = ref(elementAttr.value.seq_level);
 function removeFilter() {
   initialFromKey.value = null;
   initialToKey.value = null;

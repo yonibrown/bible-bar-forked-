@@ -17,7 +17,7 @@
 <script setup>
 import { ref, watch } from "vue";
 
-const props = defineProps(["initialValue", "name","defaultValue"]);
+const props = defineProps(["initialValue", "name", "defaultValue", "disabled"]);
 const emit = defineEmits(["submitValue"]);
 
 const editingValue = ref(false);
@@ -34,13 +34,15 @@ watch(input, function (newVal) {
 function submitValue() {
   if (editableValue.value == "") {
     editableValue.value = props.defaultValue;
-  } 
+  }
 
   editingValue.value = false;
   emit("submitValue", editableValue.value);
 }
 
 function starteditValue() {
-  editingValue.value = true;
+  if (!props.disabled){
+    editingValue.value = true;
+  }
 }
 </script>

@@ -2,7 +2,6 @@
   <div v-show="displayOptions">
     <sequence-menu
       v-show="displayOptions"
-      :elementAttr="elementAttr"
       :displayScale="false"
       :enableWholeText="false"
     ></sequence-menu>
@@ -30,7 +29,6 @@ import TextVerse from "./TextVerse.vue";
 import { inject, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-const props = defineProps(["elementAttr"]);
 const displayOptions = inject("displayOptions");
 const elementId = inject("elementId");
 
