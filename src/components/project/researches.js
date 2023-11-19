@@ -26,6 +26,8 @@ export function useResearches() {
   provide("getCollection", getCollection);
 
   async function updateCollection(col,newAttr){
+    // console.log(col);
+    // col.name = newAttr.name;
     Object.assign(col, newAttr);
     const data = {
       type: "research",
