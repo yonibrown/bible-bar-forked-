@@ -33,6 +33,10 @@ const elementAttr = inject("elementAttr");
 const researchId = { res: elementAttr.value.res };
 provide('researchId',researchId);
 
+const getResearch = inject("getResearch");
+const research = getResearch(elementAttr.value.res);
+provide('research',research);
+
 const partsTabRef = ref();
 
 // tabs

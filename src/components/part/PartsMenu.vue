@@ -43,8 +43,7 @@ import { ref, computed, inject } from "vue";
 
 const emit = defineEmits(["updateData"]);
 
-const elementAttr = inject("elementAttr");
-const getResearch = inject("getResearch");
+const research = inject("research");
 
 const action = ref("choose");
 const displayCatList = computed(function () {
@@ -54,7 +53,6 @@ const displaySubmit = computed(function () {
   return action.value != "choose";
 });
 
-const research = getResearch(elementAttr.value.res);
 
 const moveToCat = ref('choose');
 const displayNewCat = computed(function () {
