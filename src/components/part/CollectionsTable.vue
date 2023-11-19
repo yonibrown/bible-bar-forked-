@@ -2,7 +2,7 @@
   <base-table
     :enableSelection="displayOptions"
     :tableFields="tableFields"
-    :lines="collections"
+    :lines="research.collections"
     lineComponent="collection-line"
     ref="tableRef"
   >
@@ -11,29 +11,10 @@
 
 <script setup>
 import BaseTable from "../ui/BaseTable.vue";
-import { computed, ref, inject } from "vue";
-import { sendToServer } from "../../server.js";
+import { inject } from "vue";
 
 const displayOptions = inject("displayOptions");
-const researchId = inject("researchId");
 const research = inject("research");
-
-const collections = research.collections;
-
-// load data
-// loadResearchCollections();
-
-// async function loadResearchCollections() {
-//   const data = {
-//     type: "research",
-//     oper: "get_col_list",
-//     id: researchId,
-//     prop: { dummy: "" },
-//   };
-
-//   const obj = await sendToServer(data);
-//   collections.value = obj.data;
-// }
 
 // table properties
 const tableFields = [

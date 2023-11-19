@@ -56,10 +56,11 @@ function changeTab(newVal) {
 }
 
 // load data
+const newCollection = inject("newCollection");
 function updateData(data) {
   switch (data.action) {
-    case "showCat":
-      console.log("showCat: not yet implemented");
+    case "newCat":
+      newCollection(research,data.prop);
       break;
     case "moveSelectedToCat":
       partsTabRef.value.moveSelectedToCat(data.prop);

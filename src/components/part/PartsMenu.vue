@@ -3,7 +3,7 @@
     <span>פעולה:</span>
     <select v-model="action">
       <option value="choose">בחר...</option>
-      <option value="showCat">הצג קטגוריה</option>
+      <option value="newCat">קטגוריה חדשה</option>
       <option value="changeCat">העבר לקטגוריה</option>
       <option value="duplicate">העתק לרשימה חדשה</option>
       <option value="remove">מחק מהרשימה</option>
@@ -18,15 +18,15 @@
           {{ col.name }}
         </option>
       </select>
-      <span v-if="displayNewCat">
-        <span>שם:</span>
-        <input
-          type="text"
-          id="newName"
-          :name="category"
-          v-model.trim="newCategory"
-        />
-      </span>
+    </span>
+    <span v-if="displayNewCat">
+      <span>שם:</span>
+      <input
+        type="text"
+        id="newName"
+        name="category"
+        v-model.trim="newCategory"
+      />
     </span>
     <input
       v-if="displaySubmit"
@@ -47,25 +47,26 @@ const research = inject("research");
 
 const action = ref("choose");
 const displayCatList = computed(function () {
-  return action.value == "changeCat" || action.value == "showCat" ;
+  return action.value == "changeCat";
 });
 const displaySubmit = computed(function () {
   return action.value != "choose";
 });
 
-
-const moveToCat = ref('choose');
+const moveToCat = ref("choose");
 const displayNewCat = computed(function () {
-  return moveToCat.value == "new";
+  return (
+    (displayCatList && moveToCat.value == "new") || action.value == "newCat"
+  );
 });
 
 const newCategory = ref("");
 const hasChanges = computed(function () {
-  if (displayCatList.value){
-    if (moveToCat.value == 'new'){
+  if (displayCatList.value) {
+    if (moveToCat.value == "new") {
       return newCategory.value != "";
     }
-    return moveToCat.value != 'choose';
+    return moveToCat.value != "choose";
   }
   return action.value != "choose";
 });
@@ -73,26 +74,22 @@ const hasChanges = computed(function () {
 function submitChanges() {
   let act, prop;
   switch (action.value) {
-    case "showCat":
-      act = "showCat";
-      if (moveToCat.value == 'new'){
-        prop = {
-          collection_id: 0,
-          collection_name: newCategory.value
-        };
-      } else {
-        prop = {collection_id: moveToCat.value};
-      }
+    case "newCat":
+      act = "newCat";
+      prop = {
+        collection_id: 0,
+        collection_name: newCategory.value,
+      };
       break;
     case "changeCat":
       act = "moveSelectedToCat";
-      if (moveToCat.value == 'new'){
+      if (moveToCat.value == "new") {
         prop = {
           collection_id: 0,
-          collection_name: newCategory.value
+          collection_name: newCategory.value,
         };
       } else {
-        prop = {collection_id: moveToCat.value};
+        prop = { collection_id: moveToCat.value };
       }
       break;
     case "duplicate":
