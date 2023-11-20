@@ -11,7 +11,7 @@
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
         <menu-button
           v-if="displayOptionsButton"
-          type="options"
+          type="edit"
           @click="toggleMenu"
         ></menu-button>
         <menu-button type="close" @click="closeElement"></menu-button>

@@ -17,6 +17,8 @@ const faClass = computed(function () {
       return "fa-close";
     case "options":
       return "fa-bars";
+    case "edit":
+      return "fa-pencil";
     default:
       return null;
   }
@@ -27,7 +29,7 @@ const faClass = computed(function () {
 div {
   cursor: default;
   /* float: left; */
-  color: rgb(146, 146, 146);
+  color: rgb(177, 177, 177);
   margin-right: 6px;
   padding: 4px;
   position: relative;
