@@ -5,6 +5,7 @@
     :lines="research.collections"
     lineComponent="collection-line"
     ref="tableRef"
+    :enableNewLine="true"
   >
   </base-table>
 </template>
