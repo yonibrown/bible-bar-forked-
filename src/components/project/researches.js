@@ -58,5 +58,15 @@ export function useResearches() {
   }
   provide("newCollection", newCollection);
 
-  return researches;
+  function addResearch(res){
+    researches.value.push(res);
+    console.log('after addResearch',researches);
+  }
+  provide("addResearch", addResearch);
+
+  const resMethods = {
+    getResearch,getCollection,updateCollection,newCollection,addResearch
+  }
+
+  return [researches,resMethods];
 }
