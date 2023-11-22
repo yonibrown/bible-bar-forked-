@@ -6,9 +6,10 @@
     <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
       <component
         :is="lineComponent"
-        :line="line"
+        :line="tableLine"
         :field="fld"
         :enableSelection="enableSelection"
+        :newLine="newLine"
       ></component>
     </td>
   </tr>
@@ -22,11 +23,27 @@ const props = defineProps([
   "enableSelection",
   "tableFields",
   "lineComponent",
+  "newLine"
 ]);
 
 const checked = ref(false);
+
+const lineId = computed(function(){
+  if (props.newLine){
+    return null;
+  }
+  return props.line.id
+});
+
+const tableLine = computed(function(){
+  if (props.newLine){
+    return null;
+  }
+  return props.line;
+});
+
 defineExpose({
-  id: props.line.id,
+  id: lineId,
   checked,
 });
 

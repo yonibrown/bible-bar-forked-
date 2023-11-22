@@ -2,15 +2,15 @@
   <!-- <span v-if="field.name == 'name'">{{ line.name }}</span> -->
   <base-editable
     v-if="field.name == 'name'"
-    :initialValue="line.name"
+    :initialValue="name"
     @submitValue="submitName"
     name="collectionName"
-    :defaultValue="'קטגוריה'+line.id"
+    :defaultValue="defaultName"
     :disabled="!enableSelection"
   ></base-editable>
   <base-editable
     v-else-if="field.name == 'description'"
-    :initialValue="line.description"
+    :initialValue="description"
     @submitValue="submitDesc"
     name="collectionDescription"
     :blankable="true"
@@ -21,10 +21,32 @@
 </template>
 
 <script setup>
-import { inject } from "vue";
+import { inject,computed } from "vue";
 
-const props = defineProps(["line", "field", "enableSelection"]);
+const props = defineProps(["line", "field", "enableSelection","newLine"]);
 const updateCollection = inject("updateCollection");
+console.log(props.line);
+
+const defaultName = computed(function(){
+  if (props.newLine){
+    return 'קטגוריה חדשה';
+  }
+  return 'קטגוריה '+props.line.id;
+});
+
+const name = computed(function(){
+  if (props.newLine){
+    return '';
+  }
+  return props.line.name;
+});
+
+const description = computed(function(){
+  if (props.newLine){
+    return '';
+  }
+  return props.line.description;
+});
 
 function submitName(newVal) {
   // props.line.name = newVal;
