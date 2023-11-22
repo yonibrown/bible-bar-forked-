@@ -1,33 +1,38 @@
 <template>
-  <base-editable
-    v-if="field.name == 'name'"
-    :initialValue="name"
-    @submitValue="submitName"
-    name="collectionName"
-    :defaultValue="defaultName"
-    :disabled="!enableSelection"
-    placeholder="הוסף קטגוריה..."
-  ></base-editable>
-  <base-editable
-    v-else-if="field.name == 'description'"
-    :initialValue="description"
-    @submitValue="submitDesc"
-    name="collectionDescription"
-    :blankable="true"
-    :disabled="!enableSelection"
-    placeholder="הוסף תיאור..."
-  ></base-editable>
-  <span v-else></span>
+  <spec-line>
+    <template #name>
+      <base-editable
+        :initialValue="name"
+        @submitValue="submitName"
+        name="collectionName"
+        :defaultValue="defaultName"
+        :disabled="!enableSelection"
+        placeholder="הוסף קטגוריה..."
+      ></base-editable>
+    </template>
+    <template #description>
+      <base-editable
+        :initialValue="description"
+        @submitValue="submitDesc"
+        name="collectionDescription"
+        :blankable="true"
+        :disabled="!enableSelection"
+        placeholder="הוסף תיאור..."
+      ></base-editable>
+    </template>
+  </spec-line>
 </template>
 
 <script setup>
+import SpecLine from "../ui/SpecLine.vue";
 import { inject, computed, ref } from "vue";
 
-const props = defineProps(["line", "field", "enableSelection", "newLineAttr","useAttr"]);
+const props = defineProps(["line"]);
 const emit = defineEmits(["addAttr"]);
 const research = inject("research");
 const updateCollection = inject("updateCollection");
 const newCollection = inject("newCollection");
+const enableSelection = inject("enableSelection");
 
 const defaultName = computed(function () {
   if (props.line.newLine) {
@@ -36,19 +41,22 @@ const defaultName = computed(function () {
   return "קטגוריה " + props.line.id;
 });
 
+const emptyAttr = {
+  name: "",
+  description: "",
+}; 
+const attr = ref({...emptyAttr});
+
 const name = computed(function () {
   if (props.line.newLine) {
-    return "";
+    return attr.value.name;
   }
   return props.line.name;
 });
 
 const description = computed(function () {
   if (props.line.newLine) {
-    if (props.newLineAttr.description){
-      return props.newLineAttr.description;
-    }
-    return '';
+    return attr.value.description;
   }
   return props.line.description;
 });
@@ -56,8 +64,11 @@ const description = computed(function () {
 function submitName(newVal) {
   const newAttr = { name: newVal };
   if (props.line.newLine) {
-    Object.assign(newAttr,props.useAttr());
-    newCollection(research, newAttr);
+    newCollection(research, {
+      ...attr.value,
+      ...newAttr,
+    });
+    attr.value = { ...emptyAttr };
   } else {
     updateCollection(props.line, newAttr);
   }
@@ -66,8 +77,9 @@ function submitName(newVal) {
 function submitDesc(newVal) {
   const newAttr = { description: newVal };
   if (props.line.newLine) {
-    emit("addAttr", { description: newVal });
+    Object.assign(attr.value, newAttr);
   } else {
+    console.log("submitDesc", props.line, newAttr);
     updateCollection(props.line, newAttr);
   }
 }

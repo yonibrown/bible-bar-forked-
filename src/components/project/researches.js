@@ -42,6 +42,7 @@ export function useResearches() {
   provide("updateCollection", updateCollection);
 
   async function newCollection(res,newAttr){
+    // console.log(newAttr);
     const data = {
       type: "research",
       oper: "new_collection",
