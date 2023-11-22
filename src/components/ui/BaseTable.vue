@@ -22,19 +22,11 @@
         </tr>
         <table-line
           ref="linesRef"
-          v-for="line in lines"
+          v-for="line in lineList"
           :line="line"
           :key="line.id"
           :checkAll="checkAllRef"
           :enableSelection="enableSelection"
-          :tableFields="tableFields"
-          :lineComponent="lineComponent"
-        ></table-line>
-        <table-line
-          ref="newLineRef"
-          v-if="enableNewLine"
-          v-show="enableSelection"
-          :newLine="true"
           :tableFields="tableFields"
           :lineComponent="lineComponent"
         ></table-line>
@@ -61,11 +53,23 @@ const props = defineProps([
   "ascending",
   "lines",
   "lineComponent",
-  "enableNewLine"
+  "enableNewLine",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
 
 const linesRef = ref([]);
+
+const newLineArray = [
+  {
+    newLine: true,
+  },
+];
+const lineList = computed(function () {
+  if (props.enableNewLine && props.enableSelection) {
+    return props.lines.concat(newLineArray);
+  }
+  return props.lines;
+});
 
 function changeSort(newField) {
   if (props.sortField == newField) {

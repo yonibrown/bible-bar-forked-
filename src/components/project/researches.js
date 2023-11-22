@@ -41,26 +41,21 @@ export function useResearches() {
   }
   provide("updateCollection", updateCollection);
 
-  async function newCollection(col,newAttr){
-    console.log('not yet implemented');
-    // Object.assign(col, newAttr);
-    // const data = {
-    //   type: "research",
-    //   oper: "update_collection",
-    //   id: {res: col.res},
-    //   prop: {
-    //     col: col.id,
-    //     ...newAttr
-    //   },
-    // };
+  async function newCollection(res,newAttr){
+    const data = {
+      type: "research",
+      oper: "new_collection",
+      id: {res: res.id},
+      prop: newAttr,
+    };
 
-    // const obj = await sendToServer(data);
+    const obj = await sendToServer(data);
+    res.collections.push(obj.data);
   }
   provide("newCollection", newCollection);
 
   function addResearch(res){
     researches.value.push(res);
-    console.log('after addResearch',researches);
   }
   provide("addResearch", addResearch);
 
