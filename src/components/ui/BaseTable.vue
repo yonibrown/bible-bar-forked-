@@ -30,6 +30,14 @@
           :tableFields="tableFields"
           :lineComponent="lineComponent"
         ></table-line>
+        <table-line
+          ref="newLineRef"
+          v-if="enableNewLine"
+          v-show="enableSelection"
+          :newLine="true"
+          :tableFields="tableFields"
+          :lineComponent="lineComponent"
+        ></table-line>
       </table>
     </base-scrollable>
     <span v-show="enableSelection">
@@ -53,6 +61,7 @@ const props = defineProps([
   "ascending",
   "lines",
   "lineComponent",
+  "enableNewLine"
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
 
