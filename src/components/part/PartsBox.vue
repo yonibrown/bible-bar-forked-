@@ -3,15 +3,11 @@
     <links-menu title="סינון"></links-menu>
     <parts-menu @updateData="updateData"></parts-menu>
   </div>
-  <div class="tabs">
-    <button
-      v-for="tab in tabList"
-      :class="{ active: tab.name == currentTab }"
-      @click="changeTab(tab.name)"
-    >
-      {{ tab.title }}
-    </button>
-  </div>
+  <base-tabs
+    :tabList="tabList"
+    :currentTab="currentTab"
+    @changeTab="changeTab"
+  ></base-tabs>
   <parts-table v-show="currentTab == 'parts'" ref="partsTabRef"></parts-table>
   <collections-table
     v-show="currentTab == 'collections'"
@@ -20,6 +16,7 @@
 </template>
 
 <script setup>
+import BaseTabs from "../ui/BaseTabs.vue";
 import PartsTable from "./PartsTable.vue";
 import CollectionsTable from "./CollectionsTable.vue";
 import LinksMenu from "../link/LinksMenu.vue";
@@ -72,32 +69,3 @@ function updateData(data) {
 }
 </script>
 
-<style scoped>
-.tabs {
-  /* overflow: hidden; */
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-  width: fit-content;
-}
-
-/* Style the buttons that are used to open the tab content */
-.tabs button {
-  background-color: inherit;
-  float: right;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 2px 16px;
-  transition: 0.3s;
-}
-
-/* Change background color of buttons on hover */
-.tabs button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tabs button.active {
-  background-color: #ccc;
-}
-</style>
