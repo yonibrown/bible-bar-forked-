@@ -31,12 +31,12 @@
       </table>
     </base-scrollable>
     <span v-show="enableSelection">
-      <span>בחר הכל:</span>
       <input
         type="checkbox"
         v-model="checkAllRef"
         :indeterminate="checkPartial"
       />
+      <span>בחר הכל</span>
     </span>
   </div>
 </template>

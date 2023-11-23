@@ -79,7 +79,6 @@ function submitDesc(newVal) {
   if (props.line.newLine) {
     Object.assign(attr.value, newAttr);
   } else {
-    console.log("submitDesc", props.line, newAttr);
     updateCollection(props.line, newAttr);
   }
 }
