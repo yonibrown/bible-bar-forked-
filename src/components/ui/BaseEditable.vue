@@ -56,7 +56,6 @@ watch(input, function (newVal) {
 });
 
 function submitValue() {
-  console.log("submit");
   if (currentValue.value == "" && !props.blankable) {
     currentValue.value = props.defaultValue;
   }

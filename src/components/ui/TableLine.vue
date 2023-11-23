@@ -6,10 +6,12 @@
     <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
       <component
         :is="lineComponent"
-        :line="tableLine"
+        :line="line"
         :field="fld"
         :enableSelection="enableSelection"
-        :newLine="newLine"
+        :newLineAttr="newLineAttr"
+        :useAttr="useAttr"
+        @addAttr="addAttr"
       ></component>
     </td>
   </tr>
@@ -22,24 +24,26 @@ const props = defineProps([
   "checkAll",
   "enableSelection",
   "tableFields",
-  "lineComponent",
-  "newLine"
+  "lineComponent"
 ]);
 
 const checked = ref(false);
 
+const newLineAttr = ref({});
+function addAttr(attr){
+  Object.assign(newLineAttr.value,attr); 
+}
+function useAttr(){
+  const attr = newLineAttr.value;
+  newLineAttr.value = {};
+  return attr;
+}
+
 const lineId = computed(function(){
-  if (props.newLine){
+  if (props.line.newLine){
     return null;
   }
   return props.line.id
-});
-
-const tableLine = computed(function(){
-  if (props.newLine){
-    return null;
-  }
-  return props.line;
 });
 
 defineExpose({

@@ -23,7 +23,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref } from "vue";
+import { reactive, provide, computed, ref,inject } from "vue";
 import { useLinks } from "./links.js";
 import { useResearches } from "./researches.js";
 
@@ -47,7 +47,7 @@ const listRef = ref();
 const elements = ref([]);
 
 const links = useLinks();
-const researches = useResearches();
+const [researches,resMethods] = useResearches();
 
 loadProject();
 
@@ -81,15 +81,18 @@ async function createElement(attr, options) {
   };
   const obj = await sendToServer(data);
 
+  if (obj.data.res){
+    resMethods.addResearch(obj.data.res);
+  }
   if (options && options.openingElement) {
     const elm = options.openingElement;
     if (elm.type == "new") {
       elm.type = attr.type;
-      elm.id = obj.data.id;
-      elm.attr = obj.data.attr;
+      elm.id = obj.data.elm.id;
+      elm.attr = obj.data.elm.attr;
     } else {
       // elements = elements.concat([data]);
-      elements.value.push(obj.data);
+      elements.value.push(obj.data.elm);
     }
   }
 }

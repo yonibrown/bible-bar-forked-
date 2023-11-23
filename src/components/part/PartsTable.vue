@@ -133,7 +133,7 @@ async function duplicateSelected() {
   const obj = await sendToServer(data);
   createElement({
     type: "parts",
-    res: obj.data.new_res_id,
+    res: obj.data.new_res.id.res,
   });
 }
 
