@@ -1,7 +1,7 @@
 <template>
   <tr class="table-line">
     <td v-show="enableSelection" class="fit-column">
-      <input type="checkbox" v-model="checked" />
+      <input type="checkbox" v-model="checked" v-if="!line.newLine" />
     </td>
     <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
       <slot :name="fld.name"></slot>
@@ -17,6 +17,13 @@ const checkAll = inject("checkAll");
 const enableSelection = inject("enableSelection");
 const tableFields = inject("tableFields");
 const checked = ref(false);
+
+// const newLine = computed(function(){
+//   if (props.line && props.line.newLine) {
+//     return true;
+//   }
+//   return false;
+// });
 
 const lineId = computed(function () {
   if (props.line.newLine) {
