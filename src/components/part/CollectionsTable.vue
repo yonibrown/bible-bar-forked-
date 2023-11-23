@@ -1,5 +1,5 @@
 <template>
-  <base-table
+  <spec-table
     :enableSelection="displayOptions"
     :tableFields="tableFields"
     :lines="research.collections"
@@ -7,11 +7,11 @@
     ref="tableRef"
     :enableNewLine="true"
   >
-  </base-table>
+  </spec-table>
 </template>
 
 <script setup>
-import BaseTable from "../ui/BaseTable.vue";
+import SpecTable from "../ui/SpecTable.vue";
 import { inject } from "vue";
 
 const displayOptions = inject("displayOptions");

@@ -20,16 +20,13 @@
             <span v-else>{{ fld.title }}</span>
           </td>
         </tr>
-        <table-line
+        <component
+          :is="lineComponent"
           ref="linesRef"
           v-for="line in lineList"
           :line="line"
           :key="line.id"
-          :checkAll="checkAllRef"
-          :enableSelection="enableSelection"
-          :tableFields="tableFields"
-          :lineComponent="lineComponent"
-        ></table-line>
+        ></component>
       </table>
     </base-scrollable>
     <span v-show="enableSelection">
@@ -44,8 +41,7 @@
 </template>
 
 <script setup>
-import TableLine from "./TableLine.vue";
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch ,provide} from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
@@ -56,6 +52,13 @@ const props = defineProps([
   "enableNewLine",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
+provide('tableFields',props.tableFields);
+const enableLineEdit = computed(function(){
+  return props.enableSelection;
+});
+
+provide('enableSelection',enableLineEdit);
+
 
 const linesRef = ref([]);
 
@@ -80,6 +83,8 @@ function changeSort(newField) {
 }
 
 const checkAllRef = ref(false);
+provide('checkAll',checkAllRef);
+
 const checkPartial = ref(false);
 
 const selectedLines = computed(function () {

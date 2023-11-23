@@ -1,61 +1,86 @@
 <template>
-  <!-- <span v-if="field.name == 'name'">{{ line.name }}</span> -->
-  <base-editable
-    v-if="field.name == 'name'"
-    :initialValue="name"
-    @submitValue="submitName"
-    name="collectionName"
-    :defaultValue="defaultName"
-    :disabled="!enableSelection"
-  ></base-editable>
-  <base-editable
-    v-else-if="field.name == 'description'"
-    :initialValue="description"
-    @submitValue="submitDesc"
-    name="collectionDescription"
-    :blankable="true"
-    :disabled="!enableSelection"
-    placeholder="הוסף תיאור..."
-  ></base-editable>
-  <span v-else></span>
+  <spec-line>
+    <template #name>
+      <base-editable
+        :initialValue="name"
+        @submitValue="submitName"
+        name="collectionName"
+        :defaultValue="defaultName"
+        :disabled="!enableSelection"
+        placeholder="הוסף קטגוריה..."
+      ></base-editable>
+    </template>
+    <template #description>
+      <base-editable
+        :initialValue="description"
+        @submitValue="submitDesc"
+        name="collectionDescription"
+        :blankable="true"
+        :disabled="!enableSelection"
+        placeholder="הוסף תיאור..."
+      ></base-editable>
+    </template>
+  </spec-line>
 </template>
 
 <script setup>
-import { inject,computed } from "vue";
+import SpecLine from "../ui/SpecLine.vue";
+import { inject, computed, ref } from "vue";
 
-const props = defineProps(["line", "field", "enableSelection","newLine"]);
+const props = defineProps(["line"]);
+const emit = defineEmits(["addAttr"]);
+const research = inject("research");
 const updateCollection = inject("updateCollection");
-console.log(props.line);
+const newCollection = inject("newCollection");
+const enableSelection = inject("enableSelection");
 
-const defaultName = computed(function(){
-  if (props.newLine){
-    return 'קטגוריה חדשה';
+const defaultName = computed(function () {
+  if (props.line.newLine) {
+    return "קטגוריה חדשה";
   }
-  return 'קטגוריה '+props.line.id;
+  return "קטגוריה " + props.line.id;
 });
 
-const name = computed(function(){
-  if (props.newLine){
-    return '';
+const emptyAttr = {
+  name: "",
+  description: "",
+}; 
+const attr = ref({...emptyAttr});
+
+const name = computed(function () {
+  if (props.line.newLine) {
+    return attr.value.name;
   }
   return props.line.name;
 });
 
-const description = computed(function(){
-  if (props.newLine){
-    return '';
+const description = computed(function () {
+  if (props.line.newLine) {
+    return attr.value.description;
   }
   return props.line.description;
 });
 
 function submitName(newVal) {
-  // props.line.name = newVal;
-  const newAttr = {name: newVal};
-  updateCollection(props.line,newAttr);
+  const newAttr = { name: newVal };
+  if (props.line.newLine) {
+    newCollection(research, {
+      ...attr.value,
+      ...newAttr,
+    });
+    attr.value = { ...emptyAttr };
+  } else {
+    updateCollection(props.line, newAttr);
+  }
 }
 
 function submitDesc(newVal) {
-  const newAttr = {description: newVal};
-  updateCollection(props.line,newAttr);
+  const newAttr = { description: newVal };
+  if (props.line.newLine) {
+    Object.assign(attr.value, newAttr);
+  } else {
+    console.log("submitDesc", props.line, newAttr);
+    updateCollection(props.line, newAttr);
+  }
 }
 </script>
