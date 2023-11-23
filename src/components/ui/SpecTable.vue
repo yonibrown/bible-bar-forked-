@@ -20,13 +20,13 @@
             <span v-else>{{ fld.title }}</span>
           </td>
         </tr>
-        <component
-          :is="lineComponent"
+        <spec-line-wrapper
           ref="linesRef"
           v-for="line in lineList"
           :line="line"
           :key="line.id"
-        ></component>
+          :lineComponent="lineComponent"
+        ></spec-line-wrapper>
       </table>
     </base-scrollable>
     <span v-show="enableSelection">
@@ -41,6 +41,7 @@
 </template>
 
 <script setup>
+import SpecLineWrapper from "./SpecLineWrapper.vue";
 import { computed, ref, watch ,provide} from "vue";
 const props = defineProps([
   "enableSelection",

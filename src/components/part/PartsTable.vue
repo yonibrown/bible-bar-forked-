@@ -1,5 +1,5 @@
 <template>
-  <base-table
+  <spec-table
     :enableSelection="displayOptions"
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
@@ -10,12 +10,12 @@
     lineComponent="parts-line"
     ref="tableRef"
   >
-  </base-table>
+  </spec-table>
 </template>
 
 <script setup>
-import BaseTable from "../ui/BaseTable.vue";
-import { computed, ref, inject,provide } from "vue";
+import SpecTable from "../ui/SpecTable.vue";
+import { computed, ref, inject } from "vue";
 import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
@@ -114,7 +114,7 @@ async function moveSelectedToCat(cat) {
       updAttr: cat,
     },
   };
-
+  console.log(data);
   const obj = await sendToServer(data);
   loadResearchParts();
 }
