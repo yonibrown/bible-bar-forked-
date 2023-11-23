@@ -1,7 +1,7 @@
 <template>
   <tr class="table-line">
     <td v-show="enableSelection" class="fit-column">
-      <input type="checkbox" v-model="checked" v-if="!line.newLine" />
+      <input type="checkbox" :checked="checked" @change="check" v-if="!line.newLine" />
     </td>
     <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
       <slot :name="fld.name"></slot>
@@ -13,10 +13,14 @@
 import { ref, computed, watch, inject } from "vue";
 const props = defineProps(["line"]);
 
-const checkAll = inject("checkAll");
 const enableSelection = inject("enableSelection");
 const tableFields = inject("tableFields");
+
 const checked = ref(false);
+function check(){
+  console.log(checked.value);
+  checked.value = true;
+}
 
 // const newLine = computed(function(){
 //   if (props.line && props.line.newLine) {
@@ -25,21 +29,6 @@ const checked = ref(false);
 //   return false;
 // });
 
-const lineId = computed(function () {
-  if (props.line.newLine) {
-    return null;
-  }
-  return props.line.id;
-});
-
-defineExpose({
-  id: lineId,
-  checked,
-});
-
-watch(checkAll, function (newVal) {
-  checked.value = newVal;
-});
 </script>
 
 <style scoped>

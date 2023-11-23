@@ -114,7 +114,7 @@ async function moveSelectedToCat(cat) {
       updAttr: cat,
     },
   };
-
+  console.log(data);
   const obj = await sendToServer(data);
   loadResearchParts();
 }
