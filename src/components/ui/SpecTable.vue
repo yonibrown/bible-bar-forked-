@@ -42,7 +42,7 @@
 
 <script setup>
 import SpecLineWrapper from "./SpecLineWrapper.vue";
-import { computed, ref, watch ,provide} from "vue";
+import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
@@ -53,13 +53,12 @@ const props = defineProps([
   "enableNewLine",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
-provide('tableFields',props.tableFields);
-const enableLineEdit = computed(function(){
+provide("tableFields", props.tableFields);
+const enableLineEdit = computed(function () {
   return props.enableSelection;
 });
 
-provide('enableSelection',enableLineEdit);
-
+provide("enableSelection", enableLineEdit);
 
 const linesRef = ref([]);
 
@@ -75,6 +74,8 @@ const lineList = computed(function () {
   return props.lines;
 });
 
+const inactiveLines = props.enableNewLine ? 1 : 0;
+
 function changeSort(newField) {
   if (props.sortField == newField) {
     emit("reverseTable");
@@ -84,7 +85,7 @@ function changeSort(newField) {
 }
 
 const checkAllRef = ref(false);
-provide('checkAll',checkAllRef);
+provide("checkAll", checkAllRef);
 
 const checkPartial = ref(false);
 
@@ -103,7 +104,8 @@ const checkState = computed(function () {
   if (len == 0) {
     return "none";
   }
-  if (len == linesRef.value.length) {
+  console.log(len,linesRef.value.length,inactiveLines);
+  if (len == linesRef.value.length - inactiveLines) {
     return "all";
   }
   return "partial";
