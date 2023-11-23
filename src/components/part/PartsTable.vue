@@ -107,14 +107,12 @@ const filteringCols = computed(function () {
 async function moveSelectedToCat(cat) {
   const data = {
     type: "research",
-    oper: "update_parts",
+    oper: "delete_collections",
     id: researchId,
     prop: {
-      partList: tableRef.value.selectedLines,
-      updAttr: cat,
+      colList: tableRef.value.selectedLines
     },
   };
-  console.log(data);
   const obj = await sendToServer(data);
   loadResearchParts();
 }

@@ -1,16 +1,22 @@
 <template>
   <div v-show="displayOptions">
     <links-menu title="סינון"></links-menu>
-    <parts-menu @updateData="updateData"></parts-menu>
+    <parts-menu
+      @updateData="updateData"
+      :currentTab="currentTabName"
+    ></parts-menu>
   </div>
   <base-tabs
     :tabList="tabList"
-    :currentTab="currentTab"
+    :currentTab="currentTabName"
     @changeTab="changeTab"
   ></base-tabs>
-  <parts-table v-show="currentTab == 'parts'" ref="partsTabRef"></parts-table>
+  <parts-table
+    v-show="currentTabName == 'parts'"
+    ref="partsTabRef"
+  ></parts-table>
   <collections-table
-    v-show="currentTab == 'collections'"
+    v-show="currentTabName == 'collections'"
     ref="colsTabRef"
   ></collections-table>
 </template>
@@ -22,22 +28,22 @@ import CollectionsTable from "./CollectionsTable.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 
-import { ref, inject ,provide} from "vue";
+import { ref, inject, provide, computed } from "vue";
 
 const displayOptions = inject("displayOptions");
 
 const elementAttr = inject("elementAttr");
 const researchId = { res: elementAttr.value.res };
-provide('researchId',researchId);
+provide("researchId", researchId);
 
 const getResearch = inject("getResearch");
 const research = getResearch(elementAttr.value.res);
-provide('research',research);
+provide("research", research);
 
 const partsTabRef = ref();
+const colsTabRef = ref();
 
 // tabs
-const currentTab = ref("parts");
 const tabList = [
   {
     name: "parts",
@@ -48,24 +54,34 @@ const tabList = [
     title: "קטגוריות",
   },
 ];
+const currentTabName = ref("parts");
 function changeTab(newVal) {
-  currentTab.value = newVal;
+  currentTabName.value = newVal;
 }
+
+const currentTabTable = computed(function () {
+  if (currentTabName.value == "parts") {
+    return partsTabRef.value;
+  }
+  return colsTabRef.value;
+});
 
 // load data
 const newCollection = inject("newCollection");
 function updateData(data) {
   switch (data.action) {
     case "newCat":
-      newCollection(research,data.prop);
+      newCollection(research, data.prop);
       break;
-    case "moveSelectedToCat":
-      partsTabRef.value.moveSelectedToCat(data.prop);
+    case "changeCat":
+      currentTabTable.value.moveSelectedToCat(data.prop);
       break;
     case "duplicate":
-      partsTabRef.value.duplicateSelected();
+      currentTabTable.value.duplicateSelected();
+      break;
+    case "remove":
+      currentTabTable.value.removeSelected();
       break;
   }
 }
 </script>
-
