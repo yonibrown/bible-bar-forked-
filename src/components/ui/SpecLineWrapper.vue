@@ -7,14 +7,14 @@ import { ref, computed, watch, inject, provide } from "vue";
 const props = defineProps(["line", "lineComponent"]);
 
 const checked = ref(false);
-provide("checked", checked);
+// provide("checked", checked);
 
-const checkAll = inject("checkAll");
-if (!props.line.newLine) {
-  watch(checkAll, function (newVal) {
-    checked.value = newVal;
-  });
-}
+// const checkAll = inject("checkAll");
+// if (!props.line.newLine) {
+//   watch(checkAll, function (newVal) {
+//     checked.value = newVal;
+//   });
+// }
 
 function changeSelection(newVal) {
   checked.value = newVal;

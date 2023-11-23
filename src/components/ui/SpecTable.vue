@@ -68,6 +68,7 @@ const newLineArray = [
   },
 ];
 const lineList = computed(function () {
+  // console.log('iii','computed lineList');
   if (props.enableNewLine && props.enableSelection) {
     return props.lines.concat(newLineArray);
   }
@@ -90,6 +91,7 @@ provide("checkAll", checkAllRef);
 const checkPartial = ref(false);
 
 const selectedLines = computed(function () {
+  // console.log('iii','computed selectedLines');
   return linesRef.value
     .filter(function (line) {
       return line.checked;
@@ -102,15 +104,18 @@ const selectedLines = computed(function () {
 const checkState = computed(function () {
   const len = selectedLines.value.length;
   if (len == 0) {
+    // console.log('iii','computed checkState none');
     return "none";
   }
-  console.log(len,linesRef.value.length,inactiveLines);
-  if (len == linesRef.value.length - inactiveLines) {
+  if (len == (linesRef.value.length - inactiveLines)) {
+    // console.log('iii','computed checkState all');
     return "all";
   }
+  // console.log('iii','computed checkState partial');
   return "partial";
 });
-watch(checkState, function (newVal) {
+watch(checkState, function (newVal,oldVal) {
+  console.log('iii','watch checkState '+oldVal+'=>'+newVal);
   if (newVal == "all") {
     checkAllRef.value = true;
     checkPartial.value = false;
