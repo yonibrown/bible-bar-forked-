@@ -26,6 +26,7 @@
           :line="line"
           :key="line.id"
           :lineComponent="lineComponent"
+          :checkAll="checkAllRef"
         ></spec-line-wrapper>
       </table>
     </base-scrollable>
@@ -68,7 +69,6 @@ const newLineArray = [
   },
 ];
 const lineList = computed(function () {
-  // console.log('iii','computed lineList');
   if (props.enableNewLine && props.enableSelection) {
     return props.lines.concat(newLineArray);
   }
@@ -86,12 +86,10 @@ function changeSort(newField) {
 }
 
 const checkAllRef = ref(false);
-provide("checkAll", checkAllRef);
 
 const checkPartial = ref(false);
 
 const selectedLines = computed(function () {
-  // console.log('iii','computed selectedLines');
   return linesRef.value
     .filter(function (line) {
       return line.checked;
@@ -104,18 +102,14 @@ const selectedLines = computed(function () {
 const checkState = computed(function () {
   const len = selectedLines.value.length;
   if (len == 0) {
-    // console.log('iii','computed checkState none');
     return "none";
   }
   if (len == (linesRef.value.length - inactiveLines)) {
-    // console.log('iii','computed checkState all');
     return "all";
   }
-  // console.log('iii','computed checkState partial');
   return "partial";
 });
-watch(checkState, function (newVal,oldVal) {
-  console.log('iii','watch checkState '+oldVal+'=>'+newVal);
+watch(checkState, function (newVal) {
   if (newVal == "all") {
     checkAllRef.value = true;
     checkPartial.value = false;

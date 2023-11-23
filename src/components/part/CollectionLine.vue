@@ -1,5 +1,5 @@
 <template>
-  <spec-line :line="line">
+  <spec-line>
     <template #name>
       <base-editable
         :initialValue="name"

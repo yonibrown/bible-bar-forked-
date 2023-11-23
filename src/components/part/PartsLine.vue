@@ -1,5 +1,5 @@
 <template>
-  <spec-line :line="line">
+  <spec-line>
     <template #col>
       <span>{{ collection.name }}</span>
     </template>
