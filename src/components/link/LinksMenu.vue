@@ -41,7 +41,7 @@ function addToLinks(dragData) {
   const linkId = +dragData.linkId;
   if (linkId != 0) {
     const link = getLink(linkId);
-    linkElement(link);
+    linkElement(elementId);
   }
 }
 
@@ -49,7 +49,7 @@ function removeFromLinks(link){
   unlinkElement(link);
 }
 
-async function linkElement(link) {
+async function linkElement(link,elementId) {
   if (!link.elements.includes(elementId.value.elm)) {
     link.elements.push(elementId.value.elm);
   }

@@ -107,7 +107,7 @@ const filteringCols = computed(function () {
 async function moveSelectedToCat(cat) {
   const data = {
     type: "research",
-    oper: "delete_collections",
+    oper: "update_parts",
     id: researchId,
     prop: {
       colList: tableRef.value.selectedLines

@@ -1,10 +1,11 @@
-import { provide, ref, computed } from "vue";
+import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
 export function useResearches() {
   const researches = ref([]);
   provide("researches", researches);
 
+  // local objects
   function getResearch(researchId) {
     const research = researches.value.find((pResearch) => {
       return pResearch.id == researchId;
@@ -25,6 +26,12 @@ export function useResearches() {
   }
   provide("getCollection", getCollection);
 
+  function addResearch(res){
+    researches.value.push(res);
+  }
+  provide("addResearch", addResearch);
+
+  // server
   async function updateCollection(col,newAttr){
     Object.assign(col, newAttr);
     const data = {
@@ -54,11 +61,7 @@ export function useResearches() {
   }
   provide("newCollection", newCollection);
 
-  function addResearch(res){
-    researches.value.push(res);
-  }
-  provide("addResearch", addResearch);
-
+  // return
   const resMethods = {
     getResearch,getCollection,updateCollection,newCollection,addResearch
   }

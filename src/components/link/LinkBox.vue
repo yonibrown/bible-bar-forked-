@@ -5,53 +5,36 @@
         v-for="cat in categories"
         :key="cat.id"
         :category="cat"
-        @update-category="(data) => updateCategory(cat, data)"
+        @update-category="(data) => updateCategory(linkId, cat, data)"
       ></link-category>
     </table>
   </div>
 </template>
 
 <script setup>
-import LinkCategory from './LinkCategory.vue';
-import { computed, inject } from 'vue';
-import { sendToServer } from '../../server.js';
+import LinkCategory from "./LinkCategory.vue";
+import { computed, inject } from "vue";
 
-const projectId = inject('projectId');
-const getLink = inject('getLink');
-const elementAttr = inject('elementAttr');
+const projectId = inject("projectId");
+const getLink = inject("getLink");
+const elementAttr = inject("elementAttr");
+const updateCategory = inject("lnkUpdateCategory");
 
 const linkId = computed(function () {
-  return elementAttr.value.link_id;
+  return {
+    proj: projectId.value.proj,
+    link: elementAttr.value.link_id,
+  };
 });
 
 const link = computed(function () {
-  return getLink(linkId.value);
+  return getLink(linkId.value.link);
 });
 
 const categories = computed(function () {
   return link.value.categories;
 });
 
-// import link stuff
-async function updateCategory(cat, attr) {
-  // update browser
-  Object.assign(cat, attr);
-
-  // update server
-  const data = {
-    type: 'link',
-    oper: 'upd_cat',
-    id: {
-      link: linkId.value,
-      ...projectId.value,
-    },
-    prop: {
-      cat_id: cat,
-      cat_attr: attr,
-    },
-  };
-  const obj = await sendToServer(data);
-}
 </script>
 
 <style scoped></style>
