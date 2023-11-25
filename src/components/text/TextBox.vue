@@ -27,25 +27,17 @@ import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
 import { inject, ref } from "vue";
-import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
-const elementId = inject("elementId");
+const elementObjId = inject("elementObjId");
+const elmMethods = inject("elmMethods");
 
 const verses = ref([]);
 
 loadElmText();
 
 async function loadElmText() {
-  const data = {
-    type: "element",
-    oper: "get_segment",
-    id: elementId.value,
-    prop: { dummy: "" },
-  };
-
-  const obj = await sendToServer(data);
-  verses.value = obj.data.part_list;
+  verses.value = await elmMethods.loadText(elementObjId.value);
 }
 
 defineExpose({ reload: loadElmText });

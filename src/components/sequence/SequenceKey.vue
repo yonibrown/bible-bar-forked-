@@ -11,10 +11,10 @@
 
 <script setup>
 import SeqKeyLevel from './SeqKeyLevel.vue';
-import { sendToServer } from '../../server.js';
 import { ref, inject, provide, computed,watch } from 'vue';
 const props = defineProps(['initialValue', 'defaultValue']);
 const emit = defineEmits(['changeValue']);
+const resMethods = inject('resMethods');
 
 const defaultDiv = props.defaultValue == 'min' ? '0' : '-1';
 const lastKeyIdx = props.initialValue.length - 1;
@@ -49,18 +49,7 @@ function initKey() {
 }
 
 async function loadIndex() {
-  const data = {
-    type: 'res_index',
-    oper: 'get_divisions',
-    id: seqIndex.value,
-    prop: {
-      key: selectedKey,
-    },
-  };
-
-  const obj = await sendToServer(data);
-
-  keyLevels.value = obj.data;
+  keyLevels.value = await resMethods.loadIndexDivisions(seqIndex.value,selectedKey);
 }
 
 async function changeKey(lvlIdx, div) {

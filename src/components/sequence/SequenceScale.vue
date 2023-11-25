@@ -13,6 +13,7 @@ import { sendToServer } from "../../server.js";
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
 const seqIndex = inject("seqIndex");
+const resMethods = inject("resMethods");
 
 const indexLevels = ref([]);
 
@@ -46,18 +47,7 @@ watch(selected, (newVal) => {
 loadIndex();
 
 async function loadIndex() {
-  const data = {
-    type: "res_index",
-    oper: "get",
-    id: seqIndex.value,
-    prop: {
-      dummy: "",
-    },
-  };
-
-  const obj = await sendToServer(data);
-
-  indexLevels.value = obj.data.levels;
+  indexLevels.value = await resMethods.loadIndex(seqIndex.value);
 }
 
 async function changeScale() {

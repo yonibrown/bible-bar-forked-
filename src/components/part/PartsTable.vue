@@ -21,9 +21,7 @@ const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
 
 const researchObjId = inject("researchObjId");
-const resLoadParts = inject("resLoadParts");
-const resDuplicate = inject("resDuplicate");
-const resUpdateParts = inject("resUpdateParts");
+const resMethods = inject("resMethods");
 
 const parts = ref([]);
 const links = inject("links");
@@ -73,7 +71,7 @@ function changeSortField(newField) {
 loadResearchParts();
 
 async function loadResearchParts() {
-  parts.value = await resLoadParts(researchObjId, sortAttr.value);
+  parts.value = await resMethods.loadParts(researchObjId, sortAttr.value);
 }
 
 // filter parts
@@ -99,13 +97,13 @@ const filteringCols = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  await resUpdateParts(researchObjId, tableRef.value.selectedLines, cat);
+  await resMethods.updateParts(researchObjId, tableRef.value.selectedLines, cat);
   loadResearchParts();
 }
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
-  const newRes = await resDuplicate(
+  const newRes = await resMethods.duplicate(
     researchObjId,
     tableRef.value.selectedLines
   );

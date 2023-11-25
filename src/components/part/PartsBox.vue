@@ -36,8 +36,8 @@ const elementAttr = inject("elementAttr");
 const researchObjId = { res: elementAttr.value.res };
 provide("researchObjId", researchObjId);
 
-const getResearch = inject("getResearch");
-const research = getResearch(elementAttr.value.res);
+const resMethods = inject("resMethods");
+const research = resMethods.getResearch(elementAttr.value.res);
 provide("research", research);
 
 const partsTabRef = ref();
@@ -67,11 +67,10 @@ const currentTabTable = computed(function () {
 });
 
 // load data
-const newCollection = inject("newCollection");
 function updateData(data) {
   switch (data.action) {
     case "newCat":
-      newCollection(research, data.prop);
+      resMethods.newCollection(research, data.prop);
       break;
     case "changeCat":
       currentTabTable.value.moveSelectedToCat(data.prop);

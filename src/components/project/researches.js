@@ -12,7 +12,6 @@ export function useResearches() {
     });
     return research;
   }
-  provide("getResearch", getResearch);
 
   function getCollection(researchId, colId) {
     const research = getResearch(researchId);
@@ -24,12 +23,10 @@ export function useResearches() {
     });
     return col;
   }
-  provide("getCollection", getCollection);
 
   function addResearch(res) {
     researches.value.push(res);
   }
-  provide("addResearch", addResearch);
 
   function researchObjId(res) {
     return {
@@ -52,7 +49,6 @@ export function useResearches() {
 
     const obj = await sendToServer(data);
   }
-  provide("updateCollection", updateCollection);
 
   async function newCollection(res, newAttr) {
     const data = {
@@ -65,9 +61,8 @@ export function useResearches() {
     const obj = await sendToServer(data);
     res.collections.push(obj.data);
   }
-  provide("newCollection", newCollection);
 
-  async function resDeleteCollections(res, colList) {
+  async function deleteCollections(res, colList) {
     const data = {
       type: "research",
       oper: "delete_collections",
@@ -78,9 +73,8 @@ export function useResearches() {
     console.log(data);
     const obj = await sendToServer(data);
   }
-  provide("resDeleteCollections", resDeleteCollections);
 
-  async function resLoadParts(researchObjId, sortAttr) {
+  async function loadParts(researchObjId, sortAttr) {
     const data = {
       type: "research",
       oper: "get_prt_list",
@@ -91,9 +85,8 @@ export function useResearches() {
     const obj = await sendToServer(data);
     return obj.data;
   }
-  provide("resLoadParts", resLoadParts);
 
-  async function resUpdateParts(researchObjId,partList,updAttr) {
+  async function updateParts(researchObjId, partList, updAttr) {
     const data = {
       type: "research",
       oper: "update_parts",
@@ -106,9 +99,8 @@ export function useResearches() {
     const obj = await sendToServer(data);
     loadResearchParts();
   }
-  provide("resUpdateParts", resUpdateParts);
 
-  async function resDuplicate(researchObjId,partList) {
+  async function duplicate(researchObjId, partList) {
     const data = {
       type: "research",
       oper: "duplicate",
@@ -117,12 +109,38 @@ export function useResearches() {
         partList,
       },
     };
-  
+
     const obj = await sendToServer(data);
     return obj.data.new_res;
   }
-  provide("resDuplicate", resDuplicate);
-  
+
+  async function loadIndexDivisions(seqIndex, selectedKey) {
+    const data = {
+      type: "res_index",
+      oper: "get_divisions",
+      id: seqIndex,
+      prop: {
+        key: selectedKey,
+      },
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data;
+  }
+
+  async function loadIndex(seqIndex) {
+    const data = {
+      type: "res_index",
+      oper: "get",
+      id: seqIndex,
+      prop: { dummy: "" },
+    };
+
+    const obj = await sendToServer(data);
+
+    return obj.data.levels;
+  }
+
   // return
   const resMethods = {
     getResearch,
@@ -130,7 +148,14 @@ export function useResearches() {
     updateCollection,
     newCollection,
     addResearch,
+    loadIndex,
+    loadIndexDivisions,
+    deleteCollections,
+    loadParts,
+    updateParts,
+    duplicate,
   };
+  provide("resMethods", resMethods);
 
   return [researches, resMethods];
 }

@@ -5,7 +5,7 @@
         v-for="cat in categories"
         :key="cat.id"
         :category="cat"
-        @update-category="(data) => updateCategory(linkObjId, cat, data)"
+        @update-category="(data) => lnkMethods.updateCategory(link, cat, data)"
       ></link-category>
     </table>
   </div>
@@ -15,26 +15,16 @@
 import LinkCategory from "./LinkCategory.vue";
 import { computed, inject } from "vue";
 
-const projectId = inject("projectId");
-const getLink = inject("getLink");
 const elementAttr = inject("elementAttr");
-const updateCategory = inject("lnkUpdateCategory");
-
-const linkObjId = computed(function () {
-  return {
-    proj: projectId.value.proj,
-    link: elementAttr.value.link_id,
-  };
-});
+const lnkMethods = inject("lnkMethods");
 
 const link = computed(function () {
-  return getLink(linkObjId.value.link);
+  return lnkMethods.getLink(elementAttr.value.link_id);
 });
 
 const categories = computed(function () {
   return link.value.categories;
 });
-
 </script>
 
 <style scoped></style>

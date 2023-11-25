@@ -16,7 +16,7 @@ import { inject, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
 const research = inject("research");
-const resDeleteCollections = inject("resDeleteCollections");
+const resMethods = inject("resMethods");
 const tableRef = ref([]);
 
 // table properties
@@ -36,7 +36,7 @@ const tableFields = [
 ];
 
 function removeSelected() {
-  resDeleteCollections(research, tableRef.value.selectedLines);
+  resMethods.deleteCollections(research, tableRef.value.selectedLines);
 }
 
 defineExpose({ removeSelected });

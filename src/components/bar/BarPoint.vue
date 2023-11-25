@@ -17,11 +17,11 @@
 const props = defineProps(['point']);
 import { computed, inject } from 'vue';
 
-const getCategory = inject('getCategory');
+const lnkMethods = inject('lnkMethods');
 const createElement = inject('createElement');
 
 const category = computed(() => {
-  return getCategory(props.point.link, props.point.col);
+  return lnkMethods.getCategory(props.point.link, props.point.col);
 });
 const tooltip = computed(() => {
   return props.point.verse.replaceAll(',', ' ');

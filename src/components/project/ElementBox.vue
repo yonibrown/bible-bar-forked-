@@ -17,21 +17,18 @@
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
-    <component
-      :is="element.type + '-box'"
-      ref="boxRef"
-    ></component>
+    <component :is="element.type + '-box'" ref="boxRef"></component>
   </base-card>
 </template>
 
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
-import { sendToServer } from "../../server.js";
 
 const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
-const getLink = inject("getLink");
+const lnkMethods = inject("lnkMethods");
+const elmMethods = inject("elmMethods");
 
 const elementAttr = ref(props.element.attr);
 provide("elementAttr", elementAttr);
@@ -39,13 +36,13 @@ provide("elementAttr", elementAttr);
 const boxRef = ref();
 
 const projectId = inject("projectId");
-const elementId = computed(function () {
+const elementObjId = computed(function () {
   return {
     elm: props.element.id,
     ...projectId.value,
   };
 });
-provide("elementId", elementId);
+provide("elementObjId", elementObjId);
 
 // element name
 const defaultName = computed(getDefaultName);
@@ -54,7 +51,7 @@ function getDefaultName() {
     return "new element";
   }
   if (props.element.type == "link") {
-    const link = getLink(elementAttr.value.link_id);
+    const link = lnkMethods.getLink(elementAttr.value.link_id);
     if (link) {
       if (link.name != "") {
         return link.name;
@@ -96,31 +93,18 @@ function closeElement() {
 }
 
 async function reloadElement() {
-  const data = {
-    type: "element",
-    oper: "get",
-    id: elementId.value,
-    prop: { dummy: "" },
-  };
-
-  const obj = await sendToServer(data);
-  elementAttr.value = obj.data.attr;
+  elementAttr.value = await elmMethods.loadElement(elementObjId.value);
   boxRef.value.reload();
 }
+
 // change attributes of element
 async function changeAttr(changedAttr, options) {
   if (props.element.type == "new") {
     return;
   }
-  const data = {
-    type: "element",
-    oper: "set",
-    id: elementId.value,
-    prop: changedAttr,
-  };
 
-  const obj = await sendToServer(data);
-
+  await elmMethods.changeAttr(elementObjId.value,changedAttr);
+  
   if (options && options.reload) {
     reloadElement();
   }
@@ -128,20 +112,13 @@ async function changeAttr(changedAttr, options) {
 provide("changeAttr", changeAttr);
 
 // open a new element
-const createElement = inject("createElement");
 function createElementFromElement(attr) {
-  const newAttr = { ...attr };
-  const options = {};
-  options.openingElement = props.element;
-  if (props.element.type == "new") {
-    newAttr.position = props.element.position;
-    newAttr.name = elementName.value;
-  } else {
-    newAttr.opening_element = props.element.id;
-    newAttr.name = "";
-    newAttr.position = props.nextPos;
-  }
-  createElement(newAttr, options);
+  elmMethods.createFromElement(
+    attr,
+    props.element,
+    elementName.value,
+    props.nextPos
+  );
 }
 provide("createElement", createElementFromElement);
 

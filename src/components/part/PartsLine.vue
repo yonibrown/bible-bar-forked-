@@ -21,8 +21,8 @@ import { inject, computed } from "vue";
 const props = defineProps(["line", "field"]);
 
 const researchObjId = inject("researchObjId");
-const getCollection = inject("getCollection");
+const resMethods = inject("resMethods");
 const collection = computed(function () {
-  return getCollection(researchObjId.res, props.line.col);
+  return resMethods.getCollection(researchObjId.res, props.line.col);
 });
 </script>

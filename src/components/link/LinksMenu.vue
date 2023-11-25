@@ -23,10 +23,8 @@ import LinksMenuObj from "./LinksMenuObj.vue";
 
 const props = defineProps(["title"]);
 
-const getLink = inject("getLink");
-const elementId = inject("elementId");
-const lnkAddElementToLink = inject("lnkAddElementToLink");
-const lnkRemoveElementFromLink = inject("lnkRemoveElementFromLink");
+const lnkMethods = inject("lnkMethods");
+const elementObjId = inject("elementObjId");
 
 const links = inject("links");
 const hilightMenu = ref(false);
@@ -40,13 +38,13 @@ function leaveLinksMenu() {
 function addToLink(dragData) {
   const linkId = +dragData.linkId;
   if (linkId != 0) {
-    const link = getLink(linkId);
-    lnkAddElementToLink(link, elementId);
+    const link = lnkMethods.getLink(linkId);
+    lnkMethods.addElementToLink(link, elementObjId);
   }
 }
 
 function removeFromLink(link) {
-  lnkRemoveElementFromLink(link, elementId);
+  lnkMethods.removeElementFromLink(link, elementObjId);
 }
 </script>
 
