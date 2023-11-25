@@ -46,7 +46,7 @@ import BarLinkPoints from "./BarLinkPoints.vue";
 import { inject, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
-const elementObjId = inject("elementObjId");
+const element = inject("element");
 const links = inject("links");
 const elmMethods = inject("elmMethods");
 
@@ -66,11 +66,11 @@ loadElmBarSegments();
 loadElmBarPoints();
 
 async function loadElmBarSegments() {
-  segments.value = await elmMethods.loadBarSegments(elementObjId.value);
+  segments.value = await elmMethods.loadBarSegments(element.value);
 }
 
 async function loadElmBarPoints() {
-  points.value = await elmMethods.loadBarPoints(elementObjId.value);
+  points.value = await elmMethods.loadBarPoints(element.value);
 }
 </script>
 

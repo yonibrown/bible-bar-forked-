@@ -35,14 +35,10 @@ provide("elementAttr", elementAttr);
 
 const boxRef = ref();
 
-const projectId = inject("projectId");
-const elementObjId = computed(function () {
-  return {
-    elm: props.element.id,
-    ...projectId.value,
-  };
+const elementObj = computed(function () {
+  return props.element
 });
-provide("elementObjId", elementObjId);
+provide("element", elementObj);
 
 // element name
 const defaultName = computed(getDefaultName);
@@ -93,7 +89,7 @@ function closeElement() {
 }
 
 async function reloadElement() {
-  elementAttr.value = await elmMethods.loadElement(elementObjId.value);
+  elementAttr.value = await elmMethods.loadElement(elementObj.value);
   boxRef.value.reload();
 }
 
@@ -103,7 +99,7 @@ async function changeAttr(changedAttr, options) {
     return;
   }
 
-  await elmMethods.changeAttr(elementObjId.value,changedAttr);
+  await elmMethods.changeAttr(elementObj.value,changedAttr);
   
   if (options && options.reload) {
     reloadElement();

@@ -28,11 +28,6 @@ const props = defineProps(["id"]);
 
 const { project, prjMethods, elements, elmMethods } = newProjectData(props.id);
 
-const projectId = computed(function () {
-  return { proj: project.value.id };
-});
-provide("projectId", projectId);
-
 const listRef = ref();
 
 prjMethods.loadProject();

@@ -29,7 +29,7 @@ import TextVerse from "./TextVerse.vue";
 import { inject, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
-const elementObjId = inject("elementObjId");
+const element = inject("element");
 const elmMethods = inject("elmMethods");
 
 const verses = ref([]);
@@ -37,7 +37,7 @@ const verses = ref([]);
 loadElmText();
 
 async function loadElmText() {
-  verses.value = await elmMethods.loadText(elementObjId.value);
+  verses.value = await elmMethods.loadText(element.value);
 }
 
 defineExpose({ reload: loadElmText });

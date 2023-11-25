@@ -6,6 +6,13 @@ export function useElements({ resMethods, projId }) {
   provide("elements", elements);
 
   // access objects
+  function elementObjId(elm) {
+    return {
+      proj: elm.proj,
+      elm: elm.id,
+    };
+  }
+
 
   // access database
   async function elmCreate(attr, options) {
@@ -51,11 +58,11 @@ export function useElements({ resMethods, projId }) {
     elmCreate(newAttr, options);
   }
 
-  async function loadElement(elementObjId) {
+  async function loadElement(elm) {
     const data = {
       type: "element",
       oper: "get",
-      id: elementObjId,
+      id: elementObjId(elm),
       prop: { dummy: "" },
     };
 
@@ -63,11 +70,11 @@ export function useElements({ resMethods, projId }) {
     return obj.data.attr;
   }
 
-  async function loadBarSegments(elementObjId) {
+  async function loadBarSegments(elm) {
     const data = {
       type: "element",
       oper: "get_segments",
-      id: elementObjId,
+      id: elementObjId(elm),
       prop: { dummy: "" },
     };
 
@@ -75,11 +82,11 @@ export function useElements({ resMethods, projId }) {
     return obj.data.segments;
   }
 
-  async function loadBarPoints(elementObjId) {
+  async function loadBarPoints(elm) {
     const data = {
       type: "element",
       oper: "get_points",
-      id: elementObjId,
+      id: elementObjId(elm),
       prop: { dummy: "" },
     };
 
@@ -87,22 +94,22 @@ export function useElements({ resMethods, projId }) {
     return obj.data.points;
   }
 
-  async function changeAttr(elementObjId, attr) {
+  async function changeAttr(elm, attr) {
     const data = {
       type: "element",
       oper: "set",
-      id: elementObjId,
+      id: elementObjId(elm),
       prop: attr,
     };
 
     const obj = await sendToServer(data);
   }
 
-  async function loadText(elementObjId) {
+  async function loadText(elm) {
     const data = {
       type: "element",
       oper: "get_segment",
-      id: elementObjId,
+      id: elementObjId(elm),
       prop: { dummy: "" },
     };
   

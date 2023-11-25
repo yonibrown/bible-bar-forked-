@@ -49,30 +49,30 @@ export function useLinks({ projId }) {
     const obj = await sendToServer(data);
   }
 
-  async function addElementToLink(link, elementObjId) {
-    if (!link.elements.includes(elementObjId.value.elm)) {
-      link.elements.push(elementObjId.value.elm);
+  async function addElementToLink(link, elmId) {
+    if (!link.elements.includes(elmId)) {
+      link.elements.push(elmId);
     }
 
     const data = {
       type: "link",
       oper: "add_elm",
       id: linkObjId(link),
-      prop: { elm: elementObjId.value.elm },
+      prop: { elm: elmId },
     };
     const obj = await sendToServer(data);
   }
 
-  async function removeElementFromLink(link, elementObjId) {
+  async function removeElementFromLink(link, elmId) {
     link.elements = link.elements.filter(function (arrElmId) {
-      return arrElmId != elementObjId.value.elm;
+      return arrElmId != elmId;
     });
 
     const data = {
       type: "link",
       oper: "remove_elm",
       id: linkObjId(link),
-      prop: { elm: elementObjId.value.elm },
+      prop: { elm: elmId },
     };
     const obj = await sendToServer(data);
   }
