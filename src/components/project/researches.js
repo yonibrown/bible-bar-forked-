@@ -123,7 +123,7 @@ export function useResearches() {
   }
   provide("resDuplicate", resDuplicate);
   
-    // return
+  // return
   const resMethods = {
     getResearch,
     getCollection,

@@ -23,7 +23,8 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref,inject } from "vue";
+import { reactive, provide, computed, ref } from "vue";
+import { useElements } from "./elements.js";
 import { useLinks } from "./links.js";
 import { useResearches } from "./researches.js";
 
@@ -44,7 +45,7 @@ provide("projectId", projectId);
 
 const listRef = ref();
 
-const elements = ref([]);
+const [elements,elmMethods] = useElements();
 
 const links = useLinks();
 const [researches,resMethods] = useResearches();
@@ -70,29 +71,20 @@ async function loadProject() {
 
 // add a new element or reload an element
 async function createElement(attr, options) {
-  const data = {
-    type: "element",
-    oper: "new",
-    id: { dummy: "" },
-    prop: {
-      proj: project.id,
-      ...attr,
-    },
-  };
-  const obj = await sendToServer(data);
+  const data = await elmMethods.elmCreate(project.id,attr);
 
-  if (obj.data.res){
-    resMethods.addResearch(obj.data.res);
+  if (data.res){
+    resMethods.addResearch(data.res);
   }
   if (options && options.openingElement) {
     const elm = options.openingElement;
     if (elm.type == "new") {
       elm.type = attr.type;
-      elm.id = obj.data.elm.id;
-      elm.attr = obj.data.elm.attr;
+      elm.id = data.elm.id;
+      elm.attr = data.elm.attr;
     } else {
       // elements = elements.concat([data]);
-      elements.value.push(obj.data.elm);
+      elements.value.push(data.elm);
     }
   }
 }
