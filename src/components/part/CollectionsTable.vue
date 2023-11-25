@@ -13,11 +13,10 @@
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
 import { inject, ref } from "vue";
-import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
 const research = inject("research");
-const researchId = inject("researchId");
+const resDeleteCollections = inject("resDeleteCollections");
 const tableRef = ref([]);
 
 // table properties
@@ -36,18 +35,8 @@ const tableFields = [
   },
 ];
 
-async function removeSelected() {
-  const data = {
-    type: "research",
-    oper: "delete_collections",
-    id: researchId,
-    prop: {
-      colList: tableRef.value.selectedLines,
-    },
-  };
-
-  console.log(data);
-  const obj = await sendToServer(data);
+function removeSelected() {
+  resDeleteCollections(research, tableRef.value.selectedLines);
 }
 
 defineExpose({ removeSelected });

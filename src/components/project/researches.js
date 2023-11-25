@@ -26,21 +26,27 @@ export function useResearches() {
   }
   provide("getCollection", getCollection);
 
-  function addResearch(res){
+  function addResearch(res) {
     researches.value.push(res);
   }
   provide("addResearch", addResearch);
 
+  function researchObjId(res) {
+    return {
+      res: res.id,
+    };
+  }
+
   // server
-  async function updateCollection(col,newAttr){
+  async function updateCollection(col, newAttr) {
     Object.assign(col, newAttr);
     const data = {
       type: "research",
       oper: "update_collection",
-      id: {res: col.res},
+      id: { res: col.res },
       prop: {
         col: col.id,
-        ...newAttr
+        ...newAttr,
       },
     };
 
@@ -48,11 +54,11 @@ export function useResearches() {
   }
   provide("updateCollection", updateCollection);
 
-  async function newCollection(res,newAttr){
+  async function newCollection(res, newAttr) {
     const data = {
       type: "research",
       oper: "new_collection",
-      id: {res: res.id},
+      id: researchObjId(res),
       prop: newAttr,
     };
 
@@ -61,10 +67,70 @@ export function useResearches() {
   }
   provide("newCollection", newCollection);
 
-  // return
-  const resMethods = {
-    getResearch,getCollection,updateCollection,newCollection,addResearch
-  }
+  async function resDeleteCollections(res, colList) {
+    const data = {
+      type: "research",
+      oper: "delete_collections",
+      id: researchObjId(res),
+      prop: { colList },
+    };
 
-  return [researches,resMethods];
+    console.log(data);
+    const obj = await sendToServer(data);
+  }
+  provide("resDeleteCollections", resDeleteCollections);
+
+  async function resLoadParts(researchObjId, sortAttr) {
+    const data = {
+      type: "research",
+      oper: "get_prt_list",
+      id: researchObjId,
+      prop: sortAttr,
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data;
+  }
+  provide("resLoadParts", resLoadParts);
+
+  async function resUpdateParts(researchObjId,partList,updAttr) {
+    const data = {
+      type: "research",
+      oper: "update_parts",
+      id: researchObjId,
+      prop: {
+        partList,
+        updAttr,
+      },
+    };
+    const obj = await sendToServer(data);
+    loadResearchParts();
+  }
+  provide("resUpdateParts", resUpdateParts);
+
+  async function resDuplicate(researchObjId,partList) {
+    const data = {
+      type: "research",
+      oper: "duplicate",
+      id: researchObjId,
+      prop: {
+        partList,
+      },
+    };
+  
+    const obj = await sendToServer(data);
+    return obj.data.new_res;
+  }
+  provide("resDuplicate", resDuplicate);
+  
+    // return
+  const resMethods = {
+    getResearch,
+    getCollection,
+    updateCollection,
+    newCollection,
+    addResearch,
+  };
+
+  return [researches, resMethods];
 }

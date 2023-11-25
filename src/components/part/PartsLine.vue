@@ -20,9 +20,9 @@ import SpecLine from "../ui/SpecLine.vue";
 import { inject, computed } from "vue";
 const props = defineProps(["line", "field"]);
 
-const researchId = inject("researchId");
+const researchObjId = inject("researchObjId");
 const getCollection = inject("getCollection");
 const collection = computed(function () {
-  return getCollection(researchId.res, props.line.col);
+  return getCollection(researchObjId.res, props.line.col);
 });
 </script>

@@ -16,12 +16,14 @@
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
-import { sendToServer } from "../../server.js";
 
 const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
 
-const researchId = inject("researchId");
+const researchObjId = inject("researchObjId");
+const resLoadParts = inject("resLoadParts");
+const resDuplicate = inject("resDuplicate");
+const resUpdateParts = inject("resUpdateParts");
 
 const parts = ref([]);
 const links = inject("links");
@@ -71,15 +73,7 @@ function changeSortField(newField) {
 loadResearchParts();
 
 async function loadResearchParts() {
-  const data = {
-    type: "research",
-    oper: "get_prt_list",
-    id: researchId,
-    prop: sortAttr.value,
-  };
-
-  const obj = await sendToServer(data);
-  parts.value = obj.data;
+  parts.value = await resLoadParts(researchObjId, sortAttr.value);
 }
 
 // filter parts
@@ -105,33 +99,19 @@ const filteringCols = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  const data = {
-    type: "research",
-    oper: "update_parts",
-    id: researchId,
-    prop: {
-      colList: tableRef.value.selectedLines
-    },
-  };
-  const obj = await sendToServer(data);
+  await resUpdateParts(researchObjId, tableRef.value.selectedLines, cat);
   loadResearchParts();
 }
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
-  const data = {
-    type: "research",
-    oper: "duplicate",
-    id: researchId,
-    prop: {
-      partList: tableRef.value.selectedLines,
-    },
-  };
-
-  const obj = await sendToServer(data);
+  const newRes = await resDuplicate(
+    researchObjId,
+    tableRef.value.selectedLines
+  );
   createElement({
     type: "parts",
-    res: obj.data.new_res.id.res,
+    res: newRes.id.res,
   });
 }
 

@@ -5,7 +5,7 @@
         v-for="cat in categories"
         :key="cat.id"
         :category="cat"
-        @update-category="(data) => updateCategory(linkId, cat, data)"
+        @update-category="(data) => updateCategory(linkObjId, cat, data)"
       ></link-category>
     </table>
   </div>
@@ -20,7 +20,7 @@ const getLink = inject("getLink");
 const elementAttr = inject("elementAttr");
 const updateCategory = inject("lnkUpdateCategory");
 
-const linkId = computed(function () {
+const linkObjId = computed(function () {
   return {
     proj: projectId.value.proj,
     link: elementAttr.value.link_id,
@@ -28,7 +28,7 @@ const linkId = computed(function () {
 });
 
 const link = computed(function () {
-  return getLink(linkId.value.link);
+  return getLink(linkObjId.value.link);
 });
 
 const categories = computed(function () {

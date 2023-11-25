@@ -33,8 +33,8 @@ import { ref, inject, provide, computed } from "vue";
 const displayOptions = inject("displayOptions");
 
 const elementAttr = inject("elementAttr");
-const researchId = { res: elementAttr.value.res };
-provide("researchId", researchId);
+const researchObjId = { res: elementAttr.value.res };
+provide("researchObjId", researchObjId);
 
 const getResearch = inject("getResearch");
 const research = getResearch(elementAttr.value.res);
