@@ -12,10 +12,12 @@
 
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
-import { inject } from "vue";
+import { inject, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
 const research = inject("research");
+const resMethods = inject("resMethods");
+const tableRef = ref([]);
 
 // table properties
 const tableFields = [
@@ -32,4 +34,10 @@ const tableFields = [
     fit: false,
   },
 ];
+
+function removeSelected() {
+  resMethods.deleteCollections(research, tableRef.value.selectedLines);
+}
+
+defineExpose({ removeSelected });
 </script>

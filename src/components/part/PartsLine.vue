@@ -1,5 +1,5 @@
 <template>
-  <spec-line :line="line">
+  <spec-line>
     <template #col>
       <span>{{ collection.name }}</span>
     </template>
@@ -20,9 +20,9 @@ import SpecLine from "../ui/SpecLine.vue";
 import { inject, computed } from "vue";
 const props = defineProps(["line", "field"]);
 
-const researchId = inject("researchId");
-const getCollection = inject("getCollection");
+const researchObjId = inject("researchObjId");
+const resMethods = inject("resMethods");
 const collection = computed(function () {
-  return getCollection(researchId.res, props.line.col);
+  return resMethods.getCollection(researchObjId.res, props.line.col);
 });
 </script>

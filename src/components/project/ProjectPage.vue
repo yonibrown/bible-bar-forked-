@@ -13,8 +13,7 @@
           </span>
         </div>
       </base-card>
-      <element-list :elements="elements" ref="listRef"
-      ></element-list>
+      <element-list :elements="elements" ref="listRef"></element-list>
     </section>
   </div>
 </template>
@@ -22,84 +21,25 @@
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
-import { sendToServer } from "../../server.js";
-import { reactive, provide, computed, ref,inject } from "vue";
-import { useLinks } from "./links.js";
-import { useResearches } from "./researches.js";
+import { provide, computed, ref } from "vue";
+import { newProjectData } from "./dataStore.js";
 
-const props = defineProps(['id']);
+const props = defineProps(["id"]);
 
-const project = reactive({
-  id: props.id,
-  attr: {
-    name: "---",
-    desc: "",
-  },
-});
-
-const projectId = computed(function () {
-  return { proj: project.id };
-});
-provide("projectId", projectId);
+const { project, prjMethods, elements, elmMethods } = newProjectData(props.id);
 
 const listRef = ref();
 
-const elements = ref([]);
-
-const links = useLinks();
-const [researches,resMethods] = useResearches();
-
-loadProject();
-
-async function loadProject() {
-  const data = {
-    type: "project",
-    oper: "get",
-    id: projectId.value,
-    prop: { dummy: "" },
-  };
-  const obj = await sendToServer(data);
-  project.attr = {
-    name: obj.data.name,
-    desc: obj.data.desc,
-  };
-  elements.value = obj.data.elements;
-  links.value = obj.data.links;
-  researches.value = obj.data.researches;
-}
+prjMethods.loadProject();
 
 // add a new element or reload an element
-async function createElement(attr, options) {
-  const data = {
-    type: "element",
-    oper: "new",
-    id: { dummy: "" },
-    prop: {
-      proj: project.id,
-      ...attr,
-    },
-  };
-  const obj = await sendToServer(data);
-
-  if (obj.data.res){
-    resMethods.addResearch(obj.data.res);
-  }
-  if (options && options.openingElement) {
-    const elm = options.openingElement;
-    if (elm.type == "new") {
-      elm.type = attr.type;
-      elm.id = obj.data.elm.id;
-      elm.attr = obj.data.elm.attr;
-    } else {
-      // elements = elements.concat([data]);
-      elements.value.push(obj.data.elm);
-    }
-  }
+function createElement(attr) {
+  elmMethods.create(attr);
 }
 provide("createElement", createElement);
 
 // link methods
-function openNewElement(){
+function openNewElement() {
   listRef.value.openNewElement();
 }
 </script>

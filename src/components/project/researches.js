@@ -1,17 +1,17 @@
-import { provide, ref, computed } from "vue";
+import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
 export function useResearches() {
   const researches = ref([]);
   provide("researches", researches);
 
+  // local objects
   function getResearch(researchId) {
     const research = researches.value.find((pResearch) => {
       return pResearch.id == researchId;
     });
     return research;
   }
-  provide("getResearch", getResearch);
 
   function getCollection(researchId, colId) {
     const research = getResearch(researchId);
@@ -23,46 +23,139 @@ export function useResearches() {
     });
     return col;
   }
-  provide("getCollection", getCollection);
 
-  async function updateCollection(col,newAttr){
+  function addResearch(res) {
+    researches.value.push(res);
+  }
+
+  function researchObjId(res) {
+    return {
+      res: res.id,
+    };
+  }
+
+  // server
+  async function updateCollection(col, newAttr) {
     Object.assign(col, newAttr);
     const data = {
       type: "research",
       oper: "update_collection",
-      id: {res: col.res},
+      id: { res: col.res },
       prop: {
         col: col.id,
-        ...newAttr
+        ...newAttr,
       },
     };
 
     const obj = await sendToServer(data);
   }
-  provide("updateCollection", updateCollection);
 
-  async function newCollection(res,newAttr){
-    // console.log(newAttr);
+  async function newCollection(res, newAttr) {
     const data = {
       type: "research",
       oper: "new_collection",
-      id: {res: res.id},
+      id: researchObjId(res),
       prop: newAttr,
     };
 
     const obj = await sendToServer(data);
     res.collections.push(obj.data);
   }
-  provide("newCollection", newCollection);
 
-  function addResearch(res){
-    researches.value.push(res);
+  async function deleteCollections(res, colList) {
+    const data = {
+      type: "research",
+      oper: "delete_collections",
+      id: researchObjId(res),
+      prop: { colList },
+    };
+
+    console.log(data);
+    const obj = await sendToServer(data);
   }
-  provide("addResearch", addResearch);
 
+  async function loadParts(researchObjId, sortAttr) {
+    const data = {
+      type: "research",
+      oper: "get_prt_list",
+      id: researchObjId,
+      prop: sortAttr,
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data;
+  }
+
+  async function updateParts(researchObjId, partList, updAttr) {
+    const data = {
+      type: "research",
+      oper: "update_parts",
+      id: researchObjId,
+      prop: {
+        partList,
+        updAttr,
+      },
+    };
+    const obj = await sendToServer(data);
+    loadResearchParts();
+  }
+
+  async function duplicate(researchObjId, partList) {
+    const data = {
+      type: "research",
+      oper: "duplicate",
+      id: researchObjId,
+      prop: {
+        partList,
+      },
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data.new_res;
+  }
+
+  async function loadIndexDivisions(seqIndex, selectedKey) {
+    const data = {
+      type: "res_index",
+      oper: "get_divisions",
+      id: seqIndex,
+      prop: {
+        key: selectedKey,
+      },
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data;
+  }
+
+  async function loadIndex(seqIndex) {
+    const data = {
+      type: "res_index",
+      oper: "get",
+      id: seqIndex,
+      prop: { dummy: "" },
+    };
+
+    const obj = await sendToServer(data);
+
+    return obj.data.levels;
+  }
+
+  // return
   const resMethods = {
-    getResearch,getCollection,updateCollection,newCollection,addResearch
-  }
+    getResearch,
+    getCollection,
+    updateCollection,
+    newCollection,
+    addResearch,
+    loadIndex,
+    loadIndexDivisions,
+    deleteCollections,
+    loadParts,
+    updateParts,
+    duplicate,
+  };
+  provide("resMethods", resMethods);
 
-  return [researches,resMethods];
+  return [researches, resMethods];
 }
