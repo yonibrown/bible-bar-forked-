@@ -1,6 +1,6 @@
 <template>
-  <span :style="categoryStyle" ref="wordObj">{{ word.word }} </span>
-  <span class="text_space">{{ word.space }}</span>
+  <span :style="categoryStyle" ref="wordObj" :res-word="word.id">{{ word.word }} </span>
+  <span class="text_space" :res-word="0.5+word.id">{{ word.space }}</span>
 </template>
 
 <script setup>
