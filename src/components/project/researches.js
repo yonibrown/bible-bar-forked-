@@ -141,6 +141,18 @@ export function useResearches() {
     return obj.data.levels;
   }
 
+  async function newPart(id,prop) {
+    const data = {
+      type: "research",
+      oper: "new_part",
+      id: id,
+      prop: prop,
+    };
+
+    const obj = await sendToServer(data);
+    console.log(obj);
+  }
+
   // return
   const resMethods = {
     getResearch,
@@ -154,6 +166,7 @@ export function useResearches() {
     loadParts,
     updateParts,
     duplicate,
+    newPart
   };
   provide("resMethods", resMethods);
 
