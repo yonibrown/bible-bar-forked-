@@ -97,7 +97,20 @@ export function useResearches() {
       },
     };
     const obj = await sendToServer(data);
-    loadResearchParts();
+    loadParts();
+  }
+
+  async function deleteParts(res, partList) {
+    const data = {
+      type: "research",
+      oper: "delete_parts",
+      id: researchObjId(res),
+      prop: {
+        partList,
+      },
+    };
+    const obj = await sendToServer(data);
+    loadParts();
   }
 
   async function duplicate(researchObjId, partList) {
@@ -165,6 +178,7 @@ export function useResearches() {
     deleteCollections,
     loadParts,
     updateParts,
+    deleteParts,
     duplicate,
     newPart,
   };

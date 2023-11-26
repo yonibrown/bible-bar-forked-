@@ -30,7 +30,7 @@ const changeAttr = inject("changeAttr");
 const tableRef = ref([]);
 
 const parts = computed(function () {
-  if (!research.value) {
+  if (!research.value || !research.value.parts) {
     return [];
   }
   return research.value.parts;
@@ -107,13 +107,13 @@ const filteringCols = computed(function () {
 
 // sort parts
 const sortedParts = computed(function () {
-  if(!filteredParts.value){
+  if (!filteredParts.value) {
     return [];
   }
   const arr = filteredParts.value.slice();
   arr.sort(function (a, b) {
-    if (sortAttr.value.ordering == "ASC"){
-        return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort] ? 1 : -1;
+    if (sortAttr.value.ordering == "ASC") {
+      return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort] ? 1 : -1;
     }
     return a.sort_key[sortAttr.value.sort] < b.sort_key[sortAttr.value.sort] ? 1 : -1;
   });
@@ -141,5 +141,9 @@ async function duplicateSelected() {
   });
 }
 
-defineExpose({ moveSelectedToCat, duplicateSelected });
+async function removeSelected() {
+  await resMethods.deleteParts(research.value, tableRef.value.selectedLines);
+}
+
+defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });
 </script>
