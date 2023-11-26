@@ -1,16 +1,17 @@
 import { provide, ref } from "vue";
+import { sendToServer } from "../../server.js";
 
-export function useLinks() {
+export function useLinks({ projId }) {
   const links = ref([]);
   provide("links", links);
 
+  // access objects
   function getLink(linkId) {
     const link = links.value.find((pLink) => {
       return pLink.id == linkId;
     });
     return link;
   }
-  provide("getLink", getLink);
 
   function getCategory(linkId, col) {
     const link = getLink(linkId);
@@ -22,7 +23,69 @@ export function useLinks() {
     });
     return cat;
   }
-  provide("getCategory", getCategory);
 
-  return links;
+  function linkObjId(link) {
+    return {
+      proj: link.proj,
+      link: link.id,
+    };
+  }
+
+  // access database
+  async function updateCategory(link, cat, attr) {
+    // update browser
+    Object.assign(cat, attr);
+
+    // update server
+    const data = {
+      type: "link",
+      oper: "upd_cat",
+      id: linkObjId(link),
+      prop: {
+        cat_id: cat,
+        cat_attr: attr,
+      },
+    };
+    const obj = await sendToServer(data);
+  }
+
+  async function addElementToLink(link, elmId) {
+    if (!link.elements.includes(elmId)) {
+      link.elements.push(elmId);
+    }
+
+    const data = {
+      type: "link",
+      oper: "add_elm",
+      id: linkObjId(link),
+      prop: { elm: elmId },
+    };
+    const obj = await sendToServer(data);
+  }
+
+  async function removeElementFromLink(link, elmId) {
+    link.elements = link.elements.filter(function (arrElmId) {
+      return arrElmId != elmId;
+    });
+
+    const data = {
+      type: "link",
+      oper: "remove_elm",
+      id: linkObjId(link),
+      prop: { elm: elmId },
+    };
+    const obj = await sendToServer(data);
+  }
+
+  // return
+  const lnkMethods = {
+    updateCategory,
+    getLink,
+    addElementToLink,
+    removeElementFromLink,
+    getCategory,
+  };
+  provide("lnkMethods", lnkMethods);
+
+  return [links, lnkMethods];
 }

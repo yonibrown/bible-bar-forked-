@@ -4,8 +4,12 @@
     <select v-model="action">
       <option value="choose">בחר...</option>
       <option value="newCat">קטגוריה חדשה</option>
-      <option value="changeCat">העבר לקטגוריה</option>
-      <option value="duplicate">העתק לרשימה חדשה</option>
+      <option value="changeCat" v-show="currentTab == 'parts'">
+        העבר לקטגוריה
+      </option>
+      <option value="duplicate" v-show="currentTab == 'parts'">
+        העתק לרשימה חדשה
+      </option>
       <option value="remove">מחק מהרשימה</option>
     </select>
     <span v-if="displayCatList">
@@ -41,6 +45,7 @@
 <script setup>
 import { ref, computed, inject } from "vue";
 
+const props = defineProps(["currentTab"]);
 const emit = defineEmits(["updateData"]);
 
 const research = inject("research");
@@ -72,17 +77,15 @@ const hasChanges = computed(function () {
 });
 
 function submitChanges() {
-  let act, prop;
+  let prop = { dummy: "" };
   switch (action.value) {
     case "newCat":
-      act = "newCat";
       prop = {
         collection_id: 0,
         collection_name: newCategory.value,
       };
       break;
     case "changeCat":
-      act = "moveSelectedToCat";
       if (moveToCat.value == "new") {
         prop = {
           collection_id: 0,
@@ -92,13 +95,9 @@ function submitChanges() {
         prop = { collection_id: moveToCat.value };
       }
       break;
-    case "duplicate":
-      act = "duplicate";
-      prop = { dummy: "" };
-      break;
   }
   emit("updateData", {
-    action: act,
+    action: action.value,
     prop,
   });
 }

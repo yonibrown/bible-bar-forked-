@@ -18,12 +18,9 @@
 <script setup>
 import ElementBox from "./ElementBox.vue";
 import SortableCell from "../ui/SortableCell.vue";
-import { sendToServer } from "../../server.js";
-import { provide, computed, ref, onUpdated, inject } from "vue";
+import { provide, computed, ref, onUpdated } from "vue";
 
 const props = defineProps(["elements"]);
-
-const projectId = inject("projectId");
 
 const dispElements = computed(function () {
   return props.elements
@@ -93,23 +90,14 @@ function elementNextPos(elmIdx) {
   return (nextElmPos - elmPos) / 2 + elmPos;
 }
 
-async function saveElmList() {
+function saveElmList() {
   const elmList = dispElements.value.map(function (elm, idx) {
     return {
       id: elm.id,
       position: idx + 1,
     };
   });
-
-  const data = {
-    type: "project",
-    oper: "save_elements",
-    id: projectId.value,
-    prop: {
-      elements: elmList,
-    },
-  };
-  const obj = await sendToServer(data);
+  prjMethods.storeElementList(elmList);
 }
 
 function closeElement(elm) {

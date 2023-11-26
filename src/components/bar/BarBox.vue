@@ -43,12 +43,12 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
-import { sendToServer } from "../../server.js";
 import { inject, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
-const elementId = inject("elementId");
+const element = inject("element");
 const links = inject("links");
+const elmMethods = inject("elmMethods");
 
 const segments = ref([]);
 const points = ref([]);
@@ -66,29 +66,11 @@ loadElmBarSegments();
 loadElmBarPoints();
 
 async function loadElmBarSegments() {
-  const data = {
-    type: "element",
-    oper: "get_segments",
-    id: elementId.value,
-    prop: { dummy: "" },
-  };
-
-  const obj = await sendToServer(data);
-
-  segments.value = obj.data.segments;
+  segments.value = await elmMethods.loadBarSegments(element.value);
 }
 
 async function loadElmBarPoints() {
-  const data = {
-    type: "element",
-    oper: "get_points",
-    id: elementId.value,
-    prop: { dummy: "" },
-  };
-
-  const obj = await sendToServer(data);
-
-  points.value = obj.data.points;
+  points.value = await elmMethods.loadBarPoints(element.value);
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <spec-line :line="line">
+  <spec-line>
     <template #name>
       <base-editable
         :initialValue="name"
@@ -30,8 +30,7 @@ import { inject, computed, ref } from "vue";
 const props = defineProps(["line"]);
 const emit = defineEmits(["addAttr"]);
 const research = inject("research");
-const updateCollection = inject("updateCollection");
-const newCollection = inject("newCollection");
+const resMethods = inject("resMethods");
 const enableSelection = inject("enableSelection");
 
 const defaultName = computed(function () {
@@ -64,13 +63,13 @@ const description = computed(function () {
 function submitName(newVal) {
   const newAttr = { name: newVal };
   if (props.line.newLine) {
-    newCollection(research, {
+    resMethods.newCollection(research, {
       ...attr.value,
       ...newAttr,
     });
     attr.value = { ...emptyAttr };
   } else {
-    updateCollection(props.line, newAttr);
+    resMethods.updateCollection(props.line, newAttr);
   }
 }
 
@@ -79,8 +78,7 @@ function submitDesc(newVal) {
   if (props.line.newLine) {
     Object.assign(attr.value, newAttr);
   } else {
-    console.log("submitDesc", props.line, newAttr);
-    updateCollection(props.line, newAttr);
+    resMethods.updateCollection(props.line, newAttr);
   }
 }
 </script>
