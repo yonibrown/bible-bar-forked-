@@ -3,14 +3,14 @@
     <span>פעולה:</span>
     <select v-model="action">
       <option value="choose">בחר...</option>
-      <option value="changeCat">הוסף לקטגוריה</option>
+      <option value="addToCat">הוסף לקטגוריה</option>
     </select>
     <span v-if="displayChangeCat">
       <span>קטגוריה:</span>
       <select v-model="moveToCat">
         <option value="0">בחר...</option>
         <optgroup v-for="res in researches" :label="res.name">
-          <option :value="col.id" v-for="col in res.collections">
+          <option :value="res.id+'-'+col.id" v-for="col in res.collections">
             {{ col.name }}
           </option>
         </optgroup>
@@ -35,7 +35,7 @@ const researches = inject("researches");
 
 const action = ref("choose");
 const displayChangeCat = computed(function () {
-  return action.value == "changeCat";
+  return action.value == "addToCat";
 });
 const displaySubmit = computed(function () {
   return action.value != "choose";
@@ -43,27 +43,26 @@ const displaySubmit = computed(function () {
 
 const moveToCat = ref(0);
 const hasChanges = computed(function () {
-  if (action.value == "changeCat") {
+  if (action.value == "addToCat") {
     return moveToCat.value != 0;
   }
   return action.value != "choose";
 });
 
 function submitChanges() {
-  let act, prop;
+  let prop;
   switch (action.value) {
-    case "changeCat":
-      act = "moveSelectedToCat";
-      prop = moveToCat.value;
-      break;
-    case "duplicate":
-      act = "duplicate";
-      prop = { dummy: "" };
+    case "addToCat":
+       let catArr = moveToCat.value.split('-');
+       prop = { 
+        research_id: catArr[0],
+        collection_id: catArr[1] 
+        };
       break;
   }
   emit("updateData", {
-    action: act,
-    newCat: prop,
+    action: action.value,
+    prop,
   });
 }
 </script>

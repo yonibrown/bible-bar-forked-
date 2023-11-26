@@ -18,9 +18,10 @@
 <script setup>
 import ElementBox from "./ElementBox.vue";
 import SortableCell from "../ui/SortableCell.vue";
-import { provide, computed, ref, onUpdated } from "vue";
+import { provide, computed, ref, onUpdated,inject } from "vue";
 
 const props = defineProps(["elements"]);
+const prjMethods = inject('prjMethods');
 
 const dispElements = computed(function () {
   return props.elements

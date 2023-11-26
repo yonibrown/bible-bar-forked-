@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { provide, ref } from "vue";
 import { useResearches } from "./researches.js";
 import { useElements } from "./elements.js";
 import { useLinks } from "./links.js";
@@ -53,6 +53,7 @@ export function newProjectData(projId) {
     loadProject,
     storeElementList,
   };
+  provide('prjMethods',prjMethods);
 
   return {
     project,
