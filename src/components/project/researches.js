@@ -70,20 +70,20 @@ export function useResearches() {
       prop: { colList },
     };
 
-    console.log(data);
     const obj = await sendToServer(data);
   }
 
-  async function loadParts(researchObjId, sortAttr) {
+  async function loadParts(res, sortAttr) {
     const data = {
       type: "research",
       oper: "get_prt_list",
-      id: researchObjId,
+      id: researchObjId(res),
       prop: sortAttr,
     };
 
     const obj = await sendToServer(data);
-    return obj.data;
+    res.parts = obj.data;
+    return res.parts;
   }
 
   async function updateParts(researchObjId, partList, updAttr) {
@@ -141,7 +141,7 @@ export function useResearches() {
     return obj.data.levels;
   }
 
-  async function newPart(id,prop) {
+  async function newPart(id, prop) {
     const data = {
       type: "research",
       oper: "new_part",
@@ -150,7 +150,6 @@ export function useResearches() {
     };
 
     const obj = await sendToServer(data);
-    console.log(obj);
   }
 
   // return
@@ -166,7 +165,7 @@ export function useResearches() {
     loadParts,
     updateParts,
     duplicate,
-    newPart
+    newPart,
   };
   provide("resMethods", resMethods);
 

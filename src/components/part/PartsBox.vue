@@ -37,7 +37,9 @@ const researchObjId = { res: elementAttr.value.res };
 provide("researchObjId", researchObjId);
 
 const resMethods = inject("resMethods");
-const research = resMethods.getResearch(elementAttr.value.res);
+const research = computed(function () {
+  return resMethods.getResearch(elementAttr.value.res);
+});
 provide("research", research);
 
 const partsTabRef = ref();
@@ -70,7 +72,7 @@ const currentTabTable = computed(function () {
 function updateData(data) {
   switch (data.action) {
     case "newCat":
-      resMethods.newCollection(research, data.prop);
+      resMethods.newCollection(research.value, data.prop);
       break;
     case "changeCat":
       currentTabTable.value.moveSelectedToCat(data.prop);
