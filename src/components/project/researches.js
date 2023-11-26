@@ -141,15 +141,16 @@ export function useResearches() {
     return obj.data.levels;
   }
 
-  async function newPart(id, prop) {
+  async function newPart(res, prop) {
     const data = {
       type: "research",
       oper: "new_part",
-      id: id,
-      prop: prop,
+      id: researchObjId(res),
+      prop,
     };
 
     const obj = await sendToServer(data);
+    res.parts.push(obj.data);
   }
 
   // return
