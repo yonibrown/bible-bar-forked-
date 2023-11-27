@@ -122,7 +122,7 @@ const sortedParts = computed(function () {
 
 async function moveSelectedToCat(cat) {
   await resMethods.updateParts(
-    researchObjId,
+    research.value,
     tableRef.value.selectedLines,
     cat
   );
@@ -141,8 +141,8 @@ async function duplicateSelected() {
   });
 }
 
-async function removeSelected() {
-  await resMethods.deleteParts(research.value, tableRef.value.selectedLines);
+function removeSelected() {
+  resMethods.deleteParts(research.value, tableRef.value.selectedLines);
 }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });

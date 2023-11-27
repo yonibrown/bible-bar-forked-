@@ -73,7 +73,7 @@ export function useResearches() {
     const obj = await sendToServer(data);
   }
 
-  async function loadParts(res, sortAttr) {
+  async function loadParts(res, sortAttr={dummy:''}) {
     const data = {
       type: "research",
       oper: "get_prt_list",
@@ -83,24 +83,24 @@ export function useResearches() {
 
     const obj = await sendToServer(data);
     res.parts = obj.data;
-    return res.parts;
   }
 
-  async function updateParts(researchObjId, partList, updAttr) {
+  async function updateParts(res, partList, updAttr) {
     const data = {
       type: "research",
       oper: "update_parts",
-      id: researchObjId,
+      id: researchObjId(res),
       prop: {
         partList,
         updAttr,
       },
     };
     const obj = await sendToServer(data);
-    loadParts();
+    loadParts(res);
   }
 
   async function deleteParts(res, partList) {
+    console.log(res);
     const data = {
       type: "research",
       oper: "delete_parts",
@@ -110,7 +110,7 @@ export function useResearches() {
       },
     };
     const obj = await sendToServer(data);
-    loadParts();
+    loadParts(res);
   }
 
   async function duplicate(researchObjId, partList) {
