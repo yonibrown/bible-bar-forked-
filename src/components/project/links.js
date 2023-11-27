@@ -77,6 +77,18 @@ export function useLinks({ projId }) {
     const obj = await sendToServer(data);
   }
 
+  async function createLink(prop) {
+    prop.proj = projId;
+    const data = {
+      type: "link",
+      oper: "new",
+      id: { dummy: "" },
+      prop,
+    };
+    const obj = await sendToServer(data);
+    links.value.push(obj.data);
+  }
+
   // return
   const lnkMethods = {
     updateCategory,
@@ -84,6 +96,7 @@ export function useLinks({ projId }) {
     addElementToLink,
     removeElementFromLink,
     getCategory,
+    createLink,
   };
   provide("lnkMethods", lnkMethods);
 
