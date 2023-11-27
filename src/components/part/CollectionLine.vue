@@ -63,7 +63,7 @@ const description = computed(function () {
 function submitName(newVal) {
   const newAttr = { name: newVal };
   if (props.line.newLine) {
-    resMethods.newCollection(research, {
+    resMethods.newCollection(research.value, {
       ...attr.value,
       ...newAttr,
     });
