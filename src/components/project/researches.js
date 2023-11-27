@@ -100,7 +100,6 @@ export function useResearches() {
   }
 
   async function deleteParts(res, partList) {
-    console.log(res);
     const data = {
       type: "research",
       oper: "delete_parts",
