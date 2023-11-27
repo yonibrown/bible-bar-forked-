@@ -106,7 +106,7 @@ export function useElements({ resMethods, projId }) {
   }
 
   async function loadText(elm) {
-    console.log('loadText',elm);
+    // console.log('loadText',elm);
     const data = {
       type: "element",
       oper: "get_segment",

@@ -93,7 +93,7 @@ export function useLinks({ elmMethods,projId }) {
     const obj = await sendToServer(data);
 
     links.value.push(obj.data);
-    options.element.verses = [];
+    // options.element.verses = [];
     elmMethods.loadText(options.element);
   }
 
