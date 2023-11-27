@@ -12,6 +12,7 @@ const tableFields = inject("tableFields");
 <style scoped>
 td {
   font-size: 85%;
+  padding: 0 3px;
 }
 
 .fit-column {

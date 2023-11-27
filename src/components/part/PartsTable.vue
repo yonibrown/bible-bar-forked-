@@ -6,7 +6,7 @@
     @changeSortField="changeSortField"
     :ascending="sortAttr.ordering == 'ASC'"
     @reverseTable="reverseTable"
-    :lines="filteredParts"
+    :lines="sortedParts"
     lineComponent="parts-line"
     ref="tableRef"
   >
@@ -21,12 +21,20 @@ const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
 
 const researchObjId = inject("researchObjId");
+const research = inject("research");
 const resMethods = inject("resMethods");
 
-const parts = ref([]);
+// const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
 const tableRef = ref([]);
+
+const parts = computed(function () {
+  if (!research.value || !research.value.parts) {
+    return [];
+  }
+  return research.value.parts;
+});
 
 // table properties
 const tableFields = [
@@ -55,23 +63,24 @@ const sortAttr = ref({
 });
 function reverseTable() {
   sortAttr.value.ordering = sortAttr.value.ordering == "DESC" ? "ASC" : "DESC";
-  parts.value.reverse();
+  //   parts.value.reverse();
   changeAttr(sortAttr.value);
 }
 function changeSortField(newField) {
   sortAttr.value.ordering = "ASC";
   sortAttr.value.sort = newField;
-  parts.value.sort(function (a, b) {
-    return a.sort_key[newField] > b.sort_key[newField] ? 1 : -1;
-  });
+  //   parts.value.sort(function (a, b) {
+  //     return a.sort_key[newField] > b.sort_key[newField] ? 1 : -1;
+  //   });
   changeAttr(sortAttr.value);
 }
 
 // load data
 loadResearchParts();
 
-async function loadResearchParts() {
-  parts.value = await resMethods.loadParts(researchObjId, sortAttr.value);
+function loadResearchParts() {
+  //   parts.value = await resMethods.loadParts(research, sortAttr.value);
+  resMethods.loadParts(research.value, sortAttr.value);
 }
 
 // filter parts
@@ -96,8 +105,27 @@ const filteringCols = computed(function () {
   return arr;
 });
 
+// sort parts
+const sortedParts = computed(function () {
+  if (!filteredParts.value) {
+    return [];
+  }
+  const arr = filteredParts.value.slice();
+  arr.sort(function (a, b) {
+    if (sortAttr.value.ordering == "ASC") {
+      return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort] ? 1 : -1;
+    }
+    return a.sort_key[sortAttr.value.sort] < b.sort_key[sortAttr.value.sort] ? 1 : -1;
+  });
+  return arr;
+});
+
 async function moveSelectedToCat(cat) {
-  await resMethods.updateParts(researchObjId, tableRef.value.selectedLines, cat);
+  await resMethods.updateParts(
+    researchObjId,
+    tableRef.value.selectedLines,
+    cat
+  );
   loadResearchParts();
 }
 
@@ -113,5 +141,9 @@ async function duplicateSelected() {
   });
 }
 
-defineExpose({ moveSelectedToCat, duplicateSelected });
+async function removeSelected() {
+  await resMethods.deleteParts(research.value, tableRef.value.selectedLines);
+}
+
+defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });
 </script>
