@@ -39,6 +39,9 @@ function dragData(dispElmIdx) {
   if (elm.type == "link") {
     data.linkId = elm.attr.link_id;
   }
+  if (elm.type == "parts") {
+    data.resId = elm.attr.res;
+  }
   return data;
 }
 

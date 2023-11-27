@@ -40,6 +40,12 @@ function addToLink(dragData) {
   if (linkId != 0) {
     const link = lnkMethods.getLink(linkId);
     lnkMethods.addElementToLink(link, element.value.id);
+    return;
+  }
+
+  const resId = +dragData.resId;
+  if (resId != 0) {
+    lnkMethods.linkElements(resId,element.value.id);
   }
 }
 
