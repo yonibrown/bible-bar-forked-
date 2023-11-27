@@ -106,6 +106,7 @@ export function useElements({ resMethods, projId }) {
   }
 
   async function loadText(elm) {
+    console.log('loadText',elm);
     const data = {
       type: "element",
       oper: "get_segment",
@@ -114,7 +115,9 @@ export function useElements({ resMethods, projId }) {
     };
   
     const obj = await sendToServer(data);
-    return obj.data.part_list;
+    // console.log(obj.data.part_list);
+    // elm.verses = [];
+    elm.verses = obj.data.part_list;
   }
   
   // return

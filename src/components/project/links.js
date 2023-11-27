@@ -1,7 +1,7 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useLinks({ projId }) {
+export function useLinks({ elmMethods,projId }) {
   const links = ref([]);
   provide("links", links);
 
@@ -77,8 +77,13 @@ export function useLinks({ projId }) {
     const obj = await sendToServer(data);
   }
 
-  async function createLink(prop) {
-    prop.proj = projId;
+  async function createLink(options) {
+    const prop = {
+      proj: projId,
+      research_id: options.researchId,
+      main_element: options.element.id
+    };
+
     const data = {
       type: "link",
       oper: "new",
@@ -86,7 +91,10 @@ export function useLinks({ projId }) {
       prop,
     };
     const obj = await sendToServer(data);
+
     links.value.push(obj.data);
+    options.element.verses = [];
+    elmMethods.loadText(options.element);
   }
 
   // return

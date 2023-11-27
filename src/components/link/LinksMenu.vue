@@ -46,8 +46,8 @@ function addToLink(dragData) {
   const resId = +dragData.resId;
   if (resId != 0) {
     lnkMethods.createLink({
-      research_id: resId,
-      main_element: element.value.id
+      researchId: resId,
+      element: element.value,
     });
     return;
   }
