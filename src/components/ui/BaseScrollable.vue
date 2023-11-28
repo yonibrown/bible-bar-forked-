@@ -34,12 +34,10 @@ const initialHeight = 150;
 // const height = ref(initialHeight);
 const yAddition = inject("yAddition");
 // // const maxHeight = computed(function () {
-// //   console.log('maxHeight',initialHeight,yAddition.value);
 // //   return initialHeight ;
 // // });
 
 watch(yAddition, function (newVal) {
-  // console.log("Height", initialHeight, newVal);
   //   // height.value = initialHeight + newVal;
   scrollable.value.style.height = initialHeight + newVal + "px";
 });

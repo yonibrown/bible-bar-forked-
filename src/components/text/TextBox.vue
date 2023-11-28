@@ -26,7 +26,7 @@ import TextMenu from "./TextMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
-import { inject, ref } from "vue";
+import { inject, ref ,computed} from "vue";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
@@ -34,13 +34,21 @@ const elementAttr = inject("elementAttr");
 const elmMethods = inject("elmMethods");
 const resMethods = inject("resMethods");
 
-const verses = ref([]);
+// const verses = ref([]);
 const textRef = ref();
+
+const verses = computed(function () {
+  if (!element.value || !element.value.verses) {
+    return [];
+  }
+  return element.value.verses;
+});
 
 loadElmText();
 
-async function loadElmText() {
-  verses.value = await elmMethods.loadText(element.value);
+function loadElmText() {
+  // verses.value = await elmMethods.loadText(element.value);
+  elmMethods.loadText(element.value);
 }
 
 defineExpose({ reload: loadElmText });
