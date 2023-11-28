@@ -90,7 +90,8 @@ function closeElement() {
 
 async function reloadElement() {
   elementAttr.value = await elmMethods.loadElement(elementObj.value);
-  boxRef.value.reload();
+  elmMethods.reload(elementObj.value);
+  // boxRef.value.reload();
 }
 
 // change attributes of element

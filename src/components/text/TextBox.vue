@@ -34,7 +34,6 @@ const elementAttr = inject("elementAttr");
 const elmMethods = inject("elmMethods");
 const resMethods = inject("resMethods");
 
-// const verses = ref([]);
 const textRef = ref();
 
 const verses = computed(function () {
@@ -44,14 +43,7 @@ const verses = computed(function () {
   return element.value.verses;
 });
 
-loadElmText();
-
-function loadElmText() {
-  // verses.value = await elmMethods.loadText(element.value);
-  elmMethods.loadText(element.value);
-}
-
-defineExpose({ reload: loadElmText });
+elmMethods.loadText(element.value);
 
 function updateData(data) {
   switch (data.action) {

@@ -43,35 +43,27 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
-import { inject, ref } from "vue";
+import { inject, ref,computed } from "vue";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const links = inject("links");
 const elmMethods = inject("elmMethods");
 
-const segments = ref([]);
-const points = ref([]);
+const segments = computed(function () {
+  if (!element.value || !element.value.segments) {
+    return [];
+  }
+  return element.value.segments;
+});
+const points = computed(function () {
+  if (!element.value || !element.value.points) {
+    return [];
+  }
+  return element.value.points;
+});
 
-function reload() {
-  // clear points so they don't interfere
-  points.value = [];
-
-  loadElmBarSegments();
-  loadElmBarPoints();
-}
-defineExpose({ reload });
-
-loadElmBarSegments();
-loadElmBarPoints();
-
-async function loadElmBarSegments() {
-  segments.value = await elmMethods.loadBarSegments(element.value);
-}
-
-async function loadElmBarPoints() {
-  points.value = await elmMethods.loadBarPoints(element.value);
-}
+elmMethods.reload(element.value);
 </script>
 
 <style scoped>
