@@ -1,7 +1,7 @@
 <template>
   <base-droppable
     :drop="addToLink"
-    :dragStruct="['linkId']"
+    :dragStruct="['linkId','resId']"
     :dragEnter="enterLinksMenu"
     :dragLeave="leaveLinksMenu"
   >
@@ -45,7 +45,11 @@ function addToLink(dragData) {
 
   const resId = +dragData.resId;
   if (resId != 0) {
-    lnkMethods.linkElements(resId,element.value.id);
+    lnkMethods.createLink({
+      researchId: resId,
+      element: element.value,
+    });
+    return;
   }
 }
 

@@ -14,7 +14,7 @@ export function newProjectData(projId) {
   });
   const [researches, resMethods] = useResearches();
   const [elements, elmMethods] = useElements({ resMethods, projId });
-  const [links, lnkMethods] = useLinks({ projId });
+  const [links, lnkMethods] = useLinks({ elmMethods, projId });
 
   function projectObjId(proj) {
     return {
@@ -53,7 +53,7 @@ export function newProjectData(projId) {
     loadProject,
     storeElementList,
   };
-  provide('prjMethods',prjMethods);
+  provide("prjMethods", prjMethods);
 
   return {
     project,
