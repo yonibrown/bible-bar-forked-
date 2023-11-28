@@ -79,7 +79,7 @@ export function useElements({ resMethods, projId }) {
     };
 
     const obj = await sendToServer(data);
-    return obj.data.segments;
+    elm.segments = obj.data.segments;
   }
 
   async function loadBarPoints(elm) {
@@ -91,7 +91,7 @@ export function useElements({ resMethods, projId }) {
     };
 
     const obj = await sendToServer(data);
-    return obj.data.points;
+    elm.points = obj.data.points;
   }
 
   async function changeAttr(elm, attr) {
@@ -106,7 +106,6 @@ export function useElements({ resMethods, projId }) {
   }
 
   async function loadText(elm) {
-    // console.log('loadText',elm);
     const data = {
       type: "element",
       oper: "get_segment",
@@ -115,9 +114,18 @@ export function useElements({ resMethods, projId }) {
     };
   
     const obj = await sendToServer(data);
-    // console.log(obj.data.part_list);
-    // elm.verses = [];
     elm.verses = obj.data.part_list;
+  }
+
+  function reload(elm){
+    if (elm.type == 'text'){
+      loadText(elm);
+    }
+    if (elm.type == 'bar'){
+      elm.points = [];
+      loadBarSegments(elm);
+      loadBarPoints(elm);
+    }
   }
   
   // return
@@ -128,7 +136,8 @@ export function useElements({ resMethods, projId }) {
     changeAttr,
     loadBarSegments,
     loadBarPoints,
-    loadText
+    loadText,
+    reload
   };
   provide("elmMethods", elmMethods);
 

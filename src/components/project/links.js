@@ -94,7 +94,7 @@ export function useLinks({ elmMethods,projId }) {
 
     links.value.push(obj.data);
     // options.element.verses = [];
-    elmMethods.loadText(options.element);
+    elmMethods.reload(options.element);
   }
 
   // return
