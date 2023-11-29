@@ -1,7 +1,7 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useLinks({ elmMethods,projId }) {
+export function useLinks({ storeMethods,projId }) {
   const links = ref([]);
   provide("links", links);
 
@@ -94,7 +94,7 @@ export function useLinks({ elmMethods,projId }) {
 
     links.value.push(obj.data);
     // options.element.verses = [];
-    elmMethods.reload(options.element);
+    storeMethods.elm.reload(options.element);
   }
 
   // return

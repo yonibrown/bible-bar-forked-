@@ -26,7 +26,7 @@ import TextMenu from "./TextMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
-import { inject, ref ,computed} from "vue";
+import { inject, ref, computed } from "vue";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
@@ -51,7 +51,7 @@ function updateData(data) {
       const range = getSelectionInElement(textRef.value);
       if (range) {
         const res = resMethods.getResearch(data.prop.research_id);
-        resMethods.newPart(res,{
+        resMethods.newPart(res, {
           collection_id: data.prop.collection_id,
           src_research: elementAttr.value.research_id,
           src_collection: elementAttr.value.collection_id,
@@ -60,6 +60,7 @@ function updateData(data) {
           src_to_position: closestAttr(range.end, "res-position"),
           src_to_word: Math.floor(closestAttr(range.end, "res-word")),
         });
+        range.collapse();
       }
       break;
   }
@@ -74,6 +75,9 @@ function getSelectionInElement(elm) {
       return {
         start: range.startContainer.parentElement,
         end: range.endContainer.parentElement,
+        collapse: function () {
+          range.collapse();
+        },
       };
     }
   }
