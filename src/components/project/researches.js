@@ -1,7 +1,7 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useResearches() {
+export function useResearches(storeMethods, projId) {
   const researches = ref([]);
   provide("researches", researches);
 
@@ -73,7 +73,7 @@ export function useResearches() {
     const obj = await sendToServer(data);
   }
 
-  async function loadParts(res, sortAttr={dummy:''}) {
+  async function loadParts(res, sortAttr = { dummy: "" }) {
     const data = {
       type: "research",
       oper: "get_prt_list",
@@ -154,6 +154,7 @@ export function useResearches() {
   }
 
   async function newPart(res, prop) {
+    prop.project_id = { proj: projId };
     const data = {
       type: "research",
       oper: "new_part",
@@ -162,7 +163,10 @@ export function useResearches() {
     };
 
     const obj = await sendToServer(data);
-    res.parts.push(obj.data);
+    console.log(obj.data);
+    res.parts.push(obj.data.new_part);
+    console.log(storeMethods);
+    storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
   // return

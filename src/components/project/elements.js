@@ -1,18 +1,24 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useElements({ resMethods, projId }) {
+export function useElements({ storeMethods, projId }) {
   const elements = ref([]);
   provide("elements", elements);
 
   // access objects
+  function getElement(elementId) {
+    const element = elements.value.find((pElement) => {
+      return pElement.id == elementId;
+    });
+    return element;
+  }
+
   function elementObjId(elm) {
     return {
       proj: elm.proj,
       elm: elm.id,
     };
   }
-
 
   // access database
   async function elmCreate(attr, options) {
@@ -28,7 +34,7 @@ export function useElements({ resMethods, projId }) {
     const obj = await sendToServer(data);
 
     if (obj.data.res) {
-      resMethods.addResearch(obj.data.res);
+      storeMethods.res.addResearch(obj.data.res);
     }
     if (options && options.openingElement) {
       const elm = options.openingElement;
@@ -112,22 +118,31 @@ export function useElements({ resMethods, projId }) {
       id: elementObjId(elm),
       prop: { dummy: "" },
     };
-  
+
     const obj = await sendToServer(data);
     elm.verses = obj.data.part_list;
   }
 
-  function reload(elm){
-    if (elm.type == 'text'){
+  function reload(elm) {
+    if (elm.type == "text") {
       loadText(elm);
     }
-    if (elm.type == 'bar'){
+    if (elm.type == "bar") {
       elm.points = [];
       loadBarSegments(elm);
       loadBarPoints(elm);
     }
   }
-  
+
+  function reloadObjects(list) {
+    list.forEach(function(obj){
+      if (obj.type == 'element'){
+        let elm = getElement(obj.id);
+        reload(elm);
+      }
+    });
+  }
+
   // return
   const elmMethods = {
     create: elmCreate,
@@ -137,7 +152,8 @@ export function useElements({ resMethods, projId }) {
     loadBarSegments,
     loadBarPoints,
     loadText,
-    reload
+    reloadObjects,
+    reload,
   };
   provide("elmMethods", elmMethods);
 
