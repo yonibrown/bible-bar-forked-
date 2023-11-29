@@ -12,9 +12,17 @@ export function newProjectData(projId) {
       desc: "",
     },
   });
-  const [researches, resMethods] = useResearches();
-  const [elements, elmMethods] = useElements({ resMethods, projId });
-  const [links, lnkMethods] = useLinks({ elmMethods, projId });
+  const storeMethods = {};
+
+  const [researches, resMethods] = useResearches(storeMethods, projId);
+  storeMethods.res = resMethods;
+
+  const [elements, elmMethods] = useElements({ storeMethods, projId });
+  storeMethods.elm = elmMethods;
+
+  const [links, lnkMethods] = useLinks({ storeMethods, projId });
+  storeMethods.lnk = lnkMethods;
+  console.log(storeMethods);
 
   function projectObjId(proj) {
     return {
