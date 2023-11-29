@@ -109,19 +109,21 @@ async function changeAttr(changedAttr, options) {
 provide("changeAttr", changeAttr);
 
 // open a new element
-function createElementFromElement(attr) {
+function createElement(attr) {
   elmMethods.createFromElement(
     attr,
     props.element,
     elementName.value,
-    props.nextPos
+    props.nextPos,
+    links.value
   );
 }
-provide("createElement", createElementFromElement);
+provide("createElement", createElement);
 
 //links
 const projLinks = inject("links");
 const links = computed(function () {
+  // return a list of links that are linked to this element
   return projLinks.value.filter(function (link) {
     return link.elements.find(function (elmId) {
       return elmId == props.element.id;

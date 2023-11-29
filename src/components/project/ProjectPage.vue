@@ -21,22 +21,16 @@
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
-import { provide, ref } from "vue";
+import {  ref } from "vue";
 import { newProjectData } from "./dataStore.js";
 
 const props = defineProps(["id"]);
 
-const { project, prjMethods, elements, elmMethods } = newProjectData(props.id);
+const { project, prjMethods, elements } = newProjectData(props.id);
 
 const listRef = ref();
 
 prjMethods.loadProject();
-
-// add a new element or reload an element
-function createElement(attr) {
-  elmMethods.create(attr);
-}
-provide("createElement", createElement);
 
 // link methods
 function openNewElement() {
