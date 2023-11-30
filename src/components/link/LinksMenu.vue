@@ -11,7 +11,6 @@
         v-for="link in links"
         :key="link.id"
         :link="link"
-        @removeLink="removeFromLink(link)"
       ></links-menu-obj>
     </base-menu>
   </base-droppable>
@@ -51,10 +50,6 @@ function addToLink(dragData) {
     });
     return;
   }
-}
-
-function removeFromLink(link) {
-  lnkMethods.removeElementFromLink(link, element.value.id);
 }
 </script>
 

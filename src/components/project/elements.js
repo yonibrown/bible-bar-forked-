@@ -13,6 +13,17 @@ export function useElements({ storeMethods, projId }) {
     return element;
   }
 
+  var tempElementId = -1;
+  function openNewElement(position) {
+    elements.value.push({
+      id: tempElementId--,
+      proj: projId,
+      position,
+      type: "new",
+      name: "new element",
+    });
+  }
+
   function elementObjId(elm) {
     return {
       proj: elm.proj,
@@ -47,9 +58,16 @@ export function useElements({ storeMethods, projId }) {
         elements.value.push(obj.data.elm);
       }
     }
+    return obj.data.elm;
   }
 
-  function createFromElement(attr, originalElement, name, nextPos) {
+  async function createFromElement(
+    attr,
+    originalElement,
+    name,
+    nextPos,
+    elmLinks
+  ) {
     const newAttr = { ...attr };
     const options = {};
     options.openingElement = originalElement;
@@ -61,7 +79,11 @@ export function useElements({ storeMethods, projId }) {
       newAttr.name = "";
       newAttr.position = nextPos;
     }
-    elmCreate(newAttr, options);
+    const elm = await elmCreate(newAttr, options);
+
+    elmLinks.forEach(function (lnk) {
+      lnk.elements.push(elm.id);
+    });
   }
 
   async function loadElement(elm) {
@@ -135,8 +157,8 @@ export function useElements({ storeMethods, projId }) {
   }
 
   function reloadObjects(list) {
-    list.forEach(function(obj){
-      if (obj.type == 'element'){
+    list.forEach(function (obj) {
+      if (obj.type == "element") {
         let elm = getElement(obj.id);
         reload(elm);
       }
@@ -154,6 +176,7 @@ export function useElements({ storeMethods, projId }) {
     loadText,
     reloadObjects,
     reload,
+    openNewElement,
   };
   provide("elmMethods", elmMethods);
 

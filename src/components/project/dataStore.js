@@ -22,7 +22,6 @@ export function newProjectData(projId) {
 
   const [links, lnkMethods] = useLinks({ storeMethods, projId });
   storeMethods.lnk = lnkMethods;
-  console.log(storeMethods);
 
   function projectObjId(proj) {
     return {
