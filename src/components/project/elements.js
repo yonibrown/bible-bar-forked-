@@ -66,7 +66,7 @@ export function useElements({ storeMethods, projId }) {
     originalElement,
     name,
     nextPos,
-    elmLinks
+    elmLinks,
   ) {
     const newAttr = { ...attr };
     const options = {};
