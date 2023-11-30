@@ -1,14 +1,16 @@
 <template>
-  <div class="link-obj">
+  <div class="link-obj" @dblclick="openLink">
     <span>{{ name }}</span>
-    <menu-button type="close" @click="$emit('removeLink')"></menu-button>
+    <menu-button type="close" @click="removeLink"></menu-button>
   </div>
 </template>
 
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 const props = defineProps(["link"]);
+const lnkMethods = inject("lnkMethods");
+const element = inject("element");
 
 const name = computed(function () {
   if (props.link.name == "") {
@@ -16,6 +18,14 @@ const name = computed(function () {
   }
   return props.link.name;
 });
+
+function removeLink() {
+  lnkMethods.removeElementFromLink(props.link, element.value.id);
+}
+
+function openLink() {
+  console.log('open link');
+}
 </script>
 
 <style scoped>

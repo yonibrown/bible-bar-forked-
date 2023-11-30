@@ -26,12 +26,10 @@ const displaysubmitElement = computed(function () {
 });
 
 const createElement = inject("createElement");
-
 function submitElement() {
-  const attr = {
+  createElement({
     type: type.value,
-  };
-  createElement(attr);
+  });
 }
 </script>
 

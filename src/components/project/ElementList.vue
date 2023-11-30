@@ -22,6 +22,7 @@ import { provide, computed, ref, onUpdated,inject } from "vue";
 
 const props = defineProps(["elements"]);
 const prjMethods = inject('prjMethods');
+const elmMethods = inject("elmMethods");
 
 const dispElements = computed(function () {
   return props.elements
@@ -109,14 +110,8 @@ function closeElement(elm) {
   saveElmList();
 }
 
-var tempElementId = -1;
 function openNewElement() {
-  props.elements.push({
-    id: tempElementId--,
-    position: elementPrevPos(0),
-    type: "new",
-    name: "new element",
-  });
+  elmMethods.openNewElement(elementPrevPos(0));
 }
 defineExpose({ openNewElement });
 </script>

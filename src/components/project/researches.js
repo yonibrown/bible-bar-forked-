@@ -106,10 +106,12 @@ export function useResearches(storeMethods, projId) {
       id: researchObjId(res),
       prop: {
         partList,
+        project_id: { proj: projId },
       },
     };
     const obj = await sendToServer(data);
     loadParts(res);
+    storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
   async function duplicate(researchObjId, partList) {
@@ -163,9 +165,7 @@ export function useResearches(storeMethods, projId) {
     };
 
     const obj = await sendToServer(data);
-    console.log(obj.data);
     res.parts.push(obj.data.new_part);
-    console.log(storeMethods);
     storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
