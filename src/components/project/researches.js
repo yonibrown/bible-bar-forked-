@@ -100,6 +100,9 @@ export function useResearches(storeMethods, projId) {
   }
 
   async function deleteParts(res, partList) {
+    if (partList.length == 0){
+      return;
+    }
     const data = {
       type: "research",
       oper: "delete_parts",

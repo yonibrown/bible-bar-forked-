@@ -61,27 +61,21 @@ export function useElements({ storeMethods, projId }) {
     return obj.data.elm;
   }
 
-  async function createFromElement(
-    attr,
-    originalElement,
-    name,
-    nextPos,
-    elmLinks
-  ) {
-    const newAttr = { ...attr };
+  async function createFromElement(prop){
+    const newAttr = { ...prop.attr };
     const options = {};
-    options.openingElement = originalElement;
-    if (originalElement.type == "new") {
-      newAttr.position = originalElement.position;
-      newAttr.name = name;
+    options.openingElement = prop.originalElement;
+    if (prop.originalElement.type == "new") {
+      newAttr.position = prop.originalElement.position;
+      newAttr.name = prop.name;
     } else {
-      newAttr.opening_element = originalElement.id;
+      newAttr.opening_element = prop.originalElement.id;
       newAttr.name = "";
-      newAttr.position = nextPos;
+      newAttr.position = prop.position;
     }
     const elm = await elmCreate(newAttr, options);
 
-    elmLinks.forEach(function (lnk) {
+    prop.originalLinks.forEach(function (lnk) {
       lnk.elements.push(elm.id);
     });
   }
