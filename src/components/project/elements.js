@@ -124,7 +124,7 @@ export function useElements({ storeMethods, projId }) {
       prop: attr,
     };
 
-    const obj = await sendToServer(data);
+    const obj = await storeMethods.prj.sendToServer(data);
   }
 
   async function loadText(elm) {
@@ -150,14 +150,17 @@ export function useElements({ storeMethods, projId }) {
     }
   }
 
-  function reloadObjects(list) {
-    list.forEach(function (obj) {
-      if (obj.type == "element") {
-        let elm = getElement(obj.id);
-        reload(elm);
+  function reloadObj(obj) {
+    const elm = getElement(obj.id);
+    for (let act in obj.actions){
+      switch(act){
+        case 'reload':
+          reload(elm);
+          break;
       }
-    });
+    }
   }
+
 
   // return
   const elmMethods = {
@@ -168,7 +171,7 @@ export function useElements({ storeMethods, projId }) {
     loadBarSegments,
     loadBarPoints,
     loadText,
-    reloadObjects,
+    reloadObj,
     reload,
     openNewElement,
   };

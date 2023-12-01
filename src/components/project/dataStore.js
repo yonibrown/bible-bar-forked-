@@ -56,10 +56,21 @@ export function newProjectData(projId) {
     const obj = await sendToServer(data);
   }
 
+  async function prjSendToServer(data){
+    const obj = await sendToServer(data);
+    if(obj.objects_to_reload){
+      obj.objects_to_reload.links.forEach(lnkMethods.reloadObj);
+      obj.objects_to_reload.elements.forEach(elmMethods.reloadObj);
+    }
+    return obj;
+  }
+
   const prjMethods = {
     loadProject,
     storeElementList,
+    sendToServer: prjSendToServer,
   };
+  storeMethods.prj = prjMethods;
   provide("prjMethods", prjMethods);
 
   return {

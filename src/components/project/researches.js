@@ -112,9 +112,9 @@ export function useResearches(storeMethods, projId) {
         project_id: { proj: projId },
       },
     };
-    const obj = await sendToServer(data);
+    const obj = await storeMethods.prj.sendToServer(data);
     loadParts(res);
-    storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
+    // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
   async function duplicate(researchObjId, partList) {
@@ -167,9 +167,9 @@ export function useResearches(storeMethods, projId) {
       prop,
     };
 
-    const obj = await sendToServer(data);
+    const obj = await storeMethods.prj.sendToServer(data);
     res.parts.push(obj.data.new_part);
-    storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
+    // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
   // return

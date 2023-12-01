@@ -25,7 +25,6 @@ function removeLink() {
 
 const createElement = inject("createElement");
 function openLink() {
-  console.log('open link');
   createElement({
     type: 'link',
     link_id: props.link.id,
