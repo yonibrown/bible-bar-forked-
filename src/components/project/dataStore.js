@@ -57,6 +57,7 @@ export function newProjectData(projId) {
   }
 
   async function prjSendToServer(data){
+    data.reload = projectObjId(project.value);
     const obj = await sendToServer(data);
     if(obj.objects_to_reload){
       obj.objects_to_reload.links.forEach(lnkMethods.reloadObj);

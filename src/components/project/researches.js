@@ -108,8 +108,7 @@ export function useResearches(storeMethods, projId) {
       oper: "delete_parts",
       id: researchObjId(res),
       prop: {
-        partList,
-        project_id: { proj: projId },
+        partList
       },
     };
     const obj = await storeMethods.prj.sendToServer(data);
@@ -159,7 +158,6 @@ export function useResearches(storeMethods, projId) {
   }
 
   async function newPart(res, prop) {
-    prop.project_id = { proj: projId };
     const data = {
       type: "research",
       oper: "new_part",
