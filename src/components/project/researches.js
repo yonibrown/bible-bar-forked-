@@ -100,7 +100,7 @@ export function useResearches(storeMethods, projId) {
   }
 
   async function deleteParts(res, partList) {
-    if (partList.length == 0){
+    if (partList.length == 0) {
       return;
     }
     const data = {
@@ -108,7 +108,7 @@ export function useResearches(storeMethods, projId) {
       oper: "delete_parts",
       id: researchObjId(res),
       prop: {
-        partList
+        partList,
       },
     };
     const obj = await storeMethods.prj.sendToServer(data);
@@ -170,6 +170,17 @@ export function useResearches(storeMethods, projId) {
     // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
+  function reloadObj(obj) {
+    const res = getResearch(obj.id);
+    for (let act in obj.actions) {
+      switch (act) {
+        case "name":
+          res.name = obj.actions[act];
+          break;
+      }
+    }
+  }
+
   // return
   const resMethods = {
     getResearch,
@@ -185,6 +196,7 @@ export function useResearches(storeMethods, projId) {
     deleteParts,
     duplicate,
     newPart,
+    reloadObj,
   };
   provide("resMethods", resMethods);
 
