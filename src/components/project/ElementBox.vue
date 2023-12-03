@@ -36,7 +36,7 @@ provide("elementAttr", elementAttr);
 const boxRef = ref();
 
 const elementObj = computed(function () {
-  return props.element
+  return props.element;
 });
 provide("element", elementObj);
 
@@ -100,8 +100,8 @@ async function changeAttr(changedAttr, options) {
     return;
   }
 
-  await elmMethods.changeAttr(elementObj.value,changedAttr);
-  
+  await elmMethods.changeAttr(elementObj.value, changedAttr);
+
   if (options && options.reload) {
     reloadElement();
   }
@@ -110,13 +110,13 @@ provide("changeAttr", changeAttr);
 
 // open a new element
 function createElement(attr) {
-  elmMethods.createFromElement(
+  elmMethods.createFromElement({
     attr,
-    props.element,
-    elementName.value,
-    props.nextPos,
-    links.value
-  );
+    name: elementName.value,
+    position: props.nextPos,
+    originalElement: props.element,
+    originalLinks: links.value,
+  });
 }
 provide("createElement", createElement);
 
