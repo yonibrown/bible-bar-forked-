@@ -1,7 +1,7 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useLinks({ storeMethods,projId }) {
+export function useLinks({ storeMethods, projId }) {
   const links = ref([]);
   provide("links", links);
 
@@ -81,7 +81,7 @@ export function useLinks({ storeMethods,projId }) {
     const prop = {
       proj: projId,
       research_id: options.researchId,
-      main_element: options.element.id
+      main_element: options.element.id,
     };
 
     const data = {
@@ -97,6 +97,17 @@ export function useLinks({ storeMethods,projId }) {
     storeMethods.elm.reload(options.element);
   }
 
+  function reloadObj(obj) {
+    const link = getLink(obj.id);
+    for (let act in obj.actions){
+      switch(act){
+        case 'name':
+          link.name = obj.actions[act];
+          break;
+      }
+    }
+  }
+
   // return
   const lnkMethods = {
     updateCategory,
@@ -105,6 +116,7 @@ export function useLinks({ storeMethods,projId }) {
     removeElementFromLink,
     getCategory,
     createLink,
+    reloadObj,
   };
   provide("lnkMethods", lnkMethods);
 
