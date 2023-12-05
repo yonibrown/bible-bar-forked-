@@ -27,7 +27,6 @@ import { provide, computed, inject, ref } from "vue";
 
 const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
-const lnkMethods = inject("lnkMethods");
 const elmMethods = inject("elmMethods");
 
 const elementAttr = ref(props.element.attr);
@@ -41,34 +40,16 @@ const elementObj = computed(function () {
 provide("element", elementObj);
 
 // element name
-const defaultName = computed(getDefaultName);
-function getDefaultName() {
-  if (props.element.type == "new") {
-    return "new element";
-  }
-  if (props.element.type == "link") {
-    const link = lnkMethods.getLink(elementAttr.value.link_id);
-    if (link) {
-      if (link.name != "") {
-        return link.name;
-      } else {
-        return "link" + link.id;
-      }
-    }
-  }
-  return "element" + props.element.id;
-}
+const defaultName = computed(function () {
+  return elmMethods.defaultName(props.element);
+});
 
-const elementName = ref(defaultName.value);
-if (props.element.name.trim() != "") {
-  elementName.value = props.element.name;
-}
+const elementName = ref("");
+elementName.value = elmMethods.getName(props.element);
 
 function submitName(newName) {
   elementName.value = newName;
-  changeAttr({
-    name: newName,
-  });
+  elmMethods.changeName(props.element, newName);
 }
 
 // display menu
