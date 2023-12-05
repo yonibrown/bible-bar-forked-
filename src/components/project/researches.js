@@ -34,6 +34,13 @@ export function useResearches(storeMethods, projId) {
     };
   }
 
+  function getName(res) {
+    if (res.name != "") {
+      return res.name;
+    }
+    return "research" + res.id;
+  }
+
   // server
   async function updateCollection(col, newAttr) {
     Object.assign(col, newAttr);
@@ -197,6 +204,7 @@ export function useResearches(storeMethods, projId) {
     duplicate,
     newPart,
     reloadObj,
+    getName,
   };
   provide("resMethods", resMethods);
 

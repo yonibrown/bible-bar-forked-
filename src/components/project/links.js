@@ -31,6 +31,17 @@ export function useLinks({ storeMethods, projId }) {
     };
   }
 
+  function getName(link) {
+    if (link.research_id != 0) {
+      const res = storeMethods.res.getResearch(link.research_id);
+      return storeMethods.res.getName(res);
+    }
+    if (link.name != "") {
+      return link.name;
+    }
+    return "link" + link.id;
+  }
+
   // access database
   async function updateCategory(link, cat, attr) {
     // update browser
@@ -99,9 +110,9 @@ export function useLinks({ storeMethods, projId }) {
 
   function reloadObj(obj) {
     const link = getLink(obj.id);
-    for (let act in obj.actions){
-      switch(act){
-        case 'name':
+    for (let act in obj.actions) {
+      switch (act) {
+        case "name":
           link.name = obj.actions[act];
           break;
       }
@@ -117,6 +128,7 @@ export function useLinks({ storeMethods, projId }) {
     getCategory,
     createLink,
     reloadObj,
+    getName,
   };
   provide("lnkMethods", lnkMethods);
 

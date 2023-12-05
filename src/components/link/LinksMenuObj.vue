@@ -13,10 +13,7 @@ const lnkMethods = inject("lnkMethods");
 const element = inject("element");
 
 const name = computed(function () {
-  if (props.link.name == "") {
-    return "link" + props.link.id;
-  }
-  return props.link.name;
+  return lnkMethods.getName(props.link);
 });
 
 function removeLink() {
@@ -26,7 +23,7 @@ function removeLink() {
 const createElement = inject("createElement");
 function openLink() {
   createElement({
-    type: 'link',
+    type: "link",
     link_id: props.link.id,
   });
 }

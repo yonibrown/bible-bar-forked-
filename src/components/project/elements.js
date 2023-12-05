@@ -34,23 +34,11 @@ export function useElements({ storeMethods, projId }) {
   function defaultName(elm) {
     if (elm.type == "link") {
       const link = storeMethods.lnk.getLink(elm.attr.link_id);
-      if (link) {
-        if (link.name != "") {
-          return link.name;
-        } else {
-          return "link" + link.id;
-        }
-      }
+      return storeMethods.lnk.getName(link);
     }
     if (elm.type == "parts") {
       const res = storeMethods.res.getResearch(elm.attr.res);
-      if (res) {
-        if (res.name != "") {
-          return res.name;
-        } else {
-          return "research" + res.id;
-        }
-      }
+      return storeMethods.res.getName(res);
     }
     if (elm.type == "new") {
       return "new element";
@@ -60,7 +48,6 @@ export function useElements({ storeMethods, projId }) {
 
   function getName(elm) {
     if (elm.type == "link" || elm.type == "parts") {
-      console.log(elm);
       return defaultName(elm);
     }
     return elm.name;
