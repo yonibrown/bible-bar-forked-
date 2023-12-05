@@ -6,15 +6,22 @@ export function useLinks({ storeMethods, projId }) {
   provide("links", links);
 
   // access objects
-  function getLink(linkId) {
-    const link = links.value.find((pLink) => {
-      return pLink.id == linkId;
-    });
-    return link;
+  function getLink(prop) {
+    if (prop.id) {
+      return links.value.find(function (pLink) {
+        return pLink.id == prop.id;
+      });
+    }
+    if (prop.res) {
+      return links.value.find(function (pLink) {
+        return pLink.research_id == prop.res;
+      });
+    }
+    return null;
   }
 
   function getCategory(linkId, col) {
-    const link = getLink(linkId);
+    const link = getLink({ id: linkId });
     if (link == null) {
       return null;
     }
@@ -98,10 +105,10 @@ export function useLinks({ storeMethods, projId }) {
   }
 
   function reloadObj(obj) {
-    const link = getLink(obj.id);
-    for (let act in obj.actions){
-      switch(act){
-        case 'name':
+    const link = getLink({ id: obj.id });
+    for (let act in obj.actions) {
+      switch (act) {
+        case "name":
           link.name = obj.actions[act];
           break;
       }

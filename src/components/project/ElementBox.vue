@@ -47,7 +47,7 @@ function getDefaultName() {
     return "new element";
   }
   if (props.element.type == "link") {
-    const link = lnkMethods.getLink(elementAttr.value.link_id);
+    const link = lnkMethods.getLink({ id: elementAttr.value.link_id });
     if (link) {
       if (link.name != "") {
         return link.name;
