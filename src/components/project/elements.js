@@ -33,12 +33,10 @@ export function useElements({ storeMethods, projId }) {
 
   function defaultName(elm) {
     if (elm.type == "link") {
-      const link = storeMethods.lnk.getLink(elm.attr.link_id);
-      return storeMethods.lnk.getName(link);
+      return storeMethods.lnk.getName({ id: elm.attr.link_id });
     }
     if (elm.type == "parts") {
-      const res = storeMethods.res.getResearch(elm.attr.res);
-      return storeMethods.res.getName(res);
+      return storeMethods.res.getName({ id: elm.attr.res });
     }
     if (elm.type == "new") {
       return "new element";
@@ -47,7 +45,7 @@ export function useElements({ storeMethods, projId }) {
   }
 
   function getName(elm) {
-    if (elm.type == "link" || elm.type == "parts") {
+    if (elm.type == "link" || elm.type == "parts" || elm.name.trim() == "") {
       return defaultName(elm);
     }
     return elm.name;

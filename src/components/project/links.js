@@ -38,10 +38,20 @@ export function useLinks({ storeMethods, projId }) {
     };
   }
 
-  function getName(link) {
+  function getName(prop) {
+    let link = null;
+    if (prop.id) {
+      link = getLink({ id: prop.id });
+    }
+    if (prop.obj) {
+      link = prop.obj;
+    }
+    if (!link) {
+      return "link";
+    }
+
     if (link.research_id != 0) {
-      const res = storeMethods.res.getResearch(link.research_id);
-      return storeMethods.res.getName(res);
+      return storeMethods.res.getName({ id: link.research_id });
     }
     if (link.name != "") {
       return link.name;

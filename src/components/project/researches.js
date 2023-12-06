@@ -34,7 +34,18 @@ export function useResearches(storeMethods, projId) {
     };
   }
 
-  function getName(res) {
+  function getName(prop) {
+    let res = null;
+    if (prop.id) {
+      res = getResearch(prop.id);
+    }
+    if (prop.obj) {
+      res = prop.obj;
+    }
+    if (!res) {
+      return "research";
+    }
+
     if (res.name != "") {
       return res.name;
     }
