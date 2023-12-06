@@ -38,6 +38,27 @@ export function useLinks({ storeMethods, projId }) {
     };
   }
 
+  function getName(prop) {
+    let link = null;
+    if (prop.id) {
+      link = getLink({ id: prop.id });
+    }
+    if (prop.obj) {
+      link = prop.obj;
+    }
+    if (!link) {
+      return "link";
+    }
+
+    if (link.research_id != 0) {
+      return storeMethods.res.getName({ id: link.research_id });
+    }
+    if (link.name != "") {
+      return link.name;
+    }
+    return "link" + link.id;
+  }
+
   // access database
   async function updateCategory(link, cat, attr) {
     // update browser
@@ -124,6 +145,7 @@ export function useLinks({ storeMethods, projId }) {
     getCategory,
     createLink,
     reloadObj,
+    getName,
   };
   provide("lnkMethods", lnkMethods);
 

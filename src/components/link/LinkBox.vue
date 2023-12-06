@@ -26,5 +26,3 @@ const categories = computed(function () {
   return link.value.categories;
 });
 </script>
-
-<style scoped></style>
