@@ -34,6 +34,24 @@ export function useResearches(storeMethods, projId) {
     };
   }
 
+  function getName(prop) {
+    let res = null;
+    if (prop.id) {
+      res = getResearch(prop.id);
+    }
+    if (prop.obj) {
+      res = prop.obj;
+    }
+    if (!res) {
+      return "research";
+    }
+
+    if (res.name != "") {
+      return res.name;
+    }
+    return "research" + res.id;
+  }
+
   function reloadObj(obj) {
     const res = getResearch(obj.id);
     for (let act in obj.actions) {
@@ -44,7 +62,6 @@ export function useResearches(storeMethods, projId) {
       }
     }
   }
-
 
   // server
   async function updateCollection(col, newAttr) {
@@ -198,6 +215,7 @@ export function useResearches(storeMethods, projId) {
     duplicate,
     newPart,
     reloadObj,
+    getName,
   };
   provide("resMethods", resMethods);
 
