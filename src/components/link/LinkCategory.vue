@@ -12,7 +12,7 @@
           :fill="category.color"
         ></circle>
       </svg>
-      <span>{{ category.name }}</span>
+      <span class="category">{{ category.name }}</span>
     </td>
   </tr>
 </template>
@@ -29,4 +29,8 @@ watch(checked, (newDisplay) => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.category {
+  margin-right: 4px;
+}
+</style>

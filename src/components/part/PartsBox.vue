@@ -19,7 +19,7 @@
     v-show="currentTabName == 'collections'"
     ref="colsTabRef"
   ></collections-table>
-  <research-link v-show="currentTabName == 'markers'">markers</research-link>
+  <research-link v-show="currentTabName == 'markers'"></research-link>
 </template>
 
 <script setup>
