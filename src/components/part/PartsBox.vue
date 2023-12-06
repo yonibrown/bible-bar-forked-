@@ -19,6 +19,9 @@
     v-show="currentTabName == 'collections'"
     ref="colsTabRef"
   ></collections-table>
+  <base-scrollable v-show="currentTabName == 'markers'"
+    >markers</base-scrollable
+  >
 </template>
 
 <script setup>
@@ -54,6 +57,10 @@ const tabList = [
   {
     name: "collections",
     title: "קטגוריות",
+  },
+  {
+    name: "markers",
+    title: "תצוגה",
   },
 ];
 const currentTabName = ref("parts");
