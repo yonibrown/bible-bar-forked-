@@ -19,7 +19,7 @@ const elementAttr = inject("elementAttr");
 const lnkMethods = inject("lnkMethods");
 
 const link = computed(function () {
-  return lnkMethods.getLink(elementAttr.value.link_id);
+  return lnkMethods.getLink({ id: elementAttr.value.link_id });
 });
 
 const categories = computed(function () {

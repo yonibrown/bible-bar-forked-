@@ -41,6 +41,17 @@ export function useResearches(storeMethods, projId) {
     return "research" + res.id;
   }
 
+  function reloadObj(obj) {
+    const res = getResearch(obj.id);
+    for (let act in obj.actions) {
+      switch (act) {
+        case "name":
+          res.name = obj.actions[act];
+          break;
+      }
+    }
+  }
+
   // server
   async function updateCollection(col, newAttr) {
     Object.assign(col, newAttr);
@@ -175,17 +186,6 @@ export function useResearches(storeMethods, projId) {
     const obj = await storeMethods.prj.sendToServer(data);
     res.parts.push(obj.data.new_part);
     // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
-  }
-
-  function reloadObj(obj) {
-    const res = getResearch(obj.id);
-    for (let act in obj.actions) {
-      switch (act) {
-        case "name":
-          res.name = obj.actions[act];
-          break;
-      }
-    }
   }
 
   // return
