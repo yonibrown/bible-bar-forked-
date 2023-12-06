@@ -31,6 +31,26 @@ export function useElements({ storeMethods, projId }) {
     };
   }
 
+  function defaultName(elm) {
+    if (elm.type == "link") {
+      return storeMethods.lnk.getName({ id: elm.attr.link_id });
+    }
+    if (elm.type == "parts") {
+      return storeMethods.res.getName({ id: elm.attr.res });
+    }
+    if (elm.type == "new") {
+      return "new element";
+    }
+    return "element" + elm.id;
+  }
+
+  function getName(elm) {
+    if (elm.type == "link" || elm.type == "parts" || elm.name.trim() == "") {
+      return defaultName(elm);
+    }
+    return elm.name;
+  }
+
   // access database
   async function elmCreate(attr, options) {
     const data = {
@@ -61,7 +81,7 @@ export function useElements({ storeMethods, projId }) {
     return obj.data.elm;
   }
 
-  async function createFromElement(prop){
+  async function createFromElement(prop) {
     const newAttr = { ...prop.attr };
     const options = {};
     options.openingElement = prop.originalElement;
@@ -116,6 +136,26 @@ export function useElements({ storeMethods, projId }) {
     elm.points = obj.data.points;
   }
 
+  async function changeName(elm, newName) {
+    // if (elm.type == "link") {
+    //   const link = storeMethods.lnk.getLink(elm.attr.link_id);
+    //   if (link) {
+    //   }
+    //   return;
+    // }
+
+    // if (elm.type == "parts") {
+    //   const res = storeMethods.res.getResearch(elm.attr.res);
+    //   if (res) {
+    //   }
+    //   return;
+    // }
+
+    changeAttr(elm, {
+      name: newName,
+    });
+  }
+
   async function changeAttr(elm, attr) {
     const data = {
       type: "element",
@@ -152,15 +192,14 @@ export function useElements({ storeMethods, projId }) {
 
   function reloadObj(obj) {
     const elm = getElement(obj.id);
-    for (let act in obj.actions){
-      switch(act){
-        case 'reload':
+    for (let act in obj.actions) {
+      switch (act) {
+        case "reload":
           reload(elm);
           break;
       }
     }
   }
-
 
   // return
   const elmMethods = {
@@ -174,6 +213,9 @@ export function useElements({ storeMethods, projId }) {
     reloadObj,
     reload,
     openNewElement,
+    defaultName,
+    getName,
+    changeName,
   };
   provide("elmMethods", elmMethods);
 

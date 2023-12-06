@@ -19,12 +19,14 @@
     v-show="currentTabName == 'collections'"
     ref="colsTabRef"
   ></collections-table>
+  <research-link v-show="currentTabName == 'markers'"></research-link>
 </template>
 
 <script setup>
 import BaseTabs from "../ui/BaseTabs.vue";
 import PartsTable from "./PartsTable.vue";
 import CollectionsTable from "./CollectionsTable.vue";
+import ResearchLink from "./ResearchLink.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 
@@ -54,6 +56,10 @@ const tabList = [
   {
     name: "collections",
     title: "קטגוריות",
+  },
+  {
+    name: "markers",
+    title: "תצוגה",
   },
 ];
 const currentTabName = ref("parts");
