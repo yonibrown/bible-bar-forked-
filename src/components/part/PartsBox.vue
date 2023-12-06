@@ -35,6 +35,8 @@ import { ref, inject, provide, computed } from "vue";
 const displayOptions = inject("displayOptions");
 
 const elementAttr = inject("elementAttr");
+const changeAttr = inject("changeAttr");
+
 const researchObjId = { res: elementAttr.value.res };
 provide("researchObjId", researchObjId);
 
@@ -62,9 +64,10 @@ const tabList = [
     title: "תצוגה",
   },
 ];
-const currentTabName = ref("parts");
+const currentTabName = ref(elementAttr.value.tab);
 function changeTab(newVal) {
   currentTabName.value = newVal;
+  changeAttr({ tab: currentTabName.value });
 }
 
 const currentTabTable = computed(function () {
