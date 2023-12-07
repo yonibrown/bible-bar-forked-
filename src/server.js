@@ -1,8 +1,8 @@
 // local
-// const apiUrl = `http://localhost/bibar-vue-php/obj_api.php`;
+const apiUrl = `http://localhost/bibar-vue-php/obj_api.php`;
 
 // bibar.site
-const apiUrl = `https://bibar.site/obj_api.php`;
+// const apiUrl = `https://bibar.site/obj_api.php`;
 
 async function sendToServer(data) {
   const response = await fetch(apiUrl, {

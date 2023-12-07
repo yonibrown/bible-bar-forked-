@@ -37,6 +37,6 @@ const categories = computed(function () {
 <style scoped>
 .links {
   background-color: #e4e9f1;
-  height: 100%;
+  min-height: 100%;
 }
 </style>
