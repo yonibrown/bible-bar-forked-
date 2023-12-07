@@ -43,7 +43,7 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
-import { inject, ref,computed } from "vue";
+import { inject, computed } from "vue";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
