@@ -62,7 +62,7 @@ export function useElements({ storeMethods, projId }) {
         ...attr,
       },
     };
-    const obj = await sendToServer(data);
+    const obj = await storeMethods.prj.sendToServer(data);
 
     if (obj.data.res) {
       storeMethods.res.addResearch(obj.data.res);
