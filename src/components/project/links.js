@@ -88,7 +88,7 @@ export function useLinks({ storeMethods, projId }) {
       id: linkObjId(link),
       prop: { elm: elmId },
     };
-    const obj = await sendToServer(data);
+    const obj = await storeMethods.prj.sendToServer(data);
   }
 
   async function removeElementFromLink(link, elmId) {

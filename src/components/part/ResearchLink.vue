@@ -38,5 +38,6 @@ const categories = computed(function () {
 .links {
   background-color: #e4e9f1;
   min-height: 100%;
+  padding: 7px;
 }
 </style>
