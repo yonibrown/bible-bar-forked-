@@ -1,7 +1,7 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useResearches(storeMethods, projId) {
+export function useResearches({storeMethods, projId}) {
   const researches = ref([]);
   provide("researches", researches);
 

@@ -64,6 +64,7 @@ export function useElements({ storeMethods, projId }) {
     };
     const obj = await storeMethods.prj.sendToServer(data);
 
+    console.log(obj);
     if (obj.data.res) {
       storeMethods.res.addResearch(obj.data.res);
     }
