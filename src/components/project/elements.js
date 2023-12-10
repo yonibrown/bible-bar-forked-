@@ -64,7 +64,6 @@ export function useElements({ storeMethods, projId }) {
     };
     const obj = await storeMethods.prj.sendToServer(data);
 
-    console.log(obj);
     if (obj.data.res) {
       storeMethods.res.addResearch(obj.data.res);
     }
@@ -138,23 +137,17 @@ export function useElements({ storeMethods, projId }) {
   }
 
   async function changeName(elm, newName) {
-    // if (elm.type == "link") {
-    //   const link = storeMethods.lnk.getLink(elm.attr.link_id);
-    //   if (link) {
-    //   }
-    //   return;
-    // }
+    if (elm.type == "link") {
+      storeMethods.lnk.setName({ id: elm.attr.link_id }, newName);
+      return;
+    }
 
-    // if (elm.type == "parts") {
-    //   const res = storeMethods.res.getResearch(elm.attr.res);
-    //   if (res) {
-    //   }
-    //   return;
-    // }
+    if (elm.type == "parts") {
+      storeMethods.res.setName({ id: elm.attr.res }, newName);
+      return;
+    }
 
-    changeAttr(elm, {
-      name: newName,
-    });
+    changeAttr(elm, { name: newName });
   }
 
   async function changeAttr(elm, attr) {

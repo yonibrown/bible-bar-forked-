@@ -60,6 +60,39 @@ export function useLinks({ storeMethods, projId }) {
   }
 
   // access database
+  async function changeAttr(link, attr) {
+    const data = {
+      type: "link",
+      oper: "set",
+      id: linkObjId(link),
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+  }
+
+  async function setName(prop, newName) {
+    let link = null;
+    if (prop.id) {
+      link = getLink({ id: prop.id });
+    }
+    if (prop.obj) {
+      link = prop.obj;
+    }
+    if (!link) {
+      console.log("Error: link not found");
+      return;
+    }
+
+    if (link.research_id != 0) {
+      storeMethods.res.setName({ id: link.research_id });
+      return;
+    }
+
+    link.name = newName;
+    await changeAttr(link, { name: newName });
+  }
+
   async function updateCategory(link, cat, attr) {
     // update browser
     Object.assign(cat, attr);
@@ -146,6 +179,7 @@ export function useLinks({ storeMethods, projId }) {
     createLink,
     reloadObj,
     getName,
+    setName,
   };
   provide("lnkMethods", lnkMethods);
 
