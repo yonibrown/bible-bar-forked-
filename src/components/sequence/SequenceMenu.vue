@@ -15,12 +15,14 @@
         :initialValue="initialFromKey"
         @changeValue="(newVal) => updateAttr('from_div', newVal)"
         defaultValue="min"
+        ref="fromRef"
       ></sequence-key>
       <span>עד</span>
       <sequence-key
         :initialValue="initialToKey"
         @changeValue="(newVal) => updateAttr('to_div', newVal)"
         defaultValue="max"
+        ref="toRef"
       ></sequence-key>
       <input
         v-if="enableWholeText"
@@ -54,8 +56,11 @@ import { computed, provide, inject, ref } from "vue";
 
 const props = defineProps(["displayScale", "enableWholeText"]);
 
-const elementAttr = inject('elementAttr');
+const elementAttr = inject("elementAttr");
 const changeAttr = inject("changeAttr");
+
+const fromRef = ref();
+const toRef = ref();
 
 const seqIndex = computed(function () {
   return {
@@ -72,28 +77,44 @@ const hasChanges = ref(false);
 function updateAttr(attr, newVal) {
   hasChanges.value = true;
   changedAttr[attr] = newVal;
+
+  if ((attr = "from_div")) {
+    const toDiv = getSeqDiv("to");
+    if (toDiv < newVal) {
+      const fromKey = fromRef.value.getKey();
+      console.log('fromKey',fromKey);
+  //     toRef.value.changeDiv(newVal);
+  //     // initialToKey.value[0].division_id = 
+
+  //     // initialToKey.value = cloneKey(initialFromKey.value);
+
+  //     // initialToKey.value = initialFromKey.value;
+  //     updateAttr("to_div", newVal);
+    }
+  }
 }
+
+// function cloneKey(originalKey) {
+//   const cloneKey = [];
+//   originalKey.forEach(function (lvl) {
+//     cloneKey.push({
+//       level: lvl.level,
+//       division_id: lvl.division_id,
+//       name: lvl.name
+//     });
+//   });
+//   // console.log('originalKey',originalKey);
+//   // console.log('cloneKey',cloneKey);
+//   return cloneKey;
+// }
 
 async function submitChanges() {
   if (Object.keys(changedAttr).length == 0) {
     return;
   }
 
-  const fromKey = elementAttr.value.from_key;
-  var fromDiv;
-  if (changedAttr["from_div"] != null) {
-    fromDiv = +changedAttr["from_div"];
-  } else {
-    fromDiv = +fromKey[fromKey.length - 1].division_id;
-  }
-
-  const toKey = elementAttr.value.to_key;
-  var toDiv;
-  if (changedAttr["to_div"] != null) {
-    toDiv = +changedAttr["to_div"];
-  } else {
-    toDiv = +toKey[toKey.length - 1].division_id;
-  }
+  const fromDiv = getSeqDiv("from");
+  const toDiv = getSeqDiv("to");
 
   if (toDiv < fromDiv) {
     alert("טווח הפסוקים לא הגיוני");
@@ -114,13 +135,23 @@ async function submitChanges() {
   hasChanges.value = false;
 }
 
-const displayFilter = ref(true);
-function toggleFilter() {
-  displayFilter.value = !displayFilter.value;
+function getSeqDiv(ident) {
+  // ident can be 'from' or 'to'
+  if (changedAttr[ident + "_div"] != null) {
+    return +changedAttr[ident + "_div"];
+  }
+
+  const seqKey = elementAttr.value[ident + "_key"];
+  return +seqKey[seqKey.length - 1].division_id;
 }
-const filterText = computed(function () {
-  return "מיקוד " + (displayFilter.value ? "<<" : ">>");
-});
+
+const displayFilter = ref(true);
+// function toggleFilter() {
+//   displayFilter.value = !displayFilter.value;
+// }
+// const filterText = computed(function () {
+//   return "מיקוד " + (displayFilter.value ? "<<" : ">>");
+// });
 
 const initialFromKey = ref(elementAttr.value.from_key);
 const initialToKey = ref(elementAttr.value.to_key);
