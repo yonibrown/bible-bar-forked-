@@ -8,7 +8,6 @@
 
 <script setup>
 import { watch, ref, inject, computed } from "vue";
-import { sendToServer } from "../../server.js";
 
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
@@ -28,7 +27,7 @@ const selected = ref(props.initialValue);
 watch(injectedSelectedLevel, (newVal) => {
   if (selected.value != newVal) {
     injectedChange = true;
-    if (newVal == null){
+    if (newVal == null) {
       selected.value = indexLevels.value[0].id;
     } else {
       selected.value = newVal;
