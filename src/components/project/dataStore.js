@@ -14,7 +14,7 @@ export function newProjectData(projId) {
   });
   const storeMethods = {};
 
-  const [researches, resMethods] = useResearches(storeMethods, projId);
+  const [researches, resMethods] = useResearches({storeMethods, projId});
   storeMethods.res = resMethods;
 
   const [elements, elmMethods] = useElements({ storeMethods, projId });

@@ -11,8 +11,7 @@
 <script setup>
 import { watch, ref, inject, computed } from 'vue';
 
-const props = defineProps(['keyLvlIdx','keyLvl']);
-const changeKey = inject('changeKey');
+const props = defineProps(['keyLvlIdx','keyLvl','changeKeyLevel']);
 
 const injectedSelectedDiv = computed(function(){
   return props.keyLvl.selected_div;
@@ -33,7 +32,7 @@ watch(selected, (newVal) => {
   if (injectedChange){
     injectedChange = false;
   } else {
-    changeKey(props.keyLvlIdx,newVal);
+    props.changeKeyLevel(props.keyLvlIdx,newVal);
   }
 });
 </script>
