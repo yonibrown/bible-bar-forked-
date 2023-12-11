@@ -1,7 +1,7 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 
-export function useResearches(storeMethods, projId) {
+export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
   provide("researches", researches);
 
@@ -64,6 +64,34 @@ export function useResearches(storeMethods, projId) {
   }
 
   // server
+  async function changeAttr(res, attr) {
+    const data = {
+      type: "research",
+      oper: "set",
+      id: researchObjId(res),
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+  }
+
+  async function setName(prop, newName) {
+    let res = null;
+    if (prop.id) {
+      res = getResearch(prop.id);
+    }
+    if (prop.obj) {
+      res = prop.obj;
+    }
+    if (!res) {
+      console.log("Error: research not found");
+      return;
+    }
+
+    res.name = newName;
+    await changeAttr(res, { name: newName });
+  }
+
   async function updateCollection(col, newAttr) {
     Object.assign(col, newAttr);
     const data = {
@@ -216,6 +244,7 @@ export function useResearches(storeMethods, projId) {
     newPart,
     reloadObj,
     getName,
+    setName,
   };
   provide("resMethods", resMethods);
 
