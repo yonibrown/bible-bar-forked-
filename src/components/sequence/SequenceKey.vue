@@ -12,7 +12,7 @@
 
 <script setup>
 import SeqKeyLevel from "./SeqKeyLevel.vue";
-import { ref, inject, provide, computed, watch } from "vue";
+import { ref, inject, computed, watch } from "vue";
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
 const resMethods = inject("resMethods");
@@ -29,13 +29,12 @@ const initialKey = computed(function () {
 const seqIndex = inject("seqIndex");
 
 const keyLevels = ref([]);
-provide("keyLevels", keyLevels);
 
 initKey();
 loadIndex();
 
-watch(initialKey, function () {
-  if (initialKey.value == null) {
+watch(initialKey, function (newVal) {
+  if (newVal == null) {
     changeKeyLevel(0, defaultDiv);
   } else {
     initKey();
@@ -45,19 +44,21 @@ watch(initialKey, function () {
 
 function initKey() {
   initialKey.value.forEach((lvl, lvlIdx) => {
-    selectedKey[lvlIdx] = { ...lvl };
+    selectedKey[lvlIdx] = {
+      level: lvl.level,
+      division_id: lvl.division_id,
+    };
   });
 }
 
 async function loadIndex() {
   keyLevels.value = await resMethods.loadIndexDivisions(
     seqIndex.value,
-    selectedKey
+    selectedKey,
   );
 }
 
 async function changeKeyLevel(lvlIdx, div) {
-  console.log(selectedKey);
   // update div
   selectedKey[lvlIdx].division_id = div;
 

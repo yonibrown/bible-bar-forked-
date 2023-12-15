@@ -79,34 +79,11 @@ function updateAttr(attr, newVal) {
   changedAttr[attr] = newVal;
 
   if ((attr = "from_div")) {
-    const toDiv = getSeqDiv("to");
-    if (toDiv < newVal) {
-      const fromKey = fromRef.value.getKey();
-      console.log('fromKey',fromKey);
-  //     toRef.value.changeDiv(newVal);
-  //     // initialToKey.value[0].division_id = 
-
-  //     // initialToKey.value = cloneKey(initialFromKey.value);
-
-  //     // initialToKey.value = initialFromKey.value;
-  //     updateAttr("to_div", newVal);
+    if (getSeqDiv("to") < newVal) {
+      initialToKey.value = fromRef.value.getKey();
     }
   }
 }
-
-// function cloneKey(originalKey) {
-//   const cloneKey = [];
-//   originalKey.forEach(function (lvl) {
-//     cloneKey.push({
-//       level: lvl.level,
-//       division_id: lvl.division_id,
-//       name: lvl.name
-//     });
-//   });
-//   // console.log('originalKey',originalKey);
-//   // console.log('cloneKey',cloneKey);
-//   return cloneKey;
-// }
 
 async function submitChanges() {
   if (Object.keys(changedAttr).length == 0) {

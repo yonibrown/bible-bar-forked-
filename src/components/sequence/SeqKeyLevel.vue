@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { watch, ref, inject, computed } from 'vue';
+import { watch, ref, computed } from 'vue';
 
 const props = defineProps(['keyLvlIdx','keyLvl','changeKeyLevel']);
 
