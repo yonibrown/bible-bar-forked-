@@ -5,7 +5,7 @@
         :initialValue="elementName"
         @submitValue="submitName"
         name="elementName"
-        :defaultValue="defaultName"
+        :getDefault="defaultName"
       ></base-editable>
       <span class="menu-buttons">
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
@@ -40,9 +40,9 @@ const elementObj = computed(function () {
 provide("element", elementObj);
 
 // element name
-const defaultName = computed(function () {
+function defaultName() {
   return elmMethods.defaultName(props.element);
-});
+}
 
 const elementName = ref("");
 elementName.value = elmMethods.getName(props.element);

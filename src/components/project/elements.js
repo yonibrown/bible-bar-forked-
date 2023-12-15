@@ -1,5 +1,6 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
+import { seqTitle } from "./sequence.js";
 
 export function useElements({ storeMethods, projId }) {
   const elements = ref([]);
@@ -37,6 +38,9 @@ export function useElements({ storeMethods, projId }) {
     }
     if (elm.type == "parts") {
       return storeMethods.res.getName({ id: elm.attr.res });
+    }
+    if (elm.type == "text") {
+      return seqTitle(elm.attr.from_key);
     }
     if (elm.type == "new") {
       return "new element";
