@@ -46,11 +46,14 @@ function defaultName() {
   return elmMethods.defaultName(props.element);
 }
 
-const elementName = ref("");
-elementName.value = elmMethods.getName(props.element);
+// const elementName = ref("");
+// elementName.value = elmMethods.getName(props.element);
+const elementName = computed(function(){
+  return elmMethods.getName(props.element);
+});
 
 function submitName(newName) {
-  elementName.value = newName;
+  // elementName.value = newName;
   elmMethods.changeName(props.element, newName);
 }
 
@@ -78,11 +81,16 @@ function changeAttr(changedAttr, options) {
 provide("changeAttr", changeAttr);
 
 // open a new element
+const nextPos = computed(function(){
+  return props.nextPos;
+});
+provide('nextPos',nextPos);
+
 function createElement(attr) {
   elmMethods.createFromElement({
     attr,
     name: elementName.value,
-    position: props.nextPos,
+    position: nextPos.value,
     originalElement: props.element,
     originalLinks: links.value,
   });

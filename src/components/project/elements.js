@@ -152,6 +152,7 @@ export function useElements({ storeMethods, projId }) {
       return;
     }
 
+    elm.name = newName;
     changeAttr(elm, { name: newName });
   }
 
