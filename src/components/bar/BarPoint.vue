@@ -14,24 +14,24 @@
 </template>
 
 <script setup>
-const props = defineProps(['point']);
-import { computed, inject } from 'vue';
+const props = defineProps(["point"]);
+import { computed, inject } from "vue";
 
-const lnkMethods = inject('lnkMethods');
-const createElement = inject('createElement');
+const lnkMethods = inject("lnkMethods");
+const barOpenText = inject("openText");
 
 const category = computed(() => {
   return lnkMethods.getCategory(props.point.link, props.point.col);
 });
 const tooltip = computed(() => {
-  return props.point.verse.replaceAll(',', ' ');
+  return props.point.verse.replaceAll(",", " ");
 });
 
-function openText(){
-  createElement({
-    type: 'text',
-    research_id: props.point.res,
-    part_id: props.point.id,
+function openText() {
+  barOpenText({
+    type: "text",
+    point_research_id: props.point.res,
+    point_part_id: props.point.id,
   });
 }
 </script>

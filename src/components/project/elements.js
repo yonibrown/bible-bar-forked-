@@ -113,6 +113,7 @@ export function useElements({ storeMethods, projId }) {
     };
 
     const obj = await sendToServer(data);
+    elm.attr = obj.data.attr;
     return obj.data.attr;
   }
 
@@ -155,6 +156,7 @@ export function useElements({ storeMethods, projId }) {
   }
 
   async function changeAttr(elm, attr) {
+    console.log('changeAttr elm',elm);
     const data = {
       type: "element",
       oper: "set",
@@ -214,6 +216,7 @@ export function useElements({ storeMethods, projId }) {
     defaultName,
     getName,
     changeName,
+    getElement,
   };
   provide("elmMethods", elmMethods);
 

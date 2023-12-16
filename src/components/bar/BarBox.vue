@@ -6,6 +6,7 @@
       :enableWholeText="true"
     ></sequence-menu>
     <links-menu title="הדגשות"></links-menu>
+    <bar-menu ref="barMenuRef"></bar-menu>
   </div>
   <div class="in_body">
     <div class="bar_header">
@@ -38,17 +39,21 @@
 </template>
 
 <script setup>
+import BarMenu from "./BarMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
-import { inject, computed } from "vue";
+import { inject, computed, provide, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const links = inject("links");
 const elmMethods = inject("elmMethods");
+const createElement = inject("createElement");
+
+const barMenuRef = ref();
 
 const segments = computed(function () {
   if (!element.value || !element.value.segments) {
@@ -64,6 +69,24 @@ const points = computed(function () {
 });
 
 elmMethods.reload(element.value);
+
+async function openText(prop) {
+  console.log('openText',prop);
+  if (barMenuRef.value.openInSameElement && element.value.open_text_element != 0){
+    const txtElm = elmMethods.getElement(element.value.open_text_element);
+    console.log('txtElm',txtElm);
+    if (txtElm){
+      console.log('change attr');
+      await elmMethods.changeAttr(txtElm, prop);
+      elmMethods.loadElement(txtElm);
+      elmMethods.reload(txtElm);
+      return;
+    }
+  }
+
+  createElement(prop);
+}
+provide("openText", openText);
 </script>
 
 <style scoped>
