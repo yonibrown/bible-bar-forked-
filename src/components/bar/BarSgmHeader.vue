@@ -5,14 +5,12 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-const props = defineProps(['segment']);
-const changeAttr = inject('changeAttr');
+import { inject } from "vue";
+const props = defineProps(["segment"]);
+const changeAttr = inject("changeAttr");
 
 function selectDiv() {
-  changeAttr({
-    division_id: props.segment.div
-  },{reload:true});
+  changeAttr({ division_id: props.segment.div }, { reload: true });
 }
 </script>
 

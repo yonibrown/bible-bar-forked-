@@ -155,8 +155,11 @@ export function useElements({ storeMethods, projId }) {
     changeAttr(elm, { name: newName });
   }
 
-  async function changeAttr(elm, attr) {
-    console.log('changeAttr elm',elm);
+  async function changeAttr(elm, attr, options) {
+    if (elm.type == "new") {
+      return;
+    }
+
     const data = {
       type: "element",
       oper: "set",
@@ -165,6 +168,11 @@ export function useElements({ storeMethods, projId }) {
     };
 
     const obj = await storeMethods.prj.sendToServer(data);
+
+    if (options && options.reload) {
+      await loadElement(elm);
+      reload(elm);
+    }
   }
 
   async function loadText(elm) {

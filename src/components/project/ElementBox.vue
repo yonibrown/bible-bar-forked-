@@ -29,7 +29,9 @@ const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
 const elmMethods = inject("elmMethods");
 
-const elementAttr = ref(props.element.attr);
+const elementAttr = computed(function () {
+  return props.element.attr;
+});
 provide("elementAttr", elementAttr);
 
 const boxRef = ref();
@@ -69,23 +71,9 @@ function closeElement() {
   emit("closeElement");
 }
 
-async function reloadElement() {
-  elementAttr.value = await elmMethods.loadElement(elementObj.value);
-  elmMethods.reload(elementObj.value);
-  // boxRef.value.reload();
-}
-
 // change attributes of element
-async function changeAttr(changedAttr, options) {
-  if (props.element.type == "new") {
-    return;
-  }
-
-  await elmMethods.changeAttr(elementObj.value, changedAttr);
-
-  if (options && options.reload) {
-    reloadElement();
-  }
+function changeAttr(changedAttr, options) {
+  elmMethods.changeAttr(elementObj.value, changedAttr, options);
 }
 provide("changeAttr", changeAttr);
 

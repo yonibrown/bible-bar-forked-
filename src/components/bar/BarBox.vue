@@ -70,16 +70,14 @@ const points = computed(function () {
 
 elmMethods.reload(element.value);
 
-async function openText(prop) {
-  console.log('openText',prop);
-  if (barMenuRef.value.openInSameElement && element.value.open_text_element != 0){
+function openText(prop) {
+  if (
+    barMenuRef.value.openInSameElement &&
+    element.value.open_text_element != 0
+  ) {
     const txtElm = elmMethods.getElement(element.value.open_text_element);
-    console.log('txtElm',txtElm);
-    if (txtElm){
-      console.log('change attr');
-      await elmMethods.changeAttr(txtElm, prop);
-      elmMethods.loadElement(txtElm);
-      elmMethods.reload(txtElm);
+    if (txtElm) {
+      elmMethods.changeAttr(txtElm, prop, { reload: true });
       return;
     }
   }
