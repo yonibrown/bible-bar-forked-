@@ -77,6 +77,7 @@ function openText(prop) {
   ) {
     const txtElm = elmMethods.getElement(element.value.open_text_element);
     if (txtElm) {
+      prop.name = '';
       elmMethods.changeAttr(txtElm, prop, { reload: true });
       return;
     }

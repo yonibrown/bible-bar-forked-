@@ -104,18 +104,18 @@ export function useElements({ storeMethods, projId }) {
     });
   }
 
-  async function loadElement(elm) {
-    const data = {
-      type: "element",
-      oper: "get",
-      id: elementObjId(elm),
-      prop: { dummy: "" },
-    };
+  // async function loadElement(elm) {
+  //   const data = {
+  //     type: "element",
+  //     oper: "get",
+  //     id: elementObjId(elm),
+  //     prop: { dummy: "" },
+  //   };
 
-    const obj = await sendToServer(data);
-    elm.attr = obj.data.attr;
-    return obj.data.attr;
-  }
+  //   const obj = await sendToServer(data);
+  //   elm.attr = obj.data.attr;
+  //   return obj.data.attr;
+  // }
 
   async function loadBarSegments(elm) {
     const data = {
@@ -167,10 +167,10 @@ export function useElements({ storeMethods, projId }) {
       prop: attr,
     };
 
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
+    elm.attr = obj.data.attr;
 
     if (options && options.reload) {
-      await loadElement(elm);
       reload(elm);
     }
   }
@@ -213,7 +213,6 @@ export function useElements({ storeMethods, projId }) {
   const elmMethods = {
     create: elmCreate,
     createFromElement,
-    loadElement,
     changeAttr,
     loadBarSegments,
     loadBarPoints,
