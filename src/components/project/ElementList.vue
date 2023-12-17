@@ -76,6 +76,9 @@ onUpdated(function () {
 });
 
 function elementPrevPos(elmIdx) {
+  if(dispElements.value.length == 0){
+    return 1;
+  }
   const elm = dispElements.value[elmIdx];
   const elmPos = +elm.position;
   var prevElmPos = 0;
