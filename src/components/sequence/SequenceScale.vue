@@ -27,13 +27,15 @@ const selected = ref(props.initialValue);
 watch(injectedSelectedLevel, (newVal) => {
   if (selected.value != newVal) {
     injectedChange = true;
-    if (newVal == null) {
-      selected.value = indexLevels.value[0].id;
-    } else {
-      selected.value = newVal;
-    }
+    selected.value = newVal;
   }
 });
+
+function clear() {
+  injectedChange = true;
+  selected.value = indexLevels.value[0].id;
+  changeScale(props.keyLvlIdx, selected.value);
+}
 
 watch(selected, (newVal) => {
   if (injectedChange) {
@@ -56,4 +58,6 @@ async function changeScale() {
   // emit changes
   emit("changeValue", selected.value);
 }
+
+defineExpose({ clear });
 </script>

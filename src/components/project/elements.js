@@ -156,7 +156,7 @@ export function useElements({ storeMethods, projId }) {
     changeAttr(elm, { name: newName });
   }
 
-  async function changeAttr(elm, attr, options) {
+  async function changeAttr(elm, attr) {
     if (elm.type == "new") {
       return;
     }
@@ -171,7 +171,14 @@ export function useElements({ storeMethods, projId }) {
     const obj = await sendToServer(data);
     elm.attr = obj.data.attr;
 
-    if (options && options.reload) {
+    if (
+      "point_research_id" in attr ||
+      "point_part_id" in attr ||
+      "division_id" in attr ||
+      "from_div" in attr ||
+      "to_div" in attr ||
+      "seq_level" in attr
+    ) {
       reload(elm);
     }
   }

@@ -10,7 +10,7 @@ const props = defineProps(["segment"]);
 const changeAttr = inject("changeAttr");
 
 function selectDiv() {
-  changeAttr({ division_id: props.segment.div }, { reload: true });
+  changeAttr({ division_id: props.segment.div });
 }
 </script>
 
