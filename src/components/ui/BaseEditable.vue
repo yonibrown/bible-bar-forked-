@@ -27,7 +27,7 @@ import { ref, watch, computed } from "vue";
 const props = defineProps([
   "initialValue",
   "name",
-  "defaultValue",
+  "getDefault",
   "disabled",
   "placeholder",
   "blankable",
@@ -57,7 +57,7 @@ watch(input, function (newVal) {
 
 function submitValue() {
   if (currentValue.value == "" && !props.blankable) {
-    currentValue.value = props.defaultValue;
+    currentValue.value = props.getDefault();
   }
 
   leaveEdit();

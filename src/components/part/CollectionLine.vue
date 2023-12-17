@@ -5,7 +5,7 @@
         :initialValue="name"
         @submitValue="submitName"
         name="collectionName"
-        :defaultValue="defaultName"
+        :getDefault="defaultName"
         :disabled="!enableSelection"
         placeholder="הוסף קטגוריה..."
       ></base-editable>
@@ -33,18 +33,18 @@ const research = inject("research");
 const resMethods = inject("resMethods");
 const enableSelection = inject("enableSelection");
 
-const defaultName = computed(function () {
+function defaultName() {
   if (props.line.newLine) {
     return "קטגוריה חדשה";
   }
   return "קטגוריה " + props.line.id;
-});
+}
 
 const emptyAttr = {
   name: "",
   description: "",
-}; 
-const attr = ref({...emptyAttr});
+};
+const attr = ref({ ...emptyAttr });
 
 const name = computed(function () {
   if (props.line.newLine) {

@@ -67,10 +67,39 @@ export function newProjectData(projId) {
     return obj;
   }
 
+  function defaultName() {
+    return "project" + project.value.id;
+  }
+
+  function getName() {
+    if (project.value.attr.name.trim() == "") {
+      return defaultName();
+    }
+    return project.value.attr.name;
+  }
+
+  async function changeName(newName) {
+    changeAttr({ name: newName });
+  }
+
+  async function changeAttr(attr) {
+    const data = {
+      type: "project",
+      oper: "set",
+      id: projectObjId(project.value),
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+  }
+
   const prjMethods = {
     loadProject,
     storeElementList,
     sendToServer: prjSendToServer,
+    defaultName,
+    getName,
+    changeName,
   };
   storeMethods.prj = prjMethods;
   provide("prjMethods", prjMethods);

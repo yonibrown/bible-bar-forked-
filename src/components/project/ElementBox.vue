@@ -5,7 +5,7 @@
         :initialValue="elementName"
         @submitValue="submitName"
         name="elementName"
-        :defaultValue="defaultName"
+        :getDefault="defaultName"
       ></base-editable>
       <span class="menu-buttons">
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
@@ -29,7 +29,9 @@ const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
 const elmMethods = inject("elmMethods");
 
-const elementAttr = ref(props.element.attr);
+const elementAttr = computed(function () {
+  return props.element.attr;
+});
 provide("elementAttr", elementAttr);
 
 const boxRef = ref();
@@ -40,15 +42,18 @@ const elementObj = computed(function () {
 provide("element", elementObj);
 
 // element name
-const defaultName = computed(function () {
+function defaultName() {
   return elmMethods.defaultName(props.element);
+}
+
+// const elementName = ref("");
+// elementName.value = elmMethods.getName(props.element);
+const elementName = computed(function(){
+  return elmMethods.getName(props.element);
 });
 
-const elementName = ref("");
-elementName.value = elmMethods.getName(props.element);
-
 function submitName(newName) {
-  elementName.value = newName;
+  // elementName.value = newName;
   elmMethods.changeName(props.element, newName);
 }
 
@@ -69,32 +74,23 @@ function closeElement() {
   emit("closeElement");
 }
 
-async function reloadElement() {
-  elementAttr.value = await elmMethods.loadElement(elementObj.value);
-  elmMethods.reload(elementObj.value);
-  // boxRef.value.reload();
-}
-
 // change attributes of element
-async function changeAttr(changedAttr, options) {
-  if (props.element.type == "new") {
-    return;
-  }
-
-  await elmMethods.changeAttr(elementObj.value, changedAttr);
-
-  if (options && options.reload) {
-    reloadElement();
-  }
+function changeAttr(changedAttr, options) {
+  elmMethods.changeAttr(elementObj.value, changedAttr, options);
 }
 provide("changeAttr", changeAttr);
 
 // open a new element
+const nextPos = computed(function(){
+  return props.nextPos;
+});
+provide('nextPos',nextPos);
+
 function createElement(attr) {
   elmMethods.createFromElement({
     attr,
     name: elementName.value,
-    position: props.nextPos,
+    position: nextPos.value,
     originalElement: props.element,
     originalLinks: links.value,
   });

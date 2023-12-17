@@ -3,9 +3,15 @@
     <section>
       <base-card>
         <div>
-          <span class="title">
+          <!-- <span class="title">
             Project {{ project.id }}: {{ project.attr.name }}
-          </span>
+          </span> -->
+          <base-editable
+            :initialValue="projectName"
+            @submitValue="submitName"
+            name="projectName"
+            :getDefault="defaultName"
+          ></base-editable>
           <span class="menu-buttons">
             <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
             <menu-button type="add" @click="openNewElement"></menu-button>
@@ -21,21 +27,35 @@
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
-import {  ref } from "vue";
+import { ref } from "vue";
 import { newProjectData } from "./dataStore.js";
 
 const props = defineProps(["id"]);
 
-const { project, prjMethods, elements } = newProjectData(props.id);
+const { prjMethods, elements } = newProjectData(props.id);
 
 const listRef = ref();
-
-prjMethods.loadProject();
 
 // link methods
 function openNewElement() {
   listRef.value.openNewElement();
 }
+
+// element name
+function defaultName() {
+  return prjMethods.defaultName();
+}
+
+const projectName = ref("");
+
+function submitName(newName) {
+  projectName.value = newName;
+  prjMethods.changeName(newName);
+}
+
+prjMethods.loadProject().then(function () {
+  projectName.value = prjMethods.getName();
+});
 </script>
 
 <style scoped>
