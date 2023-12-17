@@ -113,9 +113,13 @@ const sortedParts = computed(function () {
   const arr = filteredParts.value.slice();
   arr.sort(function (a, b) {
     if (sortAttr.value.ordering == "ASC") {
-      return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort] ? 1 : -1;
+      return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort]
+        ? 1
+        : -1;
     }
-    return a.sort_key[sortAttr.value.sort] < b.sort_key[sortAttr.value.sort] ? 1 : -1;
+    return a.sort_key[sortAttr.value.sort] < b.sort_key[sortAttr.value.sort]
+      ? 1
+      : -1;
   });
   return arr;
 });
@@ -124,16 +128,16 @@ async function moveSelectedToCat(cat) {
   await resMethods.updateParts(
     research.value,
     tableRef.value.selectedLines,
-    cat
+    cat,
   );
-  loadResearchParts();
+  // loadResearchParts();
 }
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
   const newRes = await resMethods.duplicate(
     researchObjId,
-    tableRef.value.selectedLines
+    tableRef.value.selectedLines,
   );
   createElement({
     type: "parts",
