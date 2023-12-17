@@ -1,5 +1,6 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
+import { seqTitle } from "./sequence.js";
 
 export function useElements({ storeMethods, projId }) {
   const elements = ref([]);
@@ -37,6 +38,9 @@ export function useElements({ storeMethods, projId }) {
     }
     if (elm.type == "parts") {
       return storeMethods.res.getName({ id: elm.attr.res });
+    }
+    if (elm.type == "text") {
+      return seqTitle(elm.attr.from_key);
     }
     if (elm.type == "new") {
       return "new element";
@@ -100,17 +104,18 @@ export function useElements({ storeMethods, projId }) {
     });
   }
 
-  async function loadElement(elm) {
-    const data = {
-      type: "element",
-      oper: "get",
-      id: elementObjId(elm),
-      prop: { dummy: "" },
-    };
+  // async function loadElement(elm) {
+  //   const data = {
+  //     type: "element",
+  //     oper: "get",
+  //     id: elementObjId(elm),
+  //     prop: { dummy: "" },
+  //   };
 
-    const obj = await sendToServer(data);
-    return obj.data.attr;
-  }
+  //   const obj = await sendToServer(data);
+  //   elm.attr = obj.data.attr;
+  //   return obj.data.attr;
+  // }
 
   async function loadBarSegments(elm) {
     const data = {
@@ -147,10 +152,15 @@ export function useElements({ storeMethods, projId }) {
       return;
     }
 
+    elm.name = newName;
     changeAttr(elm, { name: newName });
   }
 
-  async function changeAttr(elm, attr) {
+  async function changeAttr(elm, attr, options) {
+    if (elm.type == "new") {
+      return;
+    }
+
     const data = {
       type: "element",
       oper: "set",
@@ -158,7 +168,12 @@ export function useElements({ storeMethods, projId }) {
       prop: attr,
     };
 
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
+    elm.attr = obj.data.attr;
+
+    if (options && options.reload) {
+      reload(elm);
+    }
   }
 
   async function loadText(elm) {
@@ -199,7 +214,6 @@ export function useElements({ storeMethods, projId }) {
   const elmMethods = {
     create: elmCreate,
     createFromElement,
-    loadElement,
     changeAttr,
     loadBarSegments,
     loadBarPoints,
@@ -210,6 +224,7 @@ export function useElements({ storeMethods, projId }) {
     defaultName,
     getName,
     changeName,
+    getElement,
   };
   provide("elmMethods", elmMethods);
 
