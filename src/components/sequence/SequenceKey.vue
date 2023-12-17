@@ -33,14 +33,14 @@ const keyLevels = ref([]);
 initKey();
 loadIndex();
 
-watch(initialKey, function (newVal) {
-  if (newVal == null) {
-    changeKeyLevel(0, defaultDiv);
-  } else {
-    initKey();
-    loadIndex();
-  }
+watch(initialKey, function () {
+  initKey();
+  loadIndex();
 });
+
+function clear() {
+  changeKeyLevel(0, defaultDiv);
+}
 
 function initKey() {
   initialKey.value.forEach((lvl, lvlIdx) => {
@@ -93,5 +93,5 @@ function getKey() {
   return cloneKey;
 }
 
-defineExpose({ getKey });
+defineExpose({ getKey, clear });
 </script>

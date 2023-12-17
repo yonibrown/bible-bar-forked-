@@ -152,7 +152,7 @@ export function useResearches({ storeMethods, projId }) {
         updAttr,
       },
     };
-    const obj = await sendToServer(data);
+    const obj = await storeMethods.prj.sendToServer(data);
     loadParts(res);
   }
 

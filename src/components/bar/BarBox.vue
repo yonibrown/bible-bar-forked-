@@ -83,7 +83,7 @@ async function openText(prop) {
       if (txtElm.position <= 0){
         prop.position = nextPos.value;
       }
-      await elmMethods.changeAttr(txtElm, prop, { reload: true });
+      await elmMethods.changeAttr(txtElm, prop);
       await elmMethods.changeName(txtElm, '');
       if (txtElm.position <= 0){
         txtElm.position = nextPos.value;

@@ -2,7 +2,13 @@
   <header>
     <nav>
       <h1>
-        <router-link to="/">Bible Bar</router-link>
+        <router-link to="/">Home</router-link>
+      </h1>
+      <h1>
+        <router-link to="/">Open</router-link>
+      </h1>
+      <h1>
+        <router-link to="/">Lists</router-link>
       </h1>
     </nav>
   </header>
@@ -47,6 +53,7 @@ h1 a {
 h1 a:hover,
 h1 a:active,
 h1 a.router-link-active {
+  background-color: gray;
   border-color: transparent;
 }
 
@@ -54,7 +61,7 @@ header nav {
   width: 90%;
   margin: auto;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
 }
 
