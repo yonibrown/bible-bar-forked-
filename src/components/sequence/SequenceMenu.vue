@@ -37,6 +37,7 @@
         :initialValue="initialScaleLevel"
         @changeValue="(newVal) => updateAttr('seq_level', newVal)"
         defaultValue="min"
+        ref="scaleRef"
       ></sequence-scale>
     </span>
     <input
@@ -61,6 +62,7 @@ const changeAttr = inject("changeAttr");
 
 const fromRef = ref();
 const toRef = ref();
+const scaleRef = ref();
 
 const seqIndex = computed(function () {
   return {
@@ -130,13 +132,19 @@ const displayFilter = ref(true);
 //   return "מיקוד " + (displayFilter.value ? "<<" : ">>");
 // });
 
-const initialFromKey = ref(elementAttr.value.from_key);
-const initialToKey = ref(elementAttr.value.to_key);
-const initialScaleLevel = ref(elementAttr.value.seq_level);
+const initialFromKey = computed(function () {
+  return elementAttr.value.from_key;
+});
+const initialToKey = computed(function () {
+  return elementAttr.value.to_key;
+});
+const initialScaleLevel = computed(function () {
+  return elementAttr.value.seq_level;
+});
 function removeFilter() {
-  initialFromKey.value = null;
-  initialToKey.value = null;
-  initialScaleLevel.value = null;
+  fromRef.value.clear();
+  toRef.value.clear();
+  scaleRef.value.clear();
 }
 </script>
 

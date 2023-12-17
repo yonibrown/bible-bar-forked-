@@ -171,13 +171,15 @@ export function useElements({ storeMethods, projId }) {
     const obj = await sendToServer(data);
     elm.attr = obj.data.attr;
 
-    let reloadNeeded = false;
-    if (attr.point_research_id || attr.point_part_id || attr.division_id ||
-        attr.from_div || attr.to_div || attr.seq_level){
-      reloadNeeded = true;
-    }
-    if (reloadNeeded) {
-        reload(elm);
+    if (
+      "point_research_id" in attr ||
+      "point_part_id" in attr ||
+      "division_id" in attr ||
+      "from_div" in attr ||
+      "to_div" in attr ||
+      "seq_level" in attr
+    ) {
+      reload(elm);
     }
   }
 
