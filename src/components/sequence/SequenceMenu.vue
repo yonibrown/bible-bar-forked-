@@ -105,7 +105,7 @@ async function submitChanges() {
       return;
     }
   }
-  changeAttr(changedAttr, { reload: true });
+  changeAttr(changedAttr);
   // if only scale changed, we can reload only the segments
 
   changedAttr = {};

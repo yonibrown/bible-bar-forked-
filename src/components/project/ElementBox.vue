@@ -75,8 +75,8 @@ function closeElement() {
 }
 
 // change attributes of element
-function changeAttr(changedAttr, options) {
-  elmMethods.changeAttr(elementObj.value, changedAttr, options);
+function changeAttr(changedAttr) {
+  elmMethods.changeAttr(elementObj.value, changedAttr);
 }
 provide("changeAttr", changeAttr);
 
