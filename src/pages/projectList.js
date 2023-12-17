@@ -17,9 +17,21 @@ export function useProjectList() {
     projects.value = obj.list;
   }
 
+  async function newProject(prop) {
+    const data = {
+      type: "project",
+      oper: "new",
+      id: { dummy: "" },
+      prop,
+    };
+    const obj = await sendToServer(data);
+    return obj.id.proj;
+  }
+
   // return
   const plistMethods = {
     loadProjects,
+    newProject,
   };
   provide("plistMethods", plistMethods);
 
