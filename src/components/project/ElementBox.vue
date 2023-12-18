@@ -1,5 +1,5 @@
 <template>
-  <base-card>
+  <base-card :shadow="true">
     <div class="draggable-head">
       <base-editable
         :initialValue="elementName"
@@ -48,7 +48,7 @@ function defaultName() {
 
 // const elementName = ref("");
 // elementName.value = elmMethods.getName(props.element);
-const elementName = computed(function(){
+const elementName = computed(function () {
   return elmMethods.getName(props.element);
 });
 
@@ -81,21 +81,37 @@ function changeAttr(changedAttr) {
 provide("changeAttr", changeAttr);
 
 // open a new element
-const nextPos = computed(function(){
-  return props.nextPos;
-});
-provide('nextPos',nextPos);
-
 function createElement(attr) {
   elmMethods.createFromElement({
     attr,
     name: elementName.value,
-    position: nextPos.value,
+    position: props.nextPos,
     originalElement: props.element,
     originalLinks: links.value,
   });
 }
 provide("createElement", createElement);
+
+async function openText(prop, openInSameElement) {
+  if (openInSameElement && element.value.open_text_element != 0) {
+    const txtElm = elmMethods.getElement(element.value.open_text_element);
+    if (txtElm) {
+      // prop.name = '';
+      if (txtElm.position <= 0) {
+        prop.position = props.nextPos;
+      }
+      await elmMethods.changeAttr(txtElm, prop);
+      await elmMethods.changeName(txtElm, "");
+      if (txtElm.position <= 0) {
+        txtElm.position = props.nextPos;
+      }
+      return;
+    }
+  }
+
+  createElement(prop);
+}
+provide("openText", openText);
 
 //links
 const projLinks = inject("links");

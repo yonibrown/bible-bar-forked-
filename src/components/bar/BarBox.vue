@@ -51,8 +51,6 @@ const displayOptions = inject("displayOptions");
 const element = inject("element");
 const links = inject("links");
 const elmMethods = inject("elmMethods");
-const createElement = inject("createElement");
-const nextPos = inject("nextPos");
 
 const barMenuRef = ref();
 
@@ -71,28 +69,9 @@ const points = computed(function () {
 
 elmMethods.reload(element.value);
 
-async function openText(prop) {
-  if (
-    barMenuRef.value.openInSameElement &&
-    element.value.open_text_element != 0
-  ) {
-    const txtElm = elmMethods.getElement(element.value.open_text_element);
-    if (txtElm) {
-      // prop.name = '';
-      console.log(txtElm);
-      if (txtElm.position <= 0){
-        prop.position = nextPos.value;
-      }
-      await elmMethods.changeAttr(txtElm, prop);
-      await elmMethods.changeName(txtElm, '');
-      if (txtElm.position <= 0){
-        txtElm.position = nextPos.value;
-      }
-      return;
-    }
-  }
-
-  createElement(prop);
+const elmOpenText = inject("openText");
+function openText(prop) {
+  elmOpenText(prop, barMenuRef.value.openInSameElement);
 }
 provide("openText", openText);
 </script>

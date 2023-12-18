@@ -39,6 +39,8 @@
       @click="submitChanges"
       :disabled="!hasChanges"
     />
+    <input type="checkbox" v-model="openInSameElement" />
+    <span>פתח טקסט בחלון קבוע</span>
   </base-menu>
 </template>
 
@@ -49,6 +51,8 @@ const props = defineProps(["currentTab"]);
 const emit = defineEmits(["updateData"]);
 
 const research = inject("research");
+
+const openInSameElement = ref(true);
 
 const action = ref("choose");
 const displayCatList = computed(function () {
@@ -101,6 +105,7 @@ function submitChanges() {
     prop,
   });
 }
+defineExpose({ openInSameElement });
 </script>
 
 <style scoped>

@@ -1,5 +1,9 @@
 <template>
-  <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
+  <td
+    v-for="fld in tableFields"
+    :class="{ 'fit-column': fld.fit }"
+    @dblclick="$emit('dblclick')"
+  >
     <slot :name="fld.name"></slot>
   </td>
 </template>

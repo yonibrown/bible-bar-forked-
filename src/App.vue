@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import TheHeader from './components/layout/TheHeader.vue';
+import TheHeader from "./components/layout/TheHeader.vue";
 </script>
 
 <style>
@@ -28,9 +28,10 @@ html {
 
 body {
   margin: 0;
+  background-color: #eef0f2;
 }
 
-.page-body{
+.page-body {
   margin-top: 120px;
 }
 

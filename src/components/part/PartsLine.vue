@@ -1,5 +1,5 @@
 <template>
-  <spec-line>
+  <spec-line @dblclick="openText">
     <template #col>
       <span>{{ collection.name }}</span>
     </template>
@@ -25,4 +25,14 @@ const resMethods = inject("resMethods");
 const collection = computed(function () {
   return resMethods.getCollection(researchObjId.res, props.line.col);
 });
+
+const partOpenText = inject("openText");
+function openText() {
+  // console.log(props.line);
+  partOpenText({
+    type: "text",
+    point_research_id: researchObjId.res,
+    point_part_id: props.line.id,
+  });
+}
 </script>
