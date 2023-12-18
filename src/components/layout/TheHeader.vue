@@ -2,13 +2,13 @@
   <header>
     <nav>
       <h1>
-        <router-link to="/">Home</router-link>
+        <router-link to="/">ראשי</router-link>
       </h1>
       <h1>
-        <router-link to="/OpenProject">Open</router-link>
+        <router-link to="/OpenProject">פתח</router-link>
       </h1>
       <h1>
-        <router-link to="/">Lists</router-link>
+        <router-link to="/">רשימות</router-link>
       </h1>
     </nav>
   </header>

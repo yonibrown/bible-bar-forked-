@@ -11,6 +11,7 @@
 <script setup>
 import { inject } from "vue";
 const tableFields = inject("tableFields");
+const emit = defineEmits(['dblclick']);
 </script>
 
 <style scoped>

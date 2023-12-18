@@ -66,7 +66,7 @@ prjMethods.loadProject().then(function () {
   cursor: default;
   /* float: right; */
   font-weight: bold;
-  font-size: 1.5em;
+  font-size: 1.8em;
   margin: 0.83em 0;
 }
 </style>

@@ -26,7 +26,7 @@
             </td>
           </tr>
         </table>
-        <!-- <base-button>פרוייקט חדש</base-button> -->
+        <base-button>פתח</base-button>
       </base-card>
     </section>
   </div>
@@ -36,7 +36,7 @@
 import { useRouter } from "vue-router";
 import { useProjectList } from "./projectList.js";
 import { ref, computed } from "vue";
-// import BaseButton from "../components/ui/BaseButton.vue";
+import BaseButton from "../components/ui/BaseButton.vue";
 
 const router = useRouter();
 

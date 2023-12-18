@@ -14,7 +14,6 @@
 import { ref, provide } from "vue";
 
 const props = defineProps(["shadow"]);
-console.log(props.shadow);
 const cardRef = ref();
 const handleRef = ref();
 
@@ -70,9 +69,10 @@ provide("activateResizable", activateResizable);
 <style scoped>
 .card {
   border-radius: 5px;
-  border-style: solid;
+  /* border-style: solid;
   border-width: 1px;
-  border-color: #c9d6e8;
+  border-color: #c9d6e8; */
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
   padding: 1rem;
   margin: 2rem auto;
   max-width: 85%;

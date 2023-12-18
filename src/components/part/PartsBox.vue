@@ -49,6 +49,7 @@ provide("research", research);
 
 const partsTabRef = ref();
 const colsTabRef = ref();
+const partsMenuRef = ref();
 
 // tabs
 const tabList = [
