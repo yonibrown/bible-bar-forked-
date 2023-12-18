@@ -1,5 +1,5 @@
 <template>
-  <div class="card" ref="cardRef">
+  <div class="card" ref="cardRef" :shadow="shadow">
     <slot></slot>
     <div
       v-if="resizable"
@@ -13,6 +13,8 @@
 <script setup>
 import { ref, provide } from "vue";
 
+const props = defineProps(["shadow"]);
+console.log(props.shadow);
 const cardRef = ref();
 const handleRef = ref();
 
@@ -55,7 +57,7 @@ function stopDrag() {
 function getCardHeight() {
   return parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
-    10
+    10,
   );
 }
 
@@ -67,13 +69,19 @@ provide("activateResizable", activateResizable);
 
 <style scoped>
 .card {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #c9d6e8;
   padding: 1rem;
   margin: 2rem auto;
   max-width: 85%;
   position: relative;
   background-color: #f5f7fa;
+}
+
+.card[shadow] {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
 }
 
 .handle {
