@@ -28,7 +28,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { ref } from "vue";
-import { newProjectData } from "./dataStore.js";
+import { newProjectData } from "./project.js";
 
 const props = defineProps(["id"]);
 

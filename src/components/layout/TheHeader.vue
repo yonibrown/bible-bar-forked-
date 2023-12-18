@@ -5,7 +5,7 @@
         <router-link to="/">Home</router-link>
       </h1>
       <h1>
-        <router-link to="/">Open</router-link>
+        <router-link to="/OpenProject">Open</router-link>
       </h1>
       <h1>
         <router-link to="/">Lists</router-link>
@@ -53,7 +53,7 @@ h1 a {
 h1 a:hover,
 h1 a:active,
 h1 a.router-link-active {
-  background-color: gray;
+  background-color: #677a9c;
   border-color: transparent;
 }
 
