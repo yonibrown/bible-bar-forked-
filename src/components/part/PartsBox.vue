@@ -4,6 +4,7 @@
     <parts-menu
       @updateData="updateData"
       :currentTab="currentTabName"
+      ref="partsMenuRef"
     ></parts-menu>
   </div>
   <base-tabs
@@ -94,4 +95,10 @@ function updateData(data) {
       break;
   }
 }
+
+const elmOpenText = inject("openText");
+function openText(prop) {
+  elmOpenText(prop, partsMenuRef.value.openInSameElement);
+}
+provide("openText", openText);
 </script>
