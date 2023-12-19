@@ -76,7 +76,7 @@ function closeElement() {
 
 // change attributes of element
 function changeAttr(changedAttr) {
-  elmMethods.changeAttr(elementObj.value, changedAttr);
+  elmMethods.changeAttr(props.element, changedAttr);
 }
 provide("changeAttr", changeAttr);
 
@@ -93,8 +93,8 @@ function createElement(attr) {
 provide("createElement", createElement);
 
 async function openText(prop, openInSameElement) {
-  if (openInSameElement && element.value.open_text_element != 0) {
-    const txtElm = elmMethods.getElement(element.value.open_text_element);
+  if (openInSameElement && props.element.open_text_element != 0) {
+    const txtElm = elmMethods.getElement(props.element.open_text_element);
     if (txtElm) {
       // prop.name = '';
       if (txtElm.position <= 0) {

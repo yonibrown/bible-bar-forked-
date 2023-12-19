@@ -30,31 +30,27 @@ const seqIndex = inject("seqIndex");
 
 const keyLevels = ref([]);
 
-initKey();
-loadIndex();
-
-watch(initialKey, function () {
-  initKey();
-  loadIndex();
-});
+updateKey(initialKey.value);
+watch(initialKey, updateKey);
 
 function clear() {
   changeKeyLevel(0, defaultDiv);
 }
 
-function initKey() {
-  initialKey.value.forEach((lvl, lvlIdx) => {
+function updateKey(key) {
+  key.forEach((lvl, lvlIdx) => {
     selectedKey[lvlIdx] = {
       level: lvl.level,
       division_id: lvl.division_id,
     };
   });
+  loadIndex();
 }
 
 async function loadIndex() {
   keyLevels.value = await resMethods.loadIndexDivisions(
     seqIndex.value,
-    selectedKey,
+    selectedKey
   );
 }
 
@@ -93,5 +89,5 @@ function getKey() {
   return cloneKey;
 }
 
-defineExpose({ getKey, clear });
+defineExpose({ getKey, clear, updateKey });
 </script>

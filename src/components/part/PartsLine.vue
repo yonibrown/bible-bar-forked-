@@ -28,7 +28,6 @@ const collection = computed(function () {
 
 const partOpenText = inject("openText");
 function openText() {
-  // console.log(props.line);
   partOpenText({
     type: "text",
     point_research_id: researchObjId.res,
