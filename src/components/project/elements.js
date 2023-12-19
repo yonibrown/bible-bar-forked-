@@ -66,7 +66,6 @@ export function useElements({ storeMethods, projId }) {
         ...attr,
       },
     };
-    console.log(data);
     const obj = await storeMethods.prj.sendToServer(data);
 
     if (obj.data.res) {

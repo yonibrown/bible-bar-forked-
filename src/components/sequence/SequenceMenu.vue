@@ -82,7 +82,8 @@ function updateAttr(attr, newVal) {
 
   if ((attr = "from_div")) {
     if (getSeqDiv("to") < newVal) {
-      initialToKey.value = fromRef.value.getKey();
+      toRef.value.updateKey(fromRef.value.getKey());
+      changedAttr["to_div"] = newVal;
     }
   }
 }

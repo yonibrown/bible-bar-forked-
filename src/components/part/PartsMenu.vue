@@ -11,6 +11,7 @@
         העתק לרשימה חדשה
       </option>
       <option value="remove">מחק מהרשימה</option>
+      <option value="upload">טען נתונים מקובץ</option>
     </select>
     <span v-if="displayCatList">
       <span>קטגוריה:</span>
@@ -23,6 +24,11 @@
         </option>
       </select>
     </span>
+    <input type="file" v-if="displayUploadFile">
+    <!-- <label id="file-input-label" for="file-input"
+      >Select a File</label> 
+    example in https://bobbyhadz.com/blog/change-or-remove-no-file-chosen-input-type-file-in-html
+    -->
     <span v-if="displayNewCat">
       <span>שם:</span>
       <input
@@ -32,6 +38,7 @@
         v-model.trim="newCategory"
       />
     </span>
+    <span>|</span>
     <input
       v-if="displaySubmit"
       type="submit"
@@ -57,6 +64,9 @@ const openInSameElement = ref(true);
 const action = ref("choose");
 const displayCatList = computed(function () {
   return action.value == "changeCat";
+});
+const displayUploadFile = computed(function () {
+  return action.value == "upload";
 });
 const displaySubmit = computed(function () {
   return action.value != "choose";
