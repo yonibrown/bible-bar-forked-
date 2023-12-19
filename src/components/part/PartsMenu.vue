@@ -24,7 +24,7 @@
         </option>
       </select>
     </span>
-    <input type="file" v-if="displayUploadFile">
+    <input type="file" v-if="displayUploadFile" ref="fileRef" />
     <!-- <label id="file-input-label" for="file-input"
       >Select a File</label> 
     example in https://bobbyhadz.com/blog/change-or-remove-no-file-chosen-input-type-file-in-html
@@ -38,7 +38,6 @@
         v-model.trim="newCategory"
       />
     </span>
-    <span>|</span>
     <input
       v-if="displaySubmit"
       type="submit"
@@ -46,6 +45,7 @@
       @click="submitChanges"
       :disabled="!hasChanges"
     />
+    <span class="divider">|</span>
     <input type="checkbox" v-model="openInSameElement" />
     <span>פתח טקסט בחלון קבוע</span>
   </base-menu>
@@ -60,6 +60,7 @@ const emit = defineEmits(["updateData"]);
 const research = inject("research");
 
 const openInSameElement = ref(true);
+const fileRef = ref();
 
 const action = ref("choose");
 const displayCatList = computed(function () {
@@ -109,6 +110,12 @@ function submitChanges() {
         prop = { collection_id: moveToCat.value };
       }
       break;
+    case "upload":
+      console.log("upload", fileRef.value.files[0]);
+      prop = {
+        file: fileRef.value.files[0],
+      };
+      break;
   }
   emit("updateData", {
     action: action.value,
@@ -121,5 +128,10 @@ defineExpose({ openInSameElement });
 <style scoped>
 div * {
   margin-left: 6px;
+}
+
+.divider {
+  color: gray;
+  font-size: 1.1rem;
 }
 </style>

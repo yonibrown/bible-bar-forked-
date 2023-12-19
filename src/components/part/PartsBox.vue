@@ -94,6 +94,9 @@ function updateData(data) {
     case "remove":
       currentTabTable.value.removeSelected();
       break;
+    case "upload":
+      resMethods.uploadParts(research.value, data.prop);
+      break;
   }
 }
 
