@@ -1,5 +1,5 @@
 import { provide, ref } from "vue";
-import { sendToServer } from "../../server.js";
+import { sendToServer ,sendFileToServer} from "../../server.js";
 
 export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
@@ -117,6 +117,18 @@ export function useResearches({ storeMethods, projId }) {
 
     const obj = await sendToServer(data);
     res.collections.push(obj.data);
+  }
+
+  async function uploadParts(res, prop) {
+    const data = {
+      type: "research",
+      oper: "upload_parts",
+      id: researchObjId(res),
+      file: prop.file,
+    };
+
+    const obj = await sendFileToServer(data);
+    console.log(obj);
   }
 
   async function deleteCollections(res, colList) {
@@ -245,6 +257,7 @@ export function useResearches({ storeMethods, projId }) {
     reloadObj,
     getName,
     setName,
+    uploadParts,
   };
   provide("resMethods", resMethods);
 
