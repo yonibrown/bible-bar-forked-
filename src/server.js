@@ -1,9 +1,11 @@
 // local
-// const apiUrl = `http://localhost/bibar-vue-php/obj_api.php`;
+const basicPath = `http://localhost/bibar-vue-php/`;
 
 // bibar.site
-const apiUrl = `https://bibar.site/obj_api.php`;
-const fileUrl = `https://bibar.site/obj_file.php`;
+// const basicPath = `https://bibar.site/`;
+
+const apiUrl = basicPath + `obj_api.php`;
+const fileUrl = basicPath + `obj_file.php`;
 
 async function sendToServer(data) {
   const response = await fetch(apiUrl, {
@@ -39,7 +41,8 @@ async function sendFileToServer(data) {
   form.append("file", data.file);
   form.append("type", data.type);
   form.append("oper", data.oper);
-  form.append("id", data.id);
+  form.append("id", JSON.stringify(data.id));
+  form.append("prop", JSON.stringify(data.prop));
   const response = await fetch(fileUrl, {
     method: "POST",
     body: form,
