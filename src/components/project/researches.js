@@ -1,5 +1,5 @@
 import { provide, ref } from "vue";
-import { sendToServer ,sendFileToServer} from "../../server.js";
+import { sendToServer, sendFileToServer } from "../../server.js";
 
 export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
@@ -124,6 +124,7 @@ export function useResearches({ storeMethods, projId }) {
       type: "research",
       oper: "upload_parts",
       id: researchObjId(res),
+      prop: { dummy: "" },
       file: prop.file,
     };
 
