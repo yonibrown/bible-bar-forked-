@@ -119,6 +119,18 @@ export function useResearches({ storeMethods, projId }) {
     res.collections.push(obj.data);
   }
 
+  async function deleteCollections(res, colList) {
+    const data = {
+      type: "research",
+      oper: "delete_collections",
+      id: researchObjId(res),
+      prop: { colList },
+    };
+    const obj = await sendToServer(data);
+    await loadParts(res);
+    loadCollections(res);
+  }
+
   async function uploadParts(res, prop) {
     const data = {
       type: "research",
@@ -129,18 +141,20 @@ export function useResearches({ storeMethods, projId }) {
     };
 
     const obj = await sendFileToServer(data);
-    console.log(obj);
+    await loadCollections(res);
+    loadParts(res);
   }
 
-  async function deleteCollections(res, colList) {
+  async function loadCollections(res) {
     const data = {
       type: "research",
-      oper: "delete_collections",
+      oper: "get_col_list",
       id: researchObjId(res),
-      prop: { colList },
+      prop: { dummy: "" },
     };
 
     const obj = await sendToServer(data);
+    res.collections = obj.data;
   }
 
   async function loadParts(res, sortAttr = { dummy: "" }) {
