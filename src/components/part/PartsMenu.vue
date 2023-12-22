@@ -88,6 +88,10 @@ const hasChanges = computed(function () {
     }
     return moveToCat.value != "choose";
   }
+  // if (displayUploadFile.value) {
+  //   console.log(fileRef.value);
+  //   return fileRef.value && fileRef.value.files.length > 0;
+  // }
   return action.value != "choose";
 });
 
@@ -111,7 +115,9 @@ function submitChanges() {
       }
       break;
     case "upload":
-      console.log("upload", fileRef.value.files[0]);
+      if (fileRef.value.files.length == 0) {
+        return;
+      }
       prop = {
         file: fileRef.value.files[0],
       };
