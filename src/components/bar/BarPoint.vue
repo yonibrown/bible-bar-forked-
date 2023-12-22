@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="category"
     class="bar_point"
     :style="{
       right: point.position,

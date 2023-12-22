@@ -141,7 +141,8 @@ export function useResearches({ storeMethods, projId }) {
     };
 
     const obj = await sendFileToServer(data);
-    await loadCollections(res);
+    res.collections.push(obj.data);
+    // await loadCollections(res);
     loadParts(res);
   }
 
