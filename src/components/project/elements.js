@@ -171,16 +171,7 @@ export function useElements({ storeMethods, projId }) {
     const obj = await sendToServer(data);
     elm.attr = obj.data.attr;
 
-    if (
-      "point_research_id" in attr ||
-      "point_part_id" in attr ||
-      "division_id" in attr ||
-      "from_div" in attr ||
-      "to_div" in attr ||
-      "seq_level" in attr
-    ) {
-      reload(elm);
-    }
+    reload(elm, attr);
   }
 
   async function loadText(elm) {
@@ -195,14 +186,32 @@ export function useElements({ storeMethods, projId }) {
     elm.verses = obj.data.part_list;
   }
 
-  function reload(elm) {
+  function reload(elm, attr) {
     if (elm.type == "text") {
-      loadText(elm);
+      if (
+        !attr ||
+        "point_research_id" in attr ||
+        "point_part_id" in attr ||
+        "division_id" in attr ||
+        "from_div" in attr ||
+        "to_div" in attr
+      ) {
+        loadText(elm);
+      }
     }
     if (elm.type == "bar") {
-      elm.points = [];
-      loadBarSegments(elm);
-      loadBarPoints(elm);
+      if (
+        !attr ||
+        "from_div" in attr ||
+        "to_div" in attr ||
+        "seq_level" in attr
+      ) {
+        loadBarSegments(elm);
+      }
+      if (!attr || "from_div" in attr || "to_div" in attr) {
+        elm.points = [];
+        loadBarPoints(elm);
+      }
     }
   }
 

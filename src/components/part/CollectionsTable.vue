@@ -36,7 +36,7 @@ const tableFields = [
 ];
 
 function removeSelected() {
-  resMethods.deleteCollections(research, tableRef.value.selectedLines);
+  resMethods.deleteCollections(research.value, tableRef.value.selectedLines);
 }
 
 defineExpose({ removeSelected });
