@@ -122,6 +122,8 @@ export function useLinks({ storeMethods, projId }) {
       prop: { elm: elmId },
     };
     const obj = await storeMethods.prj.sendToServer(data);
+    const elm = storeMethods.elm.getElement(elmId);
+    storeMethods.elm.reload(elm, { add_link: true });
   }
 
   async function removeElementFromLink(link, elmId) {
