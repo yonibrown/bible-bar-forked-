@@ -59,6 +59,17 @@ export function useLinks({ storeMethods, projId }) {
     return "link" + link.id;
   }
 
+  function reloadObj(obj) {
+    const link = getLink({ id: obj.id });
+    for (let act in obj.actions) {
+      switch (act) {
+        case "name":
+          link.name = obj.actions[act];
+          break;
+      }
+    }
+  }
+
   // access database
   async function changeAttr(link, attr) {
     const data = {
@@ -160,14 +171,18 @@ export function useLinks({ storeMethods, projId }) {
     storeMethods.elm.reload(options.element);
   }
 
-  function reloadObj(obj) {
-    const link = getLink({ id: obj.id });
-    for (let act in obj.actions) {
-      switch (act) {
-        case "name":
-          link.name = obj.actions[act];
-          break;
-      }
+  async function reload(link) {
+    const data = {
+      type: "link",
+      oper: "get",
+      id: linkObjId(link),
+      prop: { dummy: "" },
+    };
+
+    const obj = await sendToServer(data);
+    console.log(obj);
+    for (const attr in obj.data){
+      link[attr] = obj.data[attr];
     }
   }
 
@@ -182,6 +197,7 @@ export function useLinks({ storeMethods, projId }) {
     reloadObj,
     getName,
     setName,
+    reload,
   };
   provide("lnkMethods", lnkMethods);
 

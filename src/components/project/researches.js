@@ -117,6 +117,8 @@ export function useResearches({ storeMethods, projId }) {
 
     const obj = await sendToServer(data);
     res.collections.push(obj.data);
+    const link = storeMethods.lnk.getLink({ res: res.id });
+    storeMethods.lnk.reload(link);
   }
 
   async function deleteCollections(res, colList) {
