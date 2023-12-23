@@ -186,6 +186,11 @@ export function useLinks({ storeMethods, projId }) {
     }
   }
 
+  function reloadResLink(resIdObj){
+    const link = getLink(resIdObj);
+    reload(link);
+  };
+
   // return
   const lnkMethods = {
     updateCategory,
@@ -197,7 +202,7 @@ export function useLinks({ storeMethods, projId }) {
     reloadObj,
     getName,
     setName,
-    reload,
+    reloadResLink,
   };
   provide("lnkMethods", lnkMethods);
 

@@ -105,6 +105,7 @@ export function useResearches({ storeMethods, projId }) {
     };
 
     const obj = await sendToServer(data);
+    storeMethods.lnk.reloadResLink({ res: col.res });
   }
 
   async function newCollection(res, newAttr) {
@@ -117,8 +118,7 @@ export function useResearches({ storeMethods, projId }) {
 
     const obj = await sendToServer(data);
     res.collections.push(obj.data);
-    const link = storeMethods.lnk.getLink({ res: res.id });
-    storeMethods.lnk.reload(link);
+    storeMethods.lnk.reloadResLink(researchObjId(res));
   }
 
   async function deleteCollections(res, colList) {
@@ -131,6 +131,7 @@ export function useResearches({ storeMethods, projId }) {
     const obj = await sendToServer(data);
     await loadParts(res);
     loadCollections(res);
+    storeMethods.lnk.reloadResLink(researchObjId(res));
   }
 
   async function uploadParts(res, prop) {
@@ -146,6 +147,7 @@ export function useResearches({ storeMethods, projId }) {
     res.collections.push(obj.data);
     // await loadCollections(res);
     loadParts(res);
+    storeMethods.lnk.reloadResLink(researchObjId(res));
   }
 
   async function loadCollections(res) {
