@@ -144,9 +144,13 @@ export function useResearches({ storeMethods, projId }) {
     };
 
     const obj = await sendFileToServer(data);
-    res.collections.push(obj.data);
+    console.log(obj.data);
+    res.collections.push(obj.data.new_collection);
+    obj.data.new_parts.forEach(function(prt){
+      res.parts.push(prt);
+    });
     // await loadCollections(res);
-    loadParts(res);
+    // loadParts(res);
     storeMethods.lnk.reloadResLink(researchObjId(res));
   }
 
@@ -255,7 +259,9 @@ export function useResearches({ storeMethods, projId }) {
     };
 
     const obj = await storeMethods.prj.sendToServer(data);
-    res.parts.push(obj.data.new_part);
+    obj.data.new_parts.forEach(function(prt){
+      res.parts.push(prt);
+    });
     // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
   }
 
