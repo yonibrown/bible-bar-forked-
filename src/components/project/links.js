@@ -59,6 +59,17 @@ export function useLinks({ storeMethods, projId }) {
     return "link" + link.id;
   }
 
+  function reloadObj(obj) {
+    const link = getLink({ id: obj.id });
+    for (let act in obj.actions) {
+      switch (act) {
+        case "name":
+          link.name = obj.actions[act];
+          break;
+      }
+    }
+  }
+
   // access database
   async function changeAttr(link, attr) {
     const data = {
@@ -122,6 +133,8 @@ export function useLinks({ storeMethods, projId }) {
       prop: { elm: elmId },
     };
     const obj = await storeMethods.prj.sendToServer(data);
+    const elm = storeMethods.elm.getElement(elmId);
+    storeMethods.elm.reload(elm, { add_link: true });
   }
 
   async function removeElementFromLink(link, elmId) {
@@ -158,16 +171,25 @@ export function useLinks({ storeMethods, projId }) {
     storeMethods.elm.reload(options.element);
   }
 
-  function reloadObj(obj) {
-    const link = getLink({ id: obj.id });
-    for (let act in obj.actions) {
-      switch (act) {
-        case "name":
-          link.name = obj.actions[act];
-          break;
-      }
+  async function reload(link) {
+    const data = {
+      type: "link",
+      oper: "get",
+      id: linkObjId(link),
+      prop: { dummy: "" },
+    };
+
+    const obj = await sendToServer(data);
+    console.log(obj);
+    for (const attr in obj.data){
+      link[attr] = obj.data[attr];
     }
   }
+
+  function reloadResLink(resIdObj){
+    const link = getLink(resIdObj);
+    reload(link);
+  };
 
   // return
   const lnkMethods = {
@@ -180,6 +202,7 @@ export function useLinks({ storeMethods, projId }) {
     reloadObj,
     getName,
     setName,
+    reloadResLink,
   };
   provide("lnkMethods", lnkMethods);
 

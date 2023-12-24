@@ -194,7 +194,8 @@ export function useElements({ storeMethods, projId }) {
         "point_part_id" in attr ||
         "division_id" in attr ||
         "from_div" in attr ||
-        "to_div" in attr
+        "to_div" in attr ||
+        "add_link" in attr
       ) {
         loadText(elm);
       }
@@ -208,7 +209,12 @@ export function useElements({ storeMethods, projId }) {
       ) {
         loadBarSegments(elm);
       }
-      if (!attr || "from_div" in attr || "to_div" in attr) {
+      if (
+        !attr ||
+        "from_div" in attr ||
+        "to_div" in attr ||
+        "add_link" in attr
+      ) {
         elm.points = [];
         loadBarPoints(elm);
       }
