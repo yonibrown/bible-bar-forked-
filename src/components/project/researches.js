@@ -1,5 +1,5 @@
 import { provide, ref } from "vue";
-import { sendToServer, sendFileToServer } from "../../server.js";
+import { sendToServer } from "../../server.js";
 
 export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
@@ -143,8 +143,7 @@ export function useResearches({ storeMethods, projId }) {
       file: prop.file,
     };
 
-    const obj = await sendFileToServer(data);
-    console.log(obj.data);
+    const obj = await storeMethods.prj.sendToServer(data);
     res.collections.push(obj.data.new_collection);
     obj.data.new_parts.forEach(function(prt){
       res.parts.push(prt);
