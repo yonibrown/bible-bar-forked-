@@ -60,8 +60,8 @@ export function newProjectData(projId) {
     data.reload = projectObjId(project.value);
     const obj = await sendToServer(data);
     if (obj.objects_to_reload) {
-      obj.objects_to_reload.links.forEach(lnkMethods.reloadObj);
-      obj.objects_to_reload.researches.forEach(resMethods.reloadObj);
+      // obj.objects_to_reload.links.forEach(lnkMethods.reloadObj);
+      // obj.objects_to_reload.researches.forEach(resMethods.reloadObj);
       obj.objects_to_reload.elements.forEach(elmMethods.reloadObj);
     }
     return obj;

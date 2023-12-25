@@ -52,16 +52,10 @@ export function useResearches({ storeMethods, projId }) {
     return "research" + res.id;
   }
 
-  function reloadObj(obj) {
-    const res = getResearch(obj.id);
-    for (let act in obj.actions) {
-      switch (act) {
-        case "name":
-          res.name = obj.actions[act];
-          break;
-      }
-    }
-  }
+  // function reloadObj(id) {
+  //   const res = getResearch(id);
+  //   console.log('do nothing');
+  // }
 
   // server
   async function changeAttr(res, attr) {
@@ -279,7 +273,7 @@ export function useResearches({ storeMethods, projId }) {
     deleteParts,
     duplicate,
     newPart,
-    reloadObj,
+    // reloadObj,
     getName,
     setName,
     uploadParts,

@@ -59,16 +59,10 @@ export function useLinks({ storeMethods, projId }) {
     return "link" + link.id;
   }
 
-  function reloadObj(obj) {
-    const link = getLink({ id: obj.id });
-    for (let act in obj.actions) {
-      switch (act) {
-        case "name":
-          link.name = obj.actions[act];
-          break;
-      }
-    }
-  }
+  // function reloadObj(id) {
+  //   const link = getLink({ id });
+  //   console.log('do nothing');
+  // }
 
   // access database
   async function changeAttr(link, attr) {
@@ -198,7 +192,7 @@ export function useLinks({ storeMethods, projId }) {
     removeElementFromLink,
     getCategory,
     createLink,
-    reloadObj,
+    // reloadObj,
     getName,
     setName,
     reloadResLink,
