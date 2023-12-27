@@ -4,7 +4,7 @@
     <select>
       <option value="1_1" selected="selected">נוסח המסורה</option>
     </select>
-    <span>חלוקה:</span>
+    <span>מפתח:</span>
     <select>
       <option value="1" selected="selected">חלוקה לפרקים</option>
     </select>
@@ -32,7 +32,7 @@
       />
     </span>
     <span v-if="displayScale">
-      <span>סקאלה:</span>
+      <span>חלוקה:</span>
       <sequence-scale
         :initialValue="initialScaleLevel"
         @changeValue="(newVal) => updateAttr('seq_level', newVal)"
