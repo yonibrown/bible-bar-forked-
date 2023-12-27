@@ -230,17 +230,17 @@ export function useResearches({ storeMethods, projId }) {
     return obj.data;
   }
 
-  async function loadIndex(seqIndex) {
+  async function loadIndexLevels(seqIndex) {
     const data = {
       type: "res_index",
-      oper: "get",
+      oper: "get_levels",
       id: seqIndex,
       prop: { dummy: "" },
     };
 
     const obj = await sendToServer(data);
 
-    return obj.data.levels;
+    return obj.data;
   }
 
   async function newPart(res, prop) {
@@ -265,7 +265,7 @@ export function useResearches({ storeMethods, projId }) {
     updateCollection,
     newCollection,
     addResearch,
-    loadIndex,
+    loadIndexLevels,
     loadIndexDivisions,
     deleteCollections,
     loadParts,
