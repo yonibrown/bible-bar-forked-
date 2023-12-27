@@ -180,7 +180,6 @@ export function useLinks({ storeMethods, projId }) {
     };
 
     const obj = await sendToServer(data);
-    console.log(obj);
     for (const attr in obj.data){
       link[attr] = obj.data[attr];
     }
