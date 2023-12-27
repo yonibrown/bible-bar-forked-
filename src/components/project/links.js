@@ -1,34 +1,19 @@
-import { provide, ref } from "vue";
+import { provide } from "vue";
 import { sendToServer } from "../../server.js";
+import { biLink } from "./biLink.js";
 
+// class
 export function useLinks({ storeMethods, projId }) {
-  const links = ref([]);
+  const links = biLink.links;
   provide("links", links);
 
   // access objects
   function getLink(prop) {
-    if (prop.id) {
-      return links.value.find(function (pLink) {
-        return pLink.id == prop.id;
-      });
-    }
-    if (prop.res) {
-      return links.value.find(function (pLink) {
-        return pLink.research_id == prop.res;
-      });
-    }
-    return null;
+    return biLink.getLink(prop);
   }
 
   function getCategory(linkId, col) {
-    const link = getLink({ id: linkId });
-    if (link == null) {
-      return null;
-    }
-    const cat = link.categories.find((pCat) => {
-      return pCat.col == col;
-    });
-    return cat;
+    return biLink.getCategory(linkId, col);
   }
 
   function linkObjId(link) {
@@ -39,24 +24,7 @@ export function useLinks({ storeMethods, projId }) {
   }
 
   function getName(prop) {
-    let link = null;
-    if (prop.id) {
-      link = getLink({ id: prop.id });
-    }
-    if (prop.obj) {
-      link = prop.obj;
-    }
-    if (!link) {
-      return "link";
-    }
-
-    if (link.research_id != 0) {
-      return storeMethods.res.getName({ id: link.research_id });
-    }
-    if (link.name != "") {
-      return link.name;
-    }
-    return "link" + link.id;
+    return biLink.getName(prop);
   }
 
   // function reloadObj(id) {
@@ -65,54 +33,12 @@ export function useLinks({ storeMethods, projId }) {
   // }
 
   // access database
-  async function changeAttr(link, attr) {
-    const data = {
-      type: "link",
-      oper: "set",
-      id: linkObjId(link),
-      prop: attr,
-    };
-
-    const obj = await sendToServer(data);
-  }
-
   async function setName(prop, newName) {
-    let link = null;
-    if (prop.id) {
-      link = getLink({ id: prop.id });
-    }
-    if (prop.obj) {
-      link = prop.obj;
-    }
-    if (!link) {
-      console.log("Error: link not found");
-      return;
-    }
-
-    if (link.research_id != 0) {
-      storeMethods.res.setName({ id: link.research_id });
-      return;
-    }
-
-    link.name = newName;
-    await changeAttr(link, { name: newName });
+    biLink.setName(prop,newName);
   }
 
   async function updateCategory(link, cat, attr) {
-    // update browser
-    Object.assign(cat, attr);
-
-    // update server
-    const data = {
-      type: "link",
-      oper: "upd_cat",
-      id: linkObjId(link),
-      prop: {
-        cat_id: cat,
-        cat_attr: attr,
-      },
-    };
-    const obj = await sendToServer(data);
+    link.updateCategory(cat, attr);
   }
 
   async function addElementToLink(link, elmId) {
@@ -132,17 +58,7 @@ export function useLinks({ storeMethods, projId }) {
   }
 
   async function removeElementFromLink(link, elmId) {
-    link.elements = link.elements.filter(function (arrElmId) {
-      return arrElmId != elmId;
-    });
-
-    const data = {
-      type: "link",
-      oper: "remove_elm",
-      id: linkObjId(link),
-      prop: { elm: elmId },
-    };
-    const obj = await sendToServer(data);
+    link.removeElementFromLink(elmId);
   }
 
   async function createLink(options) {
@@ -165,24 +81,14 @@ export function useLinks({ storeMethods, projId }) {
     storeMethods.elm.reload(options.element);
   }
 
-  async function reload(link) {
-    const data = {
-      type: "link",
-      oper: "get",
-      id: linkObjId(link),
-      prop: { dummy: "" },
-    };
-
-    const obj = await sendToServer(data);
-    for (const attr in obj.data){
-      link[attr] = obj.data[attr];
-    }
+  function reload(link) {
+    link.reload();
   }
 
-  function reloadResLink(resIdObj){
+  function reloadResLink(resIdObj) {
     const link = getLink(resIdObj);
     reload(link);
-  };
+  }
 
   // return
   const lnkMethods = {
@@ -192,7 +98,6 @@ export function useLinks({ storeMethods, projId }) {
     removeElementFromLink,
     getCategory,
     createLink,
-    // reloadObj,
     getName,
     setName,
     reloadResLink,

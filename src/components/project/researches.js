@@ -1,5 +1,6 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
+import { biResearch } from "./biResearch.js";
 
 export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
@@ -35,21 +36,7 @@ export function useResearches({ storeMethods, projId }) {
   }
 
   function getName(prop) {
-    let res = null;
-    if (prop.id) {
-      res = getResearch(prop.id);
-    }
-    if (prop.obj) {
-      res = prop.obj;
-    }
-    if (!res) {
-      return "research";
-    }
-
-    if (res.name != "") {
-      return res.name;
-    }
-    return "research" + res.id;
+    return biResearch.getName(prop);
   }
 
   // function reloadObj(id) {
@@ -273,7 +260,6 @@ export function useResearches({ storeMethods, projId }) {
     deleteParts,
     duplicate,
     newPart,
-    // reloadObj,
     getName,
     setName,
     uploadParts,

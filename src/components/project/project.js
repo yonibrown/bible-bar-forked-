@@ -3,6 +3,7 @@ import { useResearches } from "./researches.js";
 import { useElements } from "./elements.js";
 import { useLinks } from "./links.js";
 import { sendToServer } from "../../server.js";
+import { biLink } from "./biLink.js";
 
 export function newProjectData(projId) {
   const project = ref({
@@ -14,7 +15,7 @@ export function newProjectData(projId) {
   });
   const storeMethods = {};
 
-  const [researches, resMethods] = useResearches({storeMethods, projId});
+  const [researches, resMethods] = useResearches({ storeMethods, projId });
   storeMethods.res = resMethods;
 
   const [elements, elmMethods] = useElements({ storeMethods, projId });
@@ -42,8 +43,10 @@ export function newProjectData(projId) {
       desc: obj.data.desc,
     };
     elements.value = obj.data.elements;
-    links.value = obj.data.links;
+    // links.value = obj.data.links;
+    biLink.init(obj.data.links);
     researches.value = obj.data.researches;
+    console.log(researches.value);
   }
 
   async function storeElementList(elements) {
