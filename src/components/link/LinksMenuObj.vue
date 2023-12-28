@@ -14,7 +14,6 @@ const element = inject("element");
 
 const name = computed(function () {
   return props.link.name;
-  // return lnkMethods.getName({ obj: props.link });
 });
 
 function removeLink() {

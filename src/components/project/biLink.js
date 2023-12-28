@@ -134,7 +134,7 @@ export class biLink {
       id: this.dbId,
       prop: { elm: elmId },
     };
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
     const elm = biElement.getElement(elmId);
     elm.reload({ add_link: true });
   }

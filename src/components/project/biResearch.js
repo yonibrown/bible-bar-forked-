@@ -102,7 +102,7 @@ export class biResearch {
       file: prop.file,
     };
 
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
     this.collections.push(new biResearchCollection(obj.data.new_collection));
     obj.data.new_parts.forEach(function (prt) {
       this.parts.push(prt);
@@ -155,7 +155,7 @@ export class biResearch {
       prop,
     };
 
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
     obj.data.new_parts.forEach(function (prt) {
       this.parts.push(prt);
     });
@@ -171,7 +171,7 @@ export class biResearch {
         updAttr,
       },
     };
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
     this.loadParts();
   }
 
@@ -187,7 +187,7 @@ export class biResearch {
         partList,
       },
     };
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
     this.loadParts();
   }
 

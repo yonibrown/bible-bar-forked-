@@ -146,7 +146,7 @@ export class biElement {
         ...attr,
       },
     };
-    const obj = await storeMethods.prj.sendToServer(data);
+    const obj = await sendToServer(data);
 
     if (obj.data.res) {
       biResearch.addResearch(obj.data.res);
@@ -182,6 +182,11 @@ export class biElement {
     prop.originalLinks.forEach(function (lnk) {
       lnk.elements.push(elm.id);
     });
+  }
+
+  static reloadObj(id) {
+    const elm = this.getElement(id);
+    elm.reload();
   }
 }
 
