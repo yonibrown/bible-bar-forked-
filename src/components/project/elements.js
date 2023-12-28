@@ -1,229 +1,62 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
 import { seqTitle } from "./sequence.js";
+import { biElement } from "./biElement";
 
 export function useElements({ storeMethods, projId }) {
-  const elements = ref([]);
-  provide("elements", elements);
-
   // access objects
   function getElement(elementId) {
-    const element = elements.value.find((pElement) => {
-      return pElement.id == elementId;
-    });
-    return element;
+    return biElement.getElement(elementId);
   }
 
-  var tempElementId = -1;
   function openNewElement(position) {
-    elements.value.push({
-      id: tempElementId--,
-      proj: projId,
-      position,
-      type: "new",
-      name: "new element",
-    });
-  }
-
-  function elementObjId(elm) {
-    return {
-      proj: elm.proj,
-      elm: elm.id,
-    };
+    biElement.openNewElement(position);
   }
 
   function defaultName(elm) {
-    if (elm.type == "link") {
-      return storeMethods.lnk.getName({ id: elm.attr.link_id });
-    }
-    if (elm.type == "parts") {
-      return storeMethods.res.getName({ id: elm.attr.res });
-    }
-    if (elm.type == "text") {
-      return seqTitle(elm.attr.from_key);
-    }
-    if (elm.type == "new") {
-      return "new element";
-    }
-    return "element" + elm.id;
+    return elm.defaultName;
   }
 
   function getName(elm) {
-    if (elm.type == "link" || elm.type == "parts" || elm.name.trim() == "") {
-      return defaultName(elm);
-    }
     return elm.name;
   }
 
   // access database
-  async function elmCreate(attr, options) {
-    const data = {
-      type: "element",
-      oper: "new",
-      id: { dummy: "" },
-      prop: {
-        proj: projId,
-        ...attr,
-      },
-    };
-    const obj = await storeMethods.prj.sendToServer(data);
-
-    if (obj.data.res) {
-      storeMethods.res.addResearch(obj.data.res);
-    }
-    if (options && options.openingElement) {
-      const elm = options.openingElement;
-      if (elm.type == "new") {
-        elm.type = attr.type;
-        elm.id = obj.data.elm.id;
-        elm.attr = obj.data.elm.attr;
-      } else {
-        // elements = elements.concat([data]);
-        elements.value.push(obj.data.elm);
-      }
-    }
-    return obj.data.elm;
+  function elmCreate(attr, options) {
+    return biElement.create(attr, options);
   }
 
-  async function createFromElement(prop) {
-    const newAttr = { ...prop.attr };
-    const options = {};
-    options.openingElement = prop.originalElement;
-    if (prop.originalElement.type == "new") {
-      newAttr.position = prop.originalElement.position;
-      newAttr.name = prop.name;
-    } else {
-      newAttr.opening_element = prop.originalElement.id;
-      newAttr.name = "";
-      newAttr.position = prop.position;
-    }
-    const elm = await elmCreate(newAttr, options);
-
-    prop.originalLinks.forEach(function (lnk) {
-      lnk.elements.push(elm.id);
-    });
+  function createFromElement(prop) {
+    biElement.createFromElement(prop);
   }
 
-  // async function loadElement(elm) {
-  //   const data = {
-  //     type: "element",
-  //     oper: "get",
-  //     id: elementObjId(elm),
-  //     prop: { dummy: "" },
-  //   };
-
-  //   const obj = await sendToServer(data);
-  //   elm.attr = obj.data.attr;
-  //   return obj.data.attr;
-  // }
-
-  async function loadBarSegments(elm) {
-    const data = {
-      type: "element",
-      oper: "get_segments",
-      id: elementObjId(elm),
-      prop: { dummy: "" },
-    };
-
-    const obj = await sendToServer(data);
-    elm.segments = obj.data.segments;
+  function loadBarSegments(elm) {
+    elm.loadSegments();
   }
 
-  async function loadBarPoints(elm) {
-    const data = {
-      type: "element",
-      oper: "get_points",
-      id: elementObjId(elm),
-      prop: { dummy: "" },
-    };
-
-    const obj = await sendToServer(data);
-    elm.points = obj.data.points;
+  function loadBarPoints(elm) {
+    elm.loadPoints();
   }
 
-  async function changeName(elm, newName) {
-    if (elm.type == "link") {
-      storeMethods.lnk.setName({ id: elm.attr.link_id }, newName);
-      return;
-    }
-
-    if (elm.type == "parts") {
-      storeMethods.res.setName({ id: elm.attr.res }, newName);
-      return;
-    }
-
+  function changeName(elm, newName) {
     elm.name = newName;
-    changeAttr(elm, { name: newName });
   }
 
-  async function changeAttr(elm, attr) {
-    if (elm.type == "new") {
-      return;
-    }
-
-    const data = {
-      type: "element",
-      oper: "set",
-      id: elementObjId(elm),
-      prop: attr,
-    };
-
-    const obj = await sendToServer(data);
-    elm.attr = obj.data.attr;
-
-    reload(elm, attr);
+  function changeAttr(elm, attr) {
+    elm.changeAttr(attr);
   }
 
-  async function loadText(elm) {
-    const data = {
-      type: "element",
-      oper: "get_segment",
-      id: elementObjId(elm),
-      prop: { dummy: "" },
-    };
-
-    const obj = await sendToServer(data);
-    elm.verses = obj.data.part_list;
+  function loadText(elm) {
+    elm.loadText();
   }
 
   function reload(elm, attr) {
-    if (elm.type == "text") {
-      if (
-        !attr ||
-        "point_research_id" in attr ||
-        "point_part_id" in attr ||
-        "division_id" in attr ||
-        "from_div" in attr ||
-        "to_div" in attr ||
-        "add_link" in attr
-      ) {
-        loadText(elm);
-      }
-    }
-    if (elm.type == "bar") {
-      if (
-        !attr ||
-        "from_div" in attr ||
-        "to_div" in attr ||
-        "seq_level" in attr
-      ) {
-        loadBarSegments(elm);
-      }
-      if (
-        !attr ||
-        "from_div" in attr ||
-        "to_div" in attr ||
-        "add_link" in attr
-      ) {
-        elm.points = [];
-        loadBarPoints(elm);
-      }
-    }
+    elm.reload(attr);
   }
 
   function reloadObj(id) {
-    const elm = getElement(id);
-    reload(elm);
+    const elm = biElement.getElement(id);
+    elm.reload();
   }
 
   // return
@@ -244,5 +77,5 @@ export function useElements({ storeMethods, projId }) {
   };
   provide("elmMethods", elmMethods);
 
-  return [elements, elmMethods];
+  return [ elmMethods];
 }

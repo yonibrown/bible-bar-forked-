@@ -10,7 +10,7 @@ export class biLink {
   }
 
   // getters
-  static get links() {
+  static get list() {
     return this._arr;
   }
 
@@ -150,10 +150,10 @@ export class biLink {
   }
 
   //static
-  static init(list) {
+  static initList(list) {
     // list.forEach(function (rec) {
     //   let obj = new biLink(rec);
-    //   biLink.links.value.push(obj);
+    //   biLink._arr.value.push(obj);
     // });
     biLink._arr.value = list.map(function (rec) {
       return new biLink(rec);
@@ -162,12 +162,12 @@ export class biLink {
 
   static getLink(prop) {
     if (prop.id) {
-      return biLink.links.value.find(function (pLink) {
+      return biLink._arr.value.find(function (pLink) {
         return pLink.id == prop.id;
       });
     }
     if (prop.res) {
-      return biLink.links.value.find(function (pLink) {
+      return biLink._arr.value.find(function (pLink) {
         return pLink.research_id == prop.res;
       });
     }

@@ -1,11 +1,8 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
-import { biResearch, biResearchCollection } from "./biResearch.js";
+import { biResearch } from "./biResearch.js";
 
 export function useResearches({ storeMethods, projId }) {
-  const researches = ref([]);
-  provide("researches", researches);
-
   // local objects
   function getResearch(researchId) {
     return biResearch.getResearch(researchId);
@@ -112,5 +109,5 @@ export function useResearches({ storeMethods, projId }) {
   };
   provide("resMethods", resMethods);
 
-  return [researches, resMethods];
+  return [ resMethods];
 }

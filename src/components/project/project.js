@@ -5,6 +5,7 @@ import { useLinks } from "./links.js";
 import { sendToServer } from "../../server.js";
 import { biLink } from "./biLink.js";
 import { biResearch } from "./biResearch";
+import { biElement } from "./biElement";
 
 export function newProjectData(projId) {
   const project = ref({
@@ -16,13 +17,19 @@ export function newProjectData(projId) {
   });
   const storeMethods = {};
 
-  const [researches, resMethods] = useResearches({ storeMethods, projId });
+  biElement.setProjectId(projId);
+
+  provide("elements", biElement.list);
+  provide("researches", biResearch.list);
+  provide("links", biLink.list);
+
+  const [resMethods] = useResearches({ storeMethods, projId });
   storeMethods.res = resMethods;
 
-  const [elements, elmMethods] = useElements({ storeMethods, projId });
+  const [elmMethods] = useElements({ storeMethods, projId });
   storeMethods.elm = elmMethods;
 
-  const [links, lnkMethods] = useLinks({ storeMethods, projId });
+  const [lnkMethods] = useLinks({ storeMethods, projId });
   storeMethods.lnk = lnkMethods;
 
   function projectObjId(proj) {
@@ -43,13 +50,14 @@ export function newProjectData(projId) {
       name: obj.data.name,
       desc: obj.data.desc,
     };
-    elements.value = obj.data.elements;
+    // elements.value = obj.data.elements;
+    biElement.initList(obj.data.elements)
 
     // links.value = obj.data.links;
-    biLink.init(obj.data.links);
+    biLink.initList(obj.data.links);
 
     // researches.value = obj.data.researches;
-    biResearch.init(obj.data.researches);
+    biResearch.initList(obj.data.researches);
   }
 
   async function storeElementList(elements) {
@@ -113,10 +121,8 @@ export function newProjectData(projId) {
   return {
     project,
     prjMethods,
-    researches,
     resMethods,
-    elements,
     elmMethods,
-    links,
+    elements: biElement.list
   };
 }

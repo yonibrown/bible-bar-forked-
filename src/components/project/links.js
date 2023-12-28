@@ -4,8 +4,6 @@ import { biLink } from "./biLink.js";
 
 // class
 export function useLinks({ storeMethods, projId }) {
-  const links = biLink.links;
-  provide("links", links);
 
   // access objects
   function getLink(prop) {
@@ -103,5 +101,5 @@ export function useLinks({ storeMethods, projId }) {
   };
   provide("lnkMethods", lnkMethods);
 
-  return [links, lnkMethods];
+  return [lnkMethods];
 }

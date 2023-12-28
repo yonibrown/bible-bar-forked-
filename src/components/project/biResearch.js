@@ -6,15 +6,16 @@ export class biResearch {
   static _arr = ref([]);
 
   constructor(rec) {
-    console.log("constructor");
-    this._obj.id = rec.id;
-    this._obj.name = rec.name;
-    this._obj.collections = biResearchCollection.init(rec.collections);
-    this._obj.parts = rec.parts;
+    this._obj = {
+      id: rec.id,
+      name: rec.name,
+      collections: biResearchCollection.initList(rec.collections),
+      parts: rec.parts,
+    };
   }
 
   // getters
-  static get researches() {
+  static get list() {
     return this._arr;
   }
 
@@ -118,7 +119,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections = biResearchCollection.init(obj.data);
+    this.collections = biResearchCollection.initList(obj.data);
   }
 
   async deleteCollections(colList) {
@@ -143,7 +144,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    res.parts = obj.data;
+    this.parts = obj.data;
   }
 
   async newPart(prop) {
@@ -191,25 +192,19 @@ export class biResearch {
   }
 
   //static
-  static init(list) {
-    // list.forEach(function (rec) {
-    //   let obj = new biResearch(rec);
-    //   biResearch._arr.value.push(obj);
-    // });
-    console.log("init");
-    biResearch._arr.value = list.map(function (rec) {
-      console.log(rec);
-      return new biResearch(rec);
+  static initList(list) {
+    const cls = this;
+    this._arr.value = list.map(function (rec) {
+      return new cls(rec);
     });
   }
 
   static addResearch(res) {
-    biResearch.researches.value.push(new biResearch(res));
+    this._arr.value.push(new biResearch(res));
   }
 
   static getResearch(researchId) {
-    console.log("getResearch", researchId, biResearch._arr.value);
-    return biResearch.researches.value.find((pResearch) => {
+    return this._arr.value.find((pResearch) => {
       return pResearch.id == researchId;
     });
   }
@@ -268,7 +263,7 @@ export class biResearch {
   }
 }
 
-export class biResearchCollection {
+class biResearchCollection {
   constructor(rec) {
     this._obj = rec;
   }
@@ -309,7 +304,7 @@ export class biResearchCollection {
     biLink.reloadResLink({ res: this.res });
   }
 
-  static init(list) {
+  static initList(list) {
     return list.map(function (rec) {
       return new biResearchCollection(rec);
     });
