@@ -8,41 +8,20 @@ export function useResearches({ storeMethods, projId }) {
 
   // local objects
   function getResearch(researchId) {
-    const research = researches.value.find((pResearch) => {
-      return pResearch.id == researchId;
-    });
-    return research;
+    return biResearch.getResearch(researchId);
   }
 
   function getCollection(researchId, colId) {
-    const research = getResearch(researchId);
-    if (research == null) {
-      return null;
-    }
-    const col = research.collections.find((pCol) => {
-      return pCol.id == colId;
-    });
-    return col;
+    return biResearch.getCollection(researchId, colId);
   }
 
   function addResearch(res) {
-    researches.value.push(res);
-  }
-
-  function researchObjId(res) {
-    return {
-      res: res.id,
-    };
+    biResearch.addResearch(res);
   }
 
   function getName(prop) {
     return biResearch.getName(prop);
   }
-
-  // function reloadObj(id) {
-  //   const res = getResearch(id);
-  //   console.log('do nothing');
-  // }
 
   // server
   function setName(prop, newName) {
@@ -57,105 +36,28 @@ export function useResearches({ storeMethods, projId }) {
     res.newCollection(newAttr);
   }
 
-  async function deleteCollections(res, colList) {
-    const data = {
-      type: "research",
-      oper: "delete_collections",
-      id: researchObjId(res),
-      prop: { colList },
-    };
-    const obj = await sendToServer(data);
-    await loadParts(res);
-    loadCollections(res);
-    storeMethods.lnk.reloadResLink(researchObjId(res));
+  function deleteCollections(res, colList) {
+    res.deleteCollections(colList);
   }
 
-  async function uploadParts(res, prop) {
-    const data = {
-      type: "research",
-      oper: "upload_parts",
-      id: researchObjId(res),
-      prop: { dummy: "" },
-      file: prop.file,
-    };
-
-    const obj = await storeMethods.prj.sendToServer(data);
-    res.collections.push(obj.data.new_collection);
-    obj.data.new_parts.forEach(function (prt) {
-      res.parts.push(prt);
-    });
-    // await loadCollections(res);
-    // loadParts(res);
-    storeMethods.lnk.reloadResLink(researchObjId(res));
+  function uploadParts(res, prop) {
+    res.uploadParts(prop);
   }
 
-  async function loadCollections(res) {
-    const data = {
-      type: "research",
-      oper: "get_col_list",
-      id: researchObjId(res),
-      prop: { dummy: "" },
-    };
-
-    const obj = await sendToServer(data);
-    res.collections = obj.data;
+  function loadParts(res, sortAttr) {
+    res.loadParts(sortAttr);
   }
 
-  async function loadParts(res, sortAttr = { dummy: "" }) {
-    const data = {
-      type: "research",
-      oper: "get_prt_list",
-      id: researchObjId(res),
-      prop: sortAttr,
-    };
-
-    const obj = await sendToServer(data);
-    res.parts = obj.data;
+  function updateParts(res, partList, updAttr) {
+    res.updateParts(partList, updAttr);
   }
 
-  async function updateParts(res, partList, updAttr) {
-    const data = {
-      type: "research",
-      oper: "update_parts",
-      id: researchObjId(res),
-      prop: {
-        partList,
-        updAttr,
-      },
-    };
-    const obj = await storeMethods.prj.sendToServer(data);
-    loadParts(res);
+  function deleteParts(res, partList) {
+    res.deleteParts(partList);
   }
 
-  async function deleteParts(res, partList) {
-    if (partList.length == 0) {
-      return;
-    }
-    const data = {
-      type: "research",
-      oper: "delete_parts",
-      id: researchObjId(res),
-      prop: {
-        partList,
-      },
-    };
-    const obj = await storeMethods.prj.sendToServer(data);
-    loadParts(res);
-    // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
-  }
-
-  async function duplicate(researchObjId, partList) {
-    const data = {
-      type: "research",
-      oper: "duplicate",
-      id: researchObjId,
-      prop: {
-        partList,
-      },
-    };
-
-    const obj = await sendToServer(data);
-    return obj.data.new_res;
+  function duplicate(researchObjId, partList) {
+    return biResearch.duplicate(researchObjId, partList);
   }
 
   async function loadIndexDivisions(seqIndex, selectedKey) {
@@ -186,18 +88,7 @@ export function useResearches({ storeMethods, projId }) {
   }
 
   async function newPart(res, prop) {
-    const data = {
-      type: "research",
-      oper: "new_part",
-      id: researchObjId(res),
-      prop,
-    };
-
-    const obj = await storeMethods.prj.sendToServer(data);
-    obj.data.new_parts.forEach(function (prt) {
-      res.parts.push(prt);
-    });
-    // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);
+    res.newPart(prop);
   }
 
   // return
