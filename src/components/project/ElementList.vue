@@ -25,7 +25,6 @@ const prjMethods = inject('prjMethods');
 const elmMethods = inject("elmMethods");
 
 const dispElements = computed(function () {
-  console.log(props.elements);
   return props.elements
     .filter(function (a) {
       return +a.position >= 0;

@@ -27,9 +27,8 @@
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { newProjectData } from "./project.js";
-import { biElement } from "./biElement";
 
 const props = defineProps(["id"]);
 

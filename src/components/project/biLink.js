@@ -1,6 +1,7 @@
 import { ref } from "vue";
 import { sendToServer } from "../../server.js";
 import { biResearch } from "./biResearch.js";
+import { biElement } from "./biElement.js";
 
 export class biLink {
   static _arr = ref([]);
@@ -67,7 +68,7 @@ export class biLink {
 
   set name(newName) {
     if (this.research_id != 0) {
-      biResearch.setName({ id: link.research_id });
+      biResearch.setName({ id: link.research_id },newName);
       return;
     }
 
@@ -121,6 +122,22 @@ export class biLink {
     const obj = await sendToServer(data);
   }
 
+  async addElementToLink(elmId) {
+    if (!this.elements.includes(elmId)) {
+      this.elements.push(elmId);
+    }
+
+    const data = {
+      type: "link",
+      oper: "add_elm",
+      id: this.dbId,
+      prop: { elm: elmId },
+    };
+    const obj = await storeMethods.prj.sendToServer(data);
+    const elm = biElement.getElement(elmId);
+    elm.reload({ add_link: true });
+  }
+
   removeElementFromLink(elmId) {
     this.elements = this.elements.filter(function (arrElmId) {
       return arrElmId != elmId;
@@ -151,10 +168,6 @@ export class biLink {
 
   //static
   static initList(list) {
-    // list.forEach(function (rec) {
-    //   let obj = new biLink(rec);
-    //   biLink._arr.value.push(obj);
-    // });
     biLink._arr.value = list.map(function (rec) {
       return new biLink(rec);
     });
@@ -216,5 +229,24 @@ export class biLink {
   static reloadResLink(resIdObj) {
     const link = biLink.getLink(resIdObj);
     link.reload();
+  }
+
+  static async createLink(options) {
+    const prop = {
+      proj: projId,
+      research_id: options.researchId,
+      main_element: options.element.id,
+    };
+
+    const data = {
+      type: "link",
+      oper: "new",
+      id: { dummy: "" },
+      prop,
+    };
+    const obj = await sendToServer(data);
+
+    this._arr.value.push(new biLink(obj.data));
+    options.element.reload();
   }
 }

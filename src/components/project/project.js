@@ -50,13 +50,8 @@ export function newProjectData(projId) {
       name: obj.data.name,
       desc: obj.data.desc,
     };
-    // elements.value = obj.data.elements;
     biElement.initList(obj.data.elements)
-
-    // links.value = obj.data.links;
     biLink.initList(obj.data.links);
-
-    // researches.value = obj.data.researches;
     biResearch.initList(obj.data.researches);
   }
 
