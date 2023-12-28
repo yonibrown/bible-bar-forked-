@@ -21,8 +21,6 @@ export class biLink {
   get name() {
     const link = this._obj;
     if (link.research_id != 0) {
-      // console.log("not yet implemented");
-      // return "research name";
       return biResearch.getName({ id: link.research_id });
     }
     if (link.name != "") {
@@ -69,8 +67,7 @@ export class biLink {
 
   set name(newName) {
     if (this.research_id != 0) {
-      console.log("not yet implemented");
-      //   storeMethods.res.setName({ id: link.research_id });
+      biResearch.setName({ id: link.research_id });
       return;
     }
 
@@ -153,10 +150,13 @@ export class biLink {
   }
 
   //static
-  static init(lnkList) {
-    lnkList.forEach(function (linkRec) {
-      let linkObj = new biLink(linkRec);
-      biLink.links.value.push(linkObj);
+  static init(list) {
+    // list.forEach(function (rec) {
+    //   let obj = new biLink(rec);
+    //   biLink.links.value.push(obj);
+    // });
+    biLink._arr.value = list.map(function (rec) {
+      return new biLink(rec);
     });
   }
 
@@ -211,5 +211,10 @@ export class biLink {
     }
 
     link.name = newName;
+  }
+
+  static reloadResLink(resIdObj) {
+    const link = biLink.getLink(resIdObj);
+    link.reload();
   }
 }

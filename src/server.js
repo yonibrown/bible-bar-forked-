@@ -1,8 +1,8 @@
 // local
-const basicPath = `http://localhost/bibar-vue-php/`;
+// const basicPath = `http://localhost/bibar-vue-php/`;
 
 // bibar.site
-// const basicPath = `https://bibar.site/`;
+const basicPath = `https://bibar.site/`;
 
 const apiUrl = basicPath + `obj_api.php`;
 
