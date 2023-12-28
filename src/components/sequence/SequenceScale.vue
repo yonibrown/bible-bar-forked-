@@ -45,10 +45,10 @@ watch(selected, (newVal) => {
   }
 });
 
-loadIndex();
+loadScale();
 
-async function loadIndex() {
-  indexLevels.value = await resMethods.loadIndex(seqIndex.value);
+async function loadScale() {
+  indexLevels.value = await resMethods.loadIndexLevels(seqIndex.value);
 }
 
 async function changeScale() {

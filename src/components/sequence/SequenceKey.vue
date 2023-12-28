@@ -44,10 +44,10 @@ function updateKey(key) {
       division_id: lvl.division_id,
     };
   });
-  loadIndex();
+  loadKey();
 }
 
-async function loadIndex() {
+async function loadKey() {
   keyLevels.value = await resMethods.loadIndexDivisions(
     seqIndex.value,
     selectedKey
@@ -65,7 +65,7 @@ async function changeKeyLevel(lvlIdx, div) {
 
   // refresh div lists
   if (lvlIdx + 1 < selectedKey.length) {
-    await loadIndex();
+    await loadKey();
   }
 
   // emit changes
