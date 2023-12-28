@@ -221,15 +221,9 @@ export function useElements({ storeMethods, projId }) {
     }
   }
 
-  function reloadObj(obj) {
-    const elm = getElement(obj.id);
-    for (let act in obj.actions) {
-      switch (act) {
-        case "reload":
-          reload(elm);
-          break;
-      }
-    }
+  function reloadObj(id) {
+    const elm = getElement(id);
+    reload(elm);
   }
 
   // return

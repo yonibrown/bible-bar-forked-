@@ -1,5 +1,6 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
+import { biResearch } from "./biResearch.js";
 
 export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
@@ -35,33 +36,13 @@ export function useResearches({ storeMethods, projId }) {
   }
 
   function getName(prop) {
-    let res = null;
-    if (prop.id) {
-      res = getResearch(prop.id);
-    }
-    if (prop.obj) {
-      res = prop.obj;
-    }
-    if (!res) {
-      return "research";
-    }
-
-    if (res.name != "") {
-      return res.name;
-    }
-    return "research" + res.id;
+    return biResearch.getName(prop);
   }
 
-  function reloadObj(obj) {
-    const res = getResearch(obj.id);
-    for (let act in obj.actions) {
-      switch (act) {
-        case "name":
-          res.name = obj.actions[act];
-          break;
-      }
-    }
-  }
+  // function reloadObj(id) {
+  //   const res = getResearch(id);
+  //   console.log('do nothing');
+  // }
 
   // server
   async function changeAttr(res, attr) {
@@ -236,17 +217,17 @@ export function useResearches({ storeMethods, projId }) {
     return obj.data;
   }
 
-  async function loadIndex(seqIndex) {
+  async function loadIndexLevels(seqIndex) {
     const data = {
       type: "res_index",
-      oper: "get",
+      oper: "get_levels",
       id: seqIndex,
       prop: { dummy: "" },
     };
 
     const obj = await sendToServer(data);
 
-    return obj.data.levels;
+    return obj.data;
   }
 
   async function newPart(res, prop) {
@@ -271,7 +252,7 @@ export function useResearches({ storeMethods, projId }) {
     updateCollection,
     newCollection,
     addResearch,
-    loadIndex,
+    loadIndexLevels,
     loadIndexDivisions,
     deleteCollections,
     loadParts,
@@ -279,7 +260,6 @@ export function useResearches({ storeMethods, projId }) {
     deleteParts,
     duplicate,
     newPart,
-    reloadObj,
     getName,
     setName,
     uploadParts,
