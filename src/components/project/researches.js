@@ -1,6 +1,6 @@
 import { provide, ref } from "vue";
 import { sendToServer } from "../../server.js";
-import { biResearch } from "./biResearch.js";
+import { biResearch, biResearchCollection } from "./biResearch.js";
 
 export function useResearches({ storeMethods, projId }) {
   const researches = ref([]);
@@ -45,61 +45,16 @@ export function useResearches({ storeMethods, projId }) {
   // }
 
   // server
-  async function changeAttr(res, attr) {
-    const data = {
-      type: "research",
-      oper: "set",
-      id: researchObjId(res),
-      prop: attr,
-    };
-
-    const obj = await sendToServer(data);
+  function setName(prop, newName) {
+    biResearch.setName(prop, newName);
   }
 
-  async function setName(prop, newName) {
-    let res = null;
-    if (prop.id) {
-      res = getResearch(prop.id);
-    }
-    if (prop.obj) {
-      res = prop.obj;
-    }
-    if (!res) {
-      console.log("Error: research not found");
-      return;
-    }
-
-    res.name = newName;
-    await changeAttr(res, { name: newName });
+  function updateCollection(col, newAttr) {
+    col.changeAttr(newAttr);
   }
 
-  async function updateCollection(col, newAttr) {
-    Object.assign(col, newAttr);
-    const data = {
-      type: "research",
-      oper: "update_collection",
-      id: { res: col.res },
-      prop: {
-        col: col.id,
-        ...newAttr,
-      },
-    };
-
-    const obj = await sendToServer(data);
-    storeMethods.lnk.reloadResLink({ res: col.res });
-  }
-
-  async function newCollection(res, newAttr) {
-    const data = {
-      type: "research",
-      oper: "new_collection",
-      id: researchObjId(res),
-      prop: newAttr,
-    };
-
-    const obj = await sendToServer(data);
-    res.collections.push(obj.data);
-    storeMethods.lnk.reloadResLink(researchObjId(res));
+  function newCollection(res, newAttr) {
+    res.newCollection(newAttr);
   }
 
   async function deleteCollections(res, colList) {
@@ -126,7 +81,7 @@ export function useResearches({ storeMethods, projId }) {
 
     const obj = await storeMethods.prj.sendToServer(data);
     res.collections.push(obj.data.new_collection);
-    obj.data.new_parts.forEach(function(prt){
+    obj.data.new_parts.forEach(function (prt) {
       res.parts.push(prt);
     });
     // await loadCollections(res);
@@ -239,7 +194,7 @@ export function useResearches({ storeMethods, projId }) {
     };
 
     const obj = await storeMethods.prj.sendToServer(data);
-    obj.data.new_parts.forEach(function(prt){
+    obj.data.new_parts.forEach(function (prt) {
       res.parts.push(prt);
     });
     // storeMethods.elm.reloadObjects(obj.data.objects_to_reload);

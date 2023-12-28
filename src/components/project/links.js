@@ -34,7 +34,7 @@ export function useLinks({ storeMethods, projId }) {
 
   // access database
   async function setName(prop, newName) {
-    biLink.setName(prop,newName);
+    biLink.setName(prop, newName);
   }
 
   async function updateCategory(link, cat, attr) {
@@ -86,8 +86,7 @@ export function useLinks({ storeMethods, projId }) {
   }
 
   function reloadResLink(resIdObj) {
-    const link = getLink(resIdObj);
-    reload(link);
+    biLink.reloadResLink(resIdObj);
   }
 
   // return
