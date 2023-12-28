@@ -21,10 +21,6 @@ export function useResearches({ storeMethods, projId }) {
   }
 
   // server
-  function setName(prop, newName) {
-    biResearch.setName(prop, newName);
-  }
-
   function updateCollection(col, newAttr) {
     col.changeAttr(newAttr);
   }
@@ -104,7 +100,6 @@ export function useResearches({ storeMethods, projId }) {
     duplicate,
     newPart,
     getName,
-    setName,
     uploadParts,
   };
   provide("resMethods", resMethods);

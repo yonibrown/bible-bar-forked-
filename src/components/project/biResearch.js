@@ -232,22 +232,6 @@ export class biResearch {
     return res.name;
   }
 
-  static setName(prop, newName) {
-    let res = null;
-    if (prop.id) {
-      res = biResearch.getResearch(prop.id);
-    }
-    if (prop.obj) {
-      res = prop.obj;
-    }
-    if (!res) {
-      console.log("Error: research not found");
-      return;
-    }
-
-    res.name = newName;
-  }
-
   static async duplicate(researchObjId, partList) {
     const data = {
       type: "research",

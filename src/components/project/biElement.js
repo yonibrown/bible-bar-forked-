@@ -43,6 +43,9 @@ export class biElement {
   }
 
   get name() {
+    if (this._obj.name.trim() == "") {
+      return this.defaultName;
+    }
     return this._obj.name;
   }
 
@@ -99,6 +102,8 @@ export class biElement {
 
   static init(rec) {
     switch (rec.type) {
+      case "new":
+        return new biElmNew(rec);
       case "bar":
         return new biElmBar(rec);
       case "text":
@@ -286,7 +291,8 @@ class biElmParts extends biElement {
   }
 
   set name(newName) {
-    biResearch.setName({ id: this.attr.res }, newName);
+    const res = biResearch.getResearch(this.attr.res);
+    res.name = newName;
   }
 }
 class biElmLink extends biElement {
@@ -299,6 +305,7 @@ class biElmLink extends biElement {
   }
 
   set name(newName) {
-    biLink.setName({ id: this.attr.link_id }, newName);
+    const link = biLink.getLink({ id: this.attr.link_id });
+    link.name = newName;
   }
 }

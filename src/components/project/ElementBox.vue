@@ -46,10 +46,8 @@ function defaultName() {
   return elmMethods.defaultName(props.element);
 }
 
-// const elementName = ref("");
-// elementName.value = elmMethods.getName(props.element);
 const elementName = computed(function () {
-  return elmMethods.getName(props.element);
+  return props.element.name;
 });
 
 function submitName(newName) {

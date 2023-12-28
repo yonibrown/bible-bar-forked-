@@ -30,10 +30,6 @@ export function useLinks({ storeMethods, projId }) {
   // }
 
   // access database
-  function setName(prop, newName) {
-    biLink.setName(prop, newName);
-  }
-
   function updateCategory(link, cat, attr) {
     link.updateCategory(cat, attr);
   }
@@ -63,7 +59,6 @@ export function useLinks({ storeMethods, projId }) {
     getCategory,
     createLink,
     getName,
-    setName,
     reloadResLink,
   };
   provide("lnkMethods", lnkMethods);

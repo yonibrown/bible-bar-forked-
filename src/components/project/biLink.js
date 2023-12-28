@@ -68,7 +68,8 @@ export class biLink {
 
   set name(newName) {
     if (this.research_id != 0) {
-      biResearch.setName({ id: link.research_id },newName);
+      const res = biResearch.getResearch(link.research_id);
+      res.name = newName;
       return;
     }
 
@@ -208,22 +209,6 @@ export class biLink {
     }
 
     return link.name;
-  }
-
-  static async setName(prop, newName) {
-    let link = null;
-    if (prop.id) {
-      link = biLink.getLink({ id: prop.id });
-    }
-    if (prop.obj) {
-      link = prop.obj;
-    }
-    if (!link) {
-      console.log("Error: link not found");
-      return;
-    }
-
-    link.name = newName;
   }
 
   static reloadResLink(resIdObj) {
