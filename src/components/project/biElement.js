@@ -64,11 +64,10 @@ export class biElement {
   }
 
   //methods
-  setName(newName){
+  setName(newName) {
     this._obj.name = newName;
     this.changeAttr({ name: newName });
   }
-
 
   async changeAttr(attr) {
     const data = {
@@ -124,10 +123,6 @@ export class biElement {
 }
 
 class biElmBar extends biElement {
-  // constructor(rec){
-
-  // }
-
   //getters
   get segments() {
     return this._segments;
@@ -163,16 +158,25 @@ class biElmBar extends biElement {
   }
 
   reload(attr) {
+    console.log(attr);
     if (
       !attr ||
       "from_div" in attr ||
       "to_div" in attr ||
-      "seq_level" in attr
+      "seq_level" in attr ||
+      "division_id" in attr
     ) {
+      this._segments = [];
       this.loadSegments();
     }
 
-    if (!attr || "from_div" in attr || "to_div" in attr || "add_link" in attr) {
+    if (
+      !attr ||
+      "from_div" in attr ||
+      "to_div" in attr ||
+      "add_link" in attr ||
+      "division_id" in attr
+    ) {
       this._points = [];
       this.loadPoints();
     }
@@ -187,6 +191,7 @@ class biElmNew extends biElement {
     // do nothing
   }
 }
+
 class biElmText extends biElement {
   get defaultName() {
     return biElement.seqTitle(this.attr.from_key);
@@ -219,6 +224,7 @@ class biElmText extends biElement {
     }
   }
 }
+
 class biElmParts extends biElement {
   get defaultName() {
     return biResearch.getName({ id: this.attr.res });
@@ -233,6 +239,7 @@ class biElmParts extends biElement {
     res.name = newName;
   }
 }
+
 class biElmLink extends biElement {
   get defaultName() {
     return biLink.getName({ id: this.attr.link_id });
