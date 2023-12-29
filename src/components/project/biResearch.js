@@ -237,6 +237,35 @@ export class biResearch {
     const obj = await sendToServer(data);
     return obj.data.new_res;
   }
+
+  static async loadIndexDivisions(seqIndex, selectedKey) {
+    const data = {
+      type: "res_index",
+      oper: "get_divisions",
+      id: seqIndex,
+      prop: {
+        key: selectedKey,
+      },
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data;
+  }
+
+  static async loadIndexLevels(seqIndex) {
+    const data = {
+      type: "res_index",
+      oper: "get_levels",
+      id: seqIndex,
+      prop: { dummy: "" },
+    };
+
+    const obj = await sendToServer(data);
+
+    return obj.data;
+  }
+
+
 }
 
 class biResearchCollection {

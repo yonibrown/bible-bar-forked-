@@ -17,12 +17,12 @@
 <script setup>
 const props = defineProps(["point"]);
 import { computed, inject } from "vue";
+import { biLink } from "../project/biLink.js";
 
-const lnkMethods = inject("lnkMethods");
 const barOpenText = inject("openText");
 
 const category = computed(() => {
-  return lnkMethods.getCategory(props.point.link, props.point.col);
+  return biLink.getCategory(props.point.link, props.point.col);
 });
 const tooltip = computed(() => {
   return props.point.verse.replaceAll(",", " ");

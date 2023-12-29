@@ -9,16 +9,16 @@
 
 <script setup>
 import { computed, inject, ref, onMounted } from "vue";
+import { biLink } from "../project/biLink.js";
 
 const props = defineProps(["word", "verse"]);
 const linkIds = inject("linkIds");
-const lnkMethods = inject("lnkMethods");
 
 const wordObj = ref(null);
 
 const categoryStyle = computed(function () {
   if (linkIds.value.includes(props.word.link)) {
-    let cat = lnkMethods.getCategory(props.word.link, props.word.col);
+    let cat = biLink.getCategory(props.word.link, props.word.col);
     if (cat && cat.display) {
       return {
         backgroundColor: cat.color,

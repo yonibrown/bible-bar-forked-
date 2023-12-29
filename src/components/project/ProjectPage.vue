@@ -27,38 +27,28 @@
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
-import { ref, provide,computed ,watch} from "vue";
-import { useResearches } from "./researches.js";
-import { useElements } from "./elements.js";
-import { useLinks } from "./links.js";
+import { ref, provide, computed } from "vue";
 import { biProject } from "./biProject.js";
-import { biLink } from "./biLink.js";
-import { biResearch } from "./biResearch";
 
 const props = defineProps(["id"]);
 
 const project = ref(new biProject(props.id));
-provide("project",project);
+provide("project", project);
 
-const elements = computed(function(){
+const elements = computed(function () {
   return project.value.elements;
 });
 provide("elements", elements);
 
-const links = computed(function(){
+const links = computed(function () {
   return project.value.links;
 });
 provide("links", links);
 
-const researches = computed(function(){
+const researches = computed(function () {
   return project.value.researches;
 });
 provide("researches", researches);
-
-
-useResearches();
-useElements();
-useLinks();
 
 const listRef = ref();
 

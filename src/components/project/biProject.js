@@ -94,7 +94,7 @@ export class biProject {
       type: "project",
       oper: "save_elements",
       id: this.dbId,
-      prop: { list },
+      prop: { elements: list },
     };
     sendToServer(data);
   }

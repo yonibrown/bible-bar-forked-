@@ -7,7 +7,7 @@
           :key="cat.id"
           :category="cat"
           @update-category="
-            (data) => lnkMethods.updateCategory(link, cat, data)
+            (data) => link.updateCategory( cat, data)
           "
         ></link-category>
       </table>
@@ -18,12 +18,12 @@
 <script setup>
 import LinkCategory from "../link/LinkCategory.vue";
 import { computed, inject } from "vue";
+import { biProject } from "../project/biProject.js";
 
 const research = inject("research");
-const lnkMethods = inject("lnkMethods");
 
 const link = computed(function () {
-  return lnkMethods.getLink({ res: research.value.id });
+  return biProject.main.getLink({ res: research.value.id });
 });
 
 const categories = computed(function () {

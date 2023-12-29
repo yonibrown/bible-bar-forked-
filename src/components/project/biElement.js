@@ -60,12 +60,17 @@ export class biElement {
     this._obj.attr = obj;
   }
 
-  set name(newName) {
+  set position(obj) {
+    this._obj.position = obj;
+  }
+
+  //methods
+  setName(newName){
     this._obj.name = newName;
     this.changeAttr({ name: newName });
   }
 
-  //methods
+
   async changeAttr(attr) {
     const data = {
       type: "element",

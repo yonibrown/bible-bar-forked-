@@ -9,7 +9,6 @@
 import MenuButton from "../ui/MenuButton.vue";
 import { computed, inject } from "vue";
 const props = defineProps(["link"]);
-const lnkMethods = inject("lnkMethods");
 const element = inject("element");
 
 const name = computed(function () {
@@ -17,7 +16,7 @@ const name = computed(function () {
 });
 
 function removeLink() {
-  lnkMethods.removeElementFromLink(props.link, element.value.id);
+  props.link.removeElementFromLink( element.value.id);
 }
 
 const createElement = inject("createElement");

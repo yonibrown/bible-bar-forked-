@@ -5,7 +5,7 @@
         v-for="cat in categories"
         :key="cat.id"
         :category="cat"
-        @update-category="(data) => lnkMethods.updateCategory(link, cat, data)"
+        @update-category="(data) => link.updateCategory( cat, data)"
       ></link-category>
     </table>
   </div>
@@ -14,12 +14,12 @@
 <script setup>
 import LinkCategory from "./LinkCategory.vue";
 import { computed, inject } from "vue";
+import { biProject } from "../project/biProject.js";
 
 const elementAttr = inject("elementAttr");
-const lnkMethods = inject("lnkMethods");
 
 const link = computed(function () {
-  return lnkMethods.getLink({ id: elementAttr.value.link_id });
+  return biProject.main.getLink({ id: elementAttr.value.link_id });
 });
 
 const categories = computed(function () {

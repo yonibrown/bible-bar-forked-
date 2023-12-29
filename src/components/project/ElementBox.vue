@@ -27,7 +27,6 @@ import { provide, computed, inject, ref } from "vue";
 
 const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
-const elmMethods = inject("elmMethods");
 const project = inject("project");
 
 const elementAttr = computed(function () {
@@ -99,7 +98,7 @@ async function openText(prop, openInSameElement) {
         prop.position = props.nextPos;
       }
       await txtElm.changeAttr( prop);
-      await elmMethods.changeName(txtElm, "");
+      await txtElm.setName("");
       if (txtElm.position <= 0) {
         txtElm.position = props.nextPos;
       }
