@@ -98,6 +98,7 @@ export class biElement {
     this._arr.value = list.map((rec) => {
       return this.init(rec);
     });
+    return this._arr;
   }
 
   static init(rec) {

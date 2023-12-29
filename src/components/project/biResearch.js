@@ -197,6 +197,7 @@ export class biResearch {
     this._arr.value = list.map(function (rec) {
       return new cls(rec);
     });
+    return this._arr;
   }
 
   static addResearch(res) {

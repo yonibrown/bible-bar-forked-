@@ -1,9 +1,8 @@
 import { provide } from "vue";
-import { sendToServer } from "../../server.js";
 import { biLink } from "./biLink.js";
 
 // class
-export function useLinks({ storeMethods, projId }) {
+export function useLinks() {
   // access objects
   function getLink(prop) {
     return biLink.getLink(prop);
@@ -13,21 +12,9 @@ export function useLinks({ storeMethods, projId }) {
     return biLink.getCategory(linkId, col);
   }
 
-  function linkObjId(link) {
-    return {
-      proj: link.proj,
-      link: link.id,
-    };
-  }
-
   function getName(prop) {
     return biLink.getName(prop);
   }
-
-  // function reloadObj(id) {
-  //   const link = getLink({ id });
-  //   console.log('do nothing');
-  // }
 
   // access database
   function updateCategory(link, cat, attr) {

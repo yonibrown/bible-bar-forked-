@@ -1,9 +1,7 @@
-import { provide, ref } from "vue";
-import { sendToServer } from "../../server.js";
-import { seqTitle } from "./sequence.js";
+import { provide } from "vue";
 import { biElement } from "./biElement";
 
-export function useElements({ storeMethods, projId }) {
+export function useElements() {
   // access objects
   function getElement(elementId) {
     return biElement.getElement(elementId);

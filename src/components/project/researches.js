@@ -1,8 +1,8 @@
-import { provide, ref } from "vue";
+import { provide } from "vue";
 import { sendToServer } from "../../server.js";
 import { biResearch } from "./biResearch.js";
 
-export function useResearches({ storeMethods, projId }) {
+export function useResearches() {
   // local objects
   function getResearch(researchId) {
     return biResearch.getResearch(researchId);

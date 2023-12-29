@@ -172,6 +172,7 @@ export class biLink {
     biLink._arr.value = list.map(function (rec) {
       return new biLink(rec);
     });
+    return this._arr;
   }
 
   static getLink(prop) {
