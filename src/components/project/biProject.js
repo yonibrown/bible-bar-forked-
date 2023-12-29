@@ -26,7 +26,7 @@ export class biProject {
 
   // getters
 
-  static get main(){
+  static get main() {
     return this._project;
   }
 
@@ -232,5 +232,4 @@ export class biProject {
       return pResearch.id == researchId;
     });
   }
-
 }

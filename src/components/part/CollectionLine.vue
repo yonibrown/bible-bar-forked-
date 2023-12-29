@@ -30,7 +30,6 @@ import { inject, computed, ref } from "vue";
 const props = defineProps(["line"]);
 const emit = defineEmits(["addAttr"]);
 const research = inject("research");
-const resMethods = inject("resMethods");
 const enableSelection = inject("enableSelection");
 
 function defaultName() {
@@ -63,13 +62,13 @@ const description = computed(function () {
 function submitName(newVal) {
   const newAttr = { name: newVal };
   if (props.line.newLine) {
-    resMethods.newCollection(research.value, {
+    research.value.newCollection( {
       ...attr.value,
       ...newAttr,
     });
     attr.value = { ...emptyAttr };
   } else {
-    resMethods.updateCollection(props.line, newAttr);
+    props.line.changeAttr( newAttr);
   }
 }
 
@@ -78,7 +77,7 @@ function submitDesc(newVal) {
   if (props.line.newLine) {
     Object.assign(attr.value, newAttr);
   } else {
-    resMethods.updateCollection(props.line, newAttr);
+    props.line.changeAttr( newAttr);
   }
 }
 </script>

@@ -44,7 +44,7 @@ provide("element", elementObj);
 
 // element name
 function defaultName() {
-  return elmMethods.defaultName(props.element);
+  return props.element.defaultName;
 }
 
 const elementName = computed(function () {
@@ -52,8 +52,7 @@ const elementName = computed(function () {
 });
 
 function submitName(newName) {
-  // elementName.value = newName;
-  elmMethods.changeName(props.element, newName);
+  props.element.name = newName;
 }
 
 // display menu
@@ -75,13 +74,13 @@ function closeElement() {
 
 // change attributes of element
 function changeAttr(changedAttr) {
-  elmMethods.changeAttr(props.element, changedAttr);
+  props.element.changeAttr( changedAttr);
 }
 provide("changeAttr", changeAttr);
 
 // open a new element
 function createElement(attr) {
-  elmMethods.createFromElement({
+  project.value.createFromElement({
     attr,
     name: elementName.value,
     position: props.nextPos,
@@ -99,7 +98,7 @@ async function openText(prop, openInSameElement) {
       if (txtElm.position <= 0) {
         prop.position = props.nextPos;
       }
-      await elmMethods.changeAttr(txtElm, prop);
+      await txtElm.changeAttr( prop);
       await elmMethods.changeName(txtElm, "");
       if (txtElm.position <= 0) {
         txtElm.position = props.nextPos;

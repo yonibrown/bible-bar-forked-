@@ -37,13 +37,13 @@ const displayOptions = inject("displayOptions");
 
 const elementAttr = inject("elementAttr");
 const changeAttr = inject("changeAttr");
+const project = inject("project");
 
 const researchObjId = { res: elementAttr.value.res };
 provide("researchObjId", researchObjId);
 
-const resMethods = inject("resMethods");
 const research = computed(function () {
-  return resMethods.getResearch(elementAttr.value.res);
+  return project.value.getResearch(elementAttr.value.res);
 });
 provide("research", research);
 
@@ -83,7 +83,7 @@ const currentTabTable = computed(function () {
 function updateData(data) {
   switch (data.action) {
     case "newCat":
-      resMethods.newCollection(research.value, data.prop);
+      research.value.newCollection(data.prop);
       break;
     case "changeCat":
       currentTabTable.value.moveSelectedToCat(data.prop);
@@ -95,7 +95,7 @@ function updateData(data) {
       currentTabTable.value.removeSelected();
       break;
     case "upload":
-      resMethods.uploadParts(research.value, data.prop);
+      research.value.uploadParts(data.prop);
       break;
   }
 }

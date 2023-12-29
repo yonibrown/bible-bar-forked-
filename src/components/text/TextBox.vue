@@ -31,8 +31,7 @@ import { inject, ref, computed } from "vue";
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const elementAttr = inject("elementAttr");
-const elmMethods = inject("elmMethods");
-const resMethods = inject("resMethods");
+const project = inject("project");
 
 const textRef = ref();
 
@@ -43,15 +42,15 @@ const verses = computed(function () {
   return element.value.verses;
 });
 
-elmMethods.loadText(element.value);
+element.value.loadText();
 
 function updateData(data) {
   switch (data.action) {
     case "addToCat":
       const range = getSelectionInElement(textRef.value);
       if (range) {
-        const res = resMethods.getResearch(data.prop.research_id);
-        resMethods.newPart(res, {
+        const res = project.value.getResearch(data.prop.research_id);
+        res.newPart({
           collection_id: data.prop.collection_id,
           src_research: elementAttr.value.research_id,
           src_collection: elementAttr.value.collection_id,

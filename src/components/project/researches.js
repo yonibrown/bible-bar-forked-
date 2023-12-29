@@ -5,10 +5,6 @@ import { biProject } from "./biProject.js";
 
 export function useResearches() {
   // local objects
-  function getResearch(researchId) {
-    return biProject.main.getResearch(researchId);
-  }
-
   function getCollection(researchId, colId) {
     return biResearch.getCollection(researchId, colId);
   }
@@ -22,34 +18,6 @@ export function useResearches() {
   }
 
   // server
-  function updateCollection(col, newAttr) {
-    col.changeAttr(newAttr);
-  }
-
-  function newCollection(res, newAttr) {
-    res.newCollection(newAttr);
-  }
-
-  function deleteCollections(res, colList) {
-    res.deleteCollections(colList);
-  }
-
-  function uploadParts(res, prop) {
-    res.uploadParts(prop);
-  }
-
-  function loadParts(res, sortAttr) {
-    res.loadParts(sortAttr);
-  }
-
-  function updateParts(res, partList, updAttr) {
-    res.updateParts(partList, updAttr);
-  }
-
-  function deleteParts(res, partList) {
-    res.deleteParts(partList);
-  }
-
   function duplicate(researchObjId, partList) {
     return biResearch.duplicate(researchObjId, partList);
   }
@@ -81,27 +49,14 @@ export function useResearches() {
     return obj.data;
   }
 
-  async function newPart(res, prop) {
-    res.newPart(prop);
-  }
-
   // return
   const resMethods = {
-    getResearch,
     getCollection,
-    updateCollection,
-    newCollection,
     addResearch,
     loadIndexLevels,
     loadIndexDivisions,
-    deleteCollections,
-    loadParts,
-    updateParts,
-    deleteParts,
     duplicate,
-    newPart,
     getName,
-    uploadParts,
   };
   provide("resMethods", resMethods);
 

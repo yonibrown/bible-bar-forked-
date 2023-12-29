@@ -79,8 +79,7 @@ function changeSortField(newField) {
 loadResearchParts();
 
 function loadResearchParts() {
-  //   parts.value = await resMethods.loadParts(research, sortAttr.value);
-  resMethods.loadParts(research.value, sortAttr.value);
+  research.value.loadParts(sortAttr.value);
 }
 
 // filter parts
@@ -125,19 +124,14 @@ const sortedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  await resMethods.updateParts(
-    research.value,
-    tableRef.value.selectedLines,
-    cat,
-  );
-  // loadResearchParts();
+  await research.value.updateParts(tableRef.value.selectedLines, cat);
 }
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
   const newRes = await resMethods.duplicate(
     researchObjId,
-    tableRef.value.selectedLines,
+    tableRef.value.selectedLines
   );
   createElement({
     type: "parts",
@@ -146,7 +140,7 @@ async function duplicateSelected() {
 }
 
 function removeSelected() {
-  resMethods.deleteParts(research.value, tableRef.value.selectedLines);
+  research.value.deleteParts(tableRef.value.selectedLines);
 }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });
