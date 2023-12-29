@@ -1,7 +1,6 @@
 import { sendToServer } from "../../server.js";
 import { biLink } from "./biLink";
 import { biResearch } from "./biResearch.js";
-import { seqTitle } from "./sequence.js";
 
 export class biElement {
   constructor(rec) {
@@ -115,6 +114,13 @@ export class biElement {
     const elm = this.getElement(id);
     elm.reload();
   }
+
+  static seqTitle(key) {
+    let nameKey = key.map(function (lvl) {
+      return lvl.name;
+    });
+    return nameKey.join(" ");
+  }
 }
 
 class biElmBar extends biElement {
@@ -183,7 +189,7 @@ class biElmNew extends biElement {
 }
 class biElmText extends biElement {
   get defaultName() {
-    return seqTitle(this.attr.from_key);
+    return biElement.seqTitle(this.attr.from_key);
   }
   get verses() {
     return this._verses;
