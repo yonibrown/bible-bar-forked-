@@ -1,10 +1,9 @@
 import { ref } from "vue";
 import { sendToServer } from "../../server.js";
 import { biLink } from "./biLink";
+import { biProject } from "./biProject.js";
 
 export class biResearch {
-  static _arr = ref([]);
-
   constructor(rec) {
     this._obj = {
       id: rec.id,
@@ -15,10 +14,6 @@ export class biResearch {
   }
 
   // getters
-  static get list() {
-    return this._arr;
-  }
-
   get id() {
     return this._obj.id;
   }
@@ -193,21 +188,17 @@ export class biResearch {
 
   //static
   static initList(list) {
-    const cls = this;
-    this._arr.value = list.map(function (rec) {
-      return new cls(rec);
+    return list.map((rec) => {
+      return new this(rec);
     });
-    return this._arr;
   }
 
   static addResearch(res) {
-    this._arr.value.push(new biResearch(res));
+    biProject.main.addResearch(res);
   }
 
   static getResearch(researchId) {
-    return this._arr.value.find((pResearch) => {
-      return pResearch.id == researchId;
-    });
+    return biProject.main.getResearch(researchId);
   }
 
   static getCollection(researchId, colId) {

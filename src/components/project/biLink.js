@@ -1,20 +1,13 @@
-import { ref } from "vue";
 import { sendToServer } from "../../server.js";
 import { biResearch } from "./biResearch.js";
-import { biElement } from "./biElement.js";
+import { biProject } from "./biProject.js";
 
 export class biLink {
-  static _arr = ref([]);
-
   constructor(rec) {
     this._obj = rec;
   }
 
   // getters
-  static get list() {
-    return this._arr;
-  }
-
   get id() {
     return this._obj.id;
   }
@@ -135,7 +128,7 @@ export class biLink {
       prop: { elm: elmId },
     };
     const obj = await sendToServer(data);
-    const elm = biElement.getElement(elmId);
+    const elm = biProject.main.getElement(elmId);
     elm.reload({ add_link: true });
   }
 
@@ -169,24 +162,13 @@ export class biLink {
 
   //static
   static initList(list) {
-    biLink._arr.value = list.map(function (rec) {
-      return new biLink(rec);
+    return list.map((rec) => {
+      return new this(rec);
     });
-    return this._arr;
   }
 
   static getLink(prop) {
-    if (prop.id) {
-      return biLink._arr.value.find(function (pLink) {
-        return pLink.id == prop.id;
-      });
-    }
-    if (prop.res) {
-      return biLink._arr.value.find(function (pLink) {
-        return pLink.research_id == prop.res;
-      });
-    }
-    return null;
+    return biProject.main.getLink(prop);
   }
 
   static getCategory(linkId, col) {
@@ -217,22 +199,7 @@ export class biLink {
     link.reload();
   }
 
-  static async createLink(options) {
-    const prop = {
-      proj: projId,
-      research_id: options.researchId,
-      main_element: options.element.id,
-    };
-
-    const data = {
-      type: "link",
-      oper: "new",
-      id: { dummy: "" },
-      prop,
-    };
-    const obj = await sendToServer(data);
-
-    this._arr.value.push(new biLink(obj.data));
-    options.element.reload();
+  static createLink(options) {
+    biProject.main.createLink(options);
   }
 }

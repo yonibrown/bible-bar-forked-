@@ -114,7 +114,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  elmMethods.openNewElement(elementPrevPos(0));
+  elmMethods.openNewElement(project.value,elementPrevPos(0));
 }
 defineExpose({ openNewElement });
 </script>

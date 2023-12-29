@@ -1,11 +1,12 @@
 import { provide } from "vue";
 import { sendToServer } from "../../server.js";
 import { biResearch } from "./biResearch.js";
+import { biProject } from "./biProject.js";
 
 export function useResearches() {
   // local objects
   function getResearch(researchId) {
-    return biResearch.getResearch(researchId);
+    return biProject.main.getResearch(researchId);
   }
 
   function getCollection(researchId, colId) {

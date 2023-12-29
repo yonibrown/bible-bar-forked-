@@ -28,6 +28,7 @@ import { provide, computed, inject, ref } from "vue";
 const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
 const elmMethods = inject("elmMethods");
+const project = inject("project");
 
 const elementAttr = computed(function () {
   return props.element.attr;
@@ -92,7 +93,7 @@ provide("createElement", createElement);
 
 async function openText(prop, openInSameElement) {
   if (openInSameElement && props.element.open_text_element != 0) {
-    const txtElm = elmMethods.getElement(props.element.open_text_element);
+    const txtElm = project.value.getElement(props.element.open_text_element);
     if (txtElm) {
       // prop.name = '';
       if (txtElm.position <= 0) {

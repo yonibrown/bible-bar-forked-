@@ -1,14 +1,15 @@
 import { provide } from "vue";
 import { biElement } from "./biElement";
+import { biProject } from "./biProject";
 
 export function useElements() {
   // access objects
   function getElement(elementId) {
-    return biElement.getElement(elementId);
+    return biProject.getElement(elementId);
   }
 
-  function openNewElement(position) {
-    biElement.openNewElement(position);
+  function openNewElement(proj,position) {
+    proj.openNewElement(position);
   }
 
   function defaultName(elm) {
@@ -25,7 +26,7 @@ export function useElements() {
   }
 
   function createFromElement(prop) {
-    biElement.createFromElement(prop);
+    biProject.main.createFromElement(prop);
   }
 
   function loadBarSegments(elm) {
@@ -53,7 +54,7 @@ export function useElements() {
   }
 
   function reloadObj(id) {
-    const elm = biElement.getElement(id);
+    const elm = biProject.getElement(id);
     elm.reload();
   }
 

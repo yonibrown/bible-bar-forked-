@@ -1,23 +1,14 @@
-import { ref } from "vue";
 import { sendToServer } from "../../server.js";
 import { biLink } from "./biLink";
 import { biResearch } from "./biResearch.js";
 import { seqTitle } from "./sequence.js";
 
 export class biElement {
-  static _arr = ref([]);
-  static _projectId = null;
-  static _tempElementId = -1;
-
   constructor(rec) {
     this._obj = rec;
   }
 
   // getters
-  static get list() {
-    return this._arr;
-  }
-
   get id() {
     return this._obj.id;
   }
@@ -95,10 +86,9 @@ export class biElement {
 
   //static
   static initList(list) {
-    this._arr.value = list.map((rec) => {
+    return list.map((rec) => {
       return this.init(rec);
     });
-    return this._arr;
   }
 
   static init(rec) {
@@ -114,75 +104,6 @@ export class biElement {
       case "link":
         return new biElmLink(rec);
     }
-  }
-
-  static setProjectId(id) {
-    this._projectId = id;
-  }
-
-  static openNewElement(position) {
-    const newElement = this.init({
-      id: this._tempElementId--,
-      proj: this._projectId,
-      position,
-      type: "new",
-      name: "new element",
-    });
-    this._arr.value.push(newElement);
-  }
-
-  static getElement(elementId) {
-    return this._arr.value.find((pElement) => {
-      return pElement.id == elementId;
-    });
-  }
-
-  static async create(attr, options) {
-    const data = {
-      type: "element",
-      oper: "new",
-      id: { dummy: "" },
-      prop: {
-        proj: this._projectId,
-        ...attr,
-      },
-    };
-    const obj = await sendToServer(data);
-
-    if (obj.data.res) {
-      biResearch.addResearch(obj.data.res);
-    }
-    if (options && options.openingElement) {
-      let elm = options.openingElement;
-      if (elm.type == "new") {
-        elm.type = attr.type;
-        elm.id = obj.data.elm.id;
-        elm.attr = obj.data.elm.attr;
-      } else {
-        elm = new biElement(obj.data.elm);
-        this._arr.value.push(elm);
-      }
-    }
-    return elm;
-  }
-
-  static async createFromElement(prop) {
-    const newAttr = { ...prop.attr };
-    const options = {};
-    options.openingElement = prop.originalElement;
-    if (prop.originalElement.type == "new") {
-      newAttr.position = prop.originalElement.position;
-      newAttr.name = prop.name;
-    } else {
-      newAttr.opening_element = prop.originalElement.id;
-      newAttr.name = "";
-      newAttr.position = prop.position;
-    }
-    const elm = await this.create(newAttr, options);
-
-    prop.originalLinks.forEach(function (lnk) {
-      lnk.elements.push(elm.id);
-    });
   }
 
   static reloadObj(id) {
