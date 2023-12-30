@@ -59,7 +59,7 @@ function openNewElement() {
 
 // element name
 function defaultName() {
-  return project.value.defaultName();
+  return project.value.defaultName;
 }
 
 const projectName = ref("");
@@ -70,7 +70,7 @@ function submitName(newName) {
 }
 
 project.value.loadProject().then(function () {
-  projectName.value = project.value.getName();
+  projectName.value = project.value.name;
 });
 </script>
 

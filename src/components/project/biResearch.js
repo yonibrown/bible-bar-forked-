@@ -49,7 +49,7 @@ export class biResearch {
     this._obj.parts = obj;
   }
 
-  set name(newName) {
+  setName(newName) {
     this._obj.name = newName;
     this.changeAttr({ name: newName });
   }
@@ -99,7 +99,7 @@ export class biResearch {
 
     const obj = await sendToServer(data);
     this.collections.push(new biResearchCollection(obj.data.new_collection));
-    obj.data.new_parts.forEach(function (prt) {
+    obj.data.new_parts.forEach((prt) => {
       this.parts.push(prt);
     });
     biLink.reloadResLink(this.dbId);
@@ -151,7 +151,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    obj.data.new_parts.forEach(function (prt) {
+    obj.data.new_parts.forEach((prt) => {
       this.parts.push(prt);
     });
   }
@@ -193,35 +193,12 @@ export class biResearch {
     });
   }
 
-  static addResearch(res) {
-    biProject.main.addResearch(res);
-  }
-
-  static getResearch(researchId) {
-    return biProject.main.getResearch(researchId);
-  }
-
   static getCollection(researchId, colId) {
-    const research = biResearch.getResearch(researchId);
+    const research = biProject.main.getResearch(researchId);
     if (research == null) {
       return null;
     }
     return research.getCollection(colId);
-  }
-
-  static getName(prop) {
-    let res = null;
-    if (prop.id) {
-      res = biResearch.getResearch(prop.id);
-    }
-    if (prop.obj) {
-      res = prop.obj;
-    }
-    if (!res) {
-      return "research";
-    }
-
-    return res.name;
   }
 
   static async duplicate(researchObjId, partList) {
@@ -264,8 +241,6 @@ export class biResearch {
 
     return obj.data;
   }
-
-
 }
 
 class biResearchCollection {

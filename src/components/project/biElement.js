@@ -1,6 +1,5 @@
 import { sendToServer } from "../../server.js";
-import { biLink } from "./biLink";
-import { biResearch } from "./biResearch.js";
+import { biProject } from "./biProject.js";
 
 export class biElement {
   constructor(rec) {
@@ -109,9 +108,21 @@ export class biElement {
     }
   }
 
-  static reloadObj(id) {
-    const elm = this.getElement(id);
-    elm.reload();
+  static async create(prop) {
+    const data = {
+      type: "element",
+      oper: "new",
+      id: { dummy: "" },
+      prop,
+    };
+    const obj = await sendToServer(data);
+
+    if (obj.data.res) {
+      biProject.main.addResearch(obj.data.res);
+    }
+
+    const elm = this.init(obj.data.elm);
+    return elm;
   }
 
   static seqTitle(key) {
@@ -158,7 +169,6 @@ class biElmBar extends biElement {
   }
 
   reload(attr) {
-    console.log(attr);
     if (
       !attr ||
       "from_div" in attr ||
@@ -226,31 +236,39 @@ class biElmText extends biElement {
 }
 
 class biElmParts extends biElement {
+  constructor(rec) {
+    super(rec);
+    this._research = biProject.main.getResearch(this.attr.res);
+  }
+
   get defaultName() {
-    return biResearch.getName({ id: this.attr.res });
+    return this._research.name;
   }
 
   get name() {
     return this.defaultName;
   }
 
-  set name(newName) {
-    const res = biResearch.getResearch(this.attr.res);
-    res.name = newName;
+  setName(newName) {
+    this._research.setName(newName);
   }
 }
 
 class biElmLink extends biElement {
+  constructor(rec) {
+    super(rec);
+    this._link = biProject.main.getLink(this.attr.link_id);
+  }
+
   get defaultName() {
-    return biLink.getName({ id: this.attr.link_id });
+    return this._link.name;
   }
 
   get name() {
     return this.defaultName;
   }
 
-  set name(newName) {
-    const link = biLink.getLink({ id: this.attr.link_id });
-    link.name = newName;
+  setName(newName) {
+    this._link.setName(newName);
   }
 }

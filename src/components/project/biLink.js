@@ -1,10 +1,12 @@
 import { sendToServer } from "../../server.js";
-import { biResearch } from "./biResearch.js";
 import { biProject } from "./biProject.js";
 
 export class biLink {
   constructor(rec) {
     this._obj = rec;
+    if (rec.research_id != 0) {
+      this._research = biProject.main.getResearch(rec.research_id);
+    }
   }
 
   // getters
@@ -15,7 +17,7 @@ export class biLink {
   get name() {
     const link = this._obj;
     if (link.research_id != 0) {
-      return biResearch.getName({ id: link.research_id });
+      return this._research.name;
     }
     if (link.name != "") {
       return link.name;
@@ -59,10 +61,10 @@ export class biLink {
     this._obj.id = obj;
   }
 
-  set name(newName) {
+  setName(newName) {
     if (this.research_id != 0) {
-      const res = biResearch.getResearch(link.research_id);
-      res.name = newName;
+      const res = biProject.main.getResearch(link.research_id);
+      res.setName(newName);
       return;
     }
 
@@ -167,36 +169,19 @@ export class biLink {
     });
   }
 
-  static getLink(prop) {
-    return biProject.main.getLink(prop);
-  }
-
   static getCategory(linkId, col) {
-    const link = biLink.getLink({ id: linkId });
+    const link = biProject.main.getLink({ id: linkId });
     if (link == null) {
       return null;
     }
     return link.getCategory(col);
   }
 
-  static getName(prop) {
-    let link = null;
-    if (prop.id) {
-      link = biLink.getLink({ id: prop.id });
-    }
-    if (prop.obj) {
-      link = prop.obj;
-    }
-    if (!link) {
-      return "link";
-    }
-
-    return link.name;
-  }
-
   static reloadResLink(resIdObj) {
-    const link = biLink.getLink(resIdObj);
-    link.reload();
+    const link = biProject.main.getLink(resIdObj);
+    if (link){
+      link.reload();
+    }
   }
 
   static createLink(options) {

@@ -51,7 +51,7 @@ const elementName = computed(function () {
 });
 
 function submitName(newName) {
-  props.element.name = newName;
+  props.element.setName(newName);
 }
 
 // display menu
@@ -93,7 +93,6 @@ async function openText(prop, openInSameElement) {
   if (openInSameElement && props.element.open_text_element != 0) {
     const txtElm = project.value.getElement(props.element.open_text_element);
     if (txtElm) {
-      // prop.name = '';
       if (txtElm.position <= 0) {
         prop.position = props.nextPos;
       }

@@ -54,6 +54,17 @@ export class biProject {
     return this._researches;
   }
 
+  get name() {
+    if (this.attr.name.trim() == "") {
+      return this.defaultName;
+    }
+    return this.attr.name;
+  }
+
+  get defaultName() {
+    return "project" + this.id;
+  }
+
   // setters
   set attr(val) {
     this._obj.attr = val;
@@ -99,17 +110,6 @@ export class biProject {
     sendToServer(data);
   }
 
-  defaultName() {
-    return "project" + this.id;
-  }
-
-  getName() {
-    if (this.attr.name.trim() == "") {
-      return this.defaultName();
-    }
-    return this.attr.name;
-  }
-
   changeName(newName) {
     this.changeAttr({ name: newName });
   }
@@ -142,51 +142,31 @@ export class biProject {
     });
   }
 
-  async create(attr, options) {
-    const data = {
-      type: "element",
-      oper: "new",
-      id: { dummy: "" },
-      prop: {
-        proj: this.id,
-        ...attr,
-      },
-    };
-    const obj = await sendToServer(data);
-
-    if (obj.data.res) {
-      biResearch.addResearch(obj.data.res);
-    }
-    if (options && options.openingElement) {
-      let elm = options.openingElement;
-      if (elm.type == "new") {
-        elm.type = attr.type;
-        elm.id = obj.data.elm.id;
-        elm.attr = obj.data.elm.attr;
-      } else {
-        elm = new biElement(obj.data.elm);
-        this._elements.push(elm);
-      }
-    }
-    return elm;
-  }
-
   async createFromElement(prop) {
-    const newAttr = { ...prop.attr };
-    const options = {};
-    options.openingElement = prop.originalElement;
-    if (prop.originalElement.type == "new") {
-      newAttr.position = prop.originalElement.position;
+    const newAttr = { 
+        proj: this.id,
+        ...prop.attr
+     };
+     const origElm = prop.originalElement;
+    if (origElm.type == "new") {
+      newAttr.position = origElm.position;
       newAttr.name = prop.name;
     } else {
-      newAttr.opening_element = prop.originalElement.id;
+      newAttr.opening_element = origElm.id;
       newAttr.name = "";
       newAttr.position = prop.position;
     }
-    const elm = await this.create(newAttr, options);
+    const elm = await biElement.create(newAttr);
+
+    if (origElm.type == "new") {
+        // hide the element
+        origElm.position = -1;
+    } 
+
+    this._elements.push(elm);
 
     prop.originalLinks.forEach(function (lnk) {
-      lnk.elements.push(elm.id);
+      lnk.elements.push(elmRec.id);
     });
   }
 

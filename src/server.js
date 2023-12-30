@@ -1,8 +1,11 @@
+import { biElement } from "./components/project/biElement";
+import { biProject } from "./components/project/biProject";
+
 // local
-// const basicPath = `http://localhost/bibar-vue-php/`;
+const basicPath = `http://localhost/bibar-vue-php/`;
 
 // bibar.site
-const basicPath = `https://bibar.site/`;
+// const basicPath = `https://bibar.site/`;
 
 const apiUrl = basicPath + `obj_api.php`;
 
@@ -42,6 +45,12 @@ async function sendToServer(data) {
     if (typeof obj["error"] != "undefined") {
       console.log("Error from " + service + ".php - " + obj["error"]);
       return null;
+    }
+    if (obj.objects_to_reload) {
+      obj.objects_to_reload.elements.forEach(function () {
+        const elm = biProject.main.getElement(id);
+        elm.reload();
+      });
     }
     return obj;
   } catch (err) {
