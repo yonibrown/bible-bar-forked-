@@ -206,9 +206,11 @@ class biElmText extends biElement {
   get defaultName() {
     return biElement.seqTitle(this.attr.from_key);
   }
+
   get verses() {
     return this._verses;
   }
+
   async loadText() {
     const data = {
       type: "element",
@@ -219,7 +221,9 @@ class biElmText extends biElement {
 
     const obj = await sendToServer(data);
     this._verses = obj.data.part_list;
+    console.log("load text",this._verses);
   }
+
   reload(attr) {
     if (
       !attr ||
@@ -230,7 +234,7 @@ class biElmText extends biElement {
       "to_div" in attr ||
       "add_link" in attr
     ) {
-      elm.loadText();
+      this.loadText();
     }
   }
 }

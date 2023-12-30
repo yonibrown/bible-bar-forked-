@@ -7,7 +7,7 @@ export class biProject {
   static _project = null;
 
   constructor(id) {
-    this._id = id;
+    this._id = +id;
     this._obj = {
       attr: {
         name: "---",
