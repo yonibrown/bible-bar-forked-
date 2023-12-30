@@ -1,4 +1,4 @@
-import { sendToServer } from "../../server.js";
+import { sendToServer } from "../server.js";
 import { biProject } from "./biProject.js";
 
 export class biLink {

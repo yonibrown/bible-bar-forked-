@@ -1,4 +1,4 @@
-import { biProject } from "./components/project/biProject";
+import { biProject } from "./store/biProject";
 
 // local
 const basicPath = `http://localhost/bibar-vue-php/`;

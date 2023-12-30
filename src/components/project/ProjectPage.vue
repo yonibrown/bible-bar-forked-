@@ -28,7 +28,7 @@
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
 import { ref, provide, computed } from "vue";
-import { biProject } from "./biProject.js";
+import { biProject } from "../../store/biProject.js";
 
 const props = defineProps(["id"]);
 

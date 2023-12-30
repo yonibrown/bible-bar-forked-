@@ -13,7 +13,8 @@
 <script setup>
 import SeqKeyLevel from "./SeqKeyLevel.vue";
 import { ref, inject, computed, watch } from "vue";
-import { biResearch } from "../project/biResearch.js";
+import { biResearch } from "../../store/biResearch.js";
+
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
 

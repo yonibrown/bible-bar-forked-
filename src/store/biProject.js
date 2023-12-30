@@ -1,8 +1,8 @@
 import { ref } from "vue";
-import { sendToServer } from "../../server.js";
-import { biLink } from "./biLink";
+import { sendToServer } from "../server.js";
+import { biLink } from "./biLink.js";
 import { biResearch } from "./biResearch.js";
-import { biElement } from "./biElement";
+import { biElement } from "./biElement.js";
 
 export class biProject {
   static _project = null;
@@ -208,7 +208,9 @@ export class biProject {
   }
 
   addResearch(res) {
-    this._researches.push(new biResearch(res));
+    const newRes = new biResearch(res);
+    this._researches.push(newRes);
+    return newRes;
   }
 
   getResearch(researchId) {

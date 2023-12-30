@@ -9,7 +9,7 @@
 
 <script setup>
 import { computed, inject, ref, onMounted } from "vue";
-import { biLink } from "../project/biLink.js";
+import { biLink } from "../../store/biLink.js";
 
 const props = defineProps(["word", "verse"]);
 const linkIds = inject("linkIds");

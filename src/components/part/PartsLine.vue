@@ -18,12 +18,13 @@
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
 import { inject, computed } from "vue";
-import { biResearch } from "../project/biResearch.js";
+
 const props = defineProps(["line", "field"]);
 
 const researchObjId = inject("researchObjId");
+const research = inject("research");
 const collection = computed(function () {
-  return biResearch.getCollection(researchObjId.res, props.line.col);
+  return research.value.getCollection(props.line.col);
 });
 
 const partOpenText = inject("openText");

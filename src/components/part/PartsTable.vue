@@ -16,7 +16,7 @@
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
-import { biResearch } from "../project/biResearch.js";
+import { biResearch } from "../../store/biResearch.js";
 
 const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
@@ -129,10 +129,7 @@ async function moveSelectedToCat(cat) {
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
-  const newRes = await biResearch.duplicate(
-    researchObjId,
-    tableRef.value.selectedLines
-  );
+  const newRes = await research.value.duplicate(tableRef.value.selectedLines);
   createElement({
     type: "parts",
     res: newRes.id.res,

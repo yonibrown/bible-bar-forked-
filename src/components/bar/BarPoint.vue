@@ -17,7 +17,7 @@
 <script setup>
 const props = defineProps(["point"]);
 import { computed, inject } from "vue";
-import { biLink } from "../project/biLink.js";
+import { biLink } from "../../store/biLink.js";
 
 const barOpenText = inject("openText");
 

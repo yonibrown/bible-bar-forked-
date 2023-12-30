@@ -1,5 +1,5 @@
-import { sendToServer } from "../../server.js";
-import { biLink } from "./biLink";
+import { sendToServer } from "../server.js";
+import { biLink } from "./biLink.js";
 import { biProject } from "./biProject.js";
 
 export class biResearch {
@@ -185,33 +185,26 @@ export class biResearch {
     this.loadParts();
   }
 
-  //static
-  static initList(list) {
-    return list.map((rec) => {
-      return new this(rec);
-    });
-  }
-
-  static getCollection(researchId, colId) {
-    const research = biProject.main.getResearch(researchId);
-    if (research == null) {
-      return null;
-    }
-    return research.getCollection(colId);
-  }
-
-  static async duplicate(researchObjId, partList) {
+  async duplicate( partList) {
     const data = {
       type: "research",
       oper: "duplicate",
-      id: researchObjId,
+      id: this.dbId,
       prop: {
         partList,
       },
     };
 
     const obj = await sendToServer(data);
-    return obj.data.new_res;
+    const newRes = biProject.main.addResearch(obj.data.new_res);
+    return newRes;
+  }
+
+  //static
+  static initList(list) {
+    return list.map((rec) => {
+      return new this(rec);
+    });
   }
 
   static async loadIndexDivisions(seqIndex, selectedKey) {

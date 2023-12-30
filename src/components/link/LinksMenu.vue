@@ -19,7 +19,7 @@
 <script setup>
 import { inject, ref } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
-import { biLink } from "../project/biLink.js";
+import { biLink } from "../../store/biLink.js";
 
 const props = defineProps(["title"]);
 

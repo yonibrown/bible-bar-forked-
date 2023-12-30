@@ -1,4 +1,4 @@
-import { sendToServer } from "../../server.js";
+import { sendToServer } from "../server.js";
 import { biProject } from "./biProject.js";
 
 export class biElement {
@@ -260,7 +260,7 @@ class biElmParts extends biElement {
 class biElmLink extends biElement {
   constructor(rec) {
     super(rec);
-    this._link = biProject.main.getLink(this.attr.link_id);
+    this._link = biProject.main.getLink({ id: this.attr.link_id });
   }
 
   get defaultName() {

@@ -8,7 +8,7 @@
 
 <script setup>
 import { watch, ref, inject, computed } from "vue";
-import { biResearch } from "../project/biResearch.js";
+import { biResearch } from "../../store/biResearch.js";
 
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
