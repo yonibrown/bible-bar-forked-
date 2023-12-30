@@ -28,8 +28,11 @@ export class biProject {
   // getters
 
   static get main() {
+    if (!this._project){
+        return null;
+    }
     return this._project.value;
-  }
+}
 
   get id() {
     return this._id;
@@ -97,8 +100,8 @@ export class biProject {
       desc: obj.data.desc,
     };
     this._researches = biResearch.initList(obj.data.researches);
-    this._elements = biElement.initList(obj.data.elements);
     this._links = biLink.initList(obj.data.links);
+    this._elements = biElement.initList(obj.data.elements);
   }
 
   storeElementList(list) {

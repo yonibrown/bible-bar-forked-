@@ -37,10 +37,8 @@ const textRef = ref();
 
 const verses = computed(function () {
   if (!element.value || !element.value.verses) {
-    console.log('verses empty',element.value.verses);
     return [];
   }
-  console.log('verses',element.value.verses);
   return element.value.verses;
 });
 

@@ -19,11 +19,12 @@ async function sendToServer(data) {
     form.append("file", data.file);
   }
 
-  data.reload = biProject.main.dbId;
+  if (biProject.main) {
+    data.reload = biProject.main.dbId;
+  }
   if (data.reload) {
     form.append("reload", JSON.stringify(data.reload));
   }
-
 
   // for (const pair of form.entries()) {
   //   console.log(`${pair[0]}, ${pair[1]}`);
@@ -55,7 +56,7 @@ async function sendToServer(data) {
       console.log("Error from " + service + ".php - " + obj["error"]);
       return null;
     }
-    if (obj.objects_to_reload) {
+    if (biProject.main && obj.objects_to_reload) {
       biProject.main.reloadElements(obj.objects_to_reload.elements);
     }
     return obj;

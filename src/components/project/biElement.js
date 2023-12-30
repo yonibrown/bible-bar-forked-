@@ -221,7 +221,6 @@ class biElmText extends biElement {
 
     const obj = await sendToServer(data);
     this._verses = obj.data.part_list;
-    console.log("load text",this._verses);
   }
 
   reload(attr) {
