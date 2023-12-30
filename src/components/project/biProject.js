@@ -1,3 +1,4 @@
+import { ref } from "vue";
 import { sendToServer } from "../../server.js";
 import { biLink } from "./biLink";
 import { biResearch } from "./biResearch.js";
@@ -21,13 +22,13 @@ export class biProject {
 
     this._tempElementId = -1;
 
-    this.constructor._project = this;
+    this.constructor._project = ref(this);
   }
 
   // getters
 
   static get main() {
-    return this._project;
+    return this._project.value;
   }
 
   get id() {
@@ -143,11 +144,11 @@ export class biProject {
   }
 
   async createFromElement(prop) {
-    const newAttr = { 
-        proj: this.id,
-        ...prop.attr
-     };
-     const origElm = prop.originalElement;
+    const newAttr = {
+      proj: this.id,
+      ...prop.attr,
+    };
+    const origElm = prop.originalElement;
     if (origElm.type == "new") {
       newAttr.position = origElm.position;
       newAttr.name = prop.name;
@@ -159,9 +160,9 @@ export class biProject {
     const elm = await biElement.create(newAttr);
 
     if (origElm.type == "new") {
-        // hide the element
-        origElm.position = -1;
-    } 
+      // hide the element
+      origElm.position = -1;
+    }
 
     this._elements.push(elm);
 
@@ -210,6 +211,13 @@ export class biProject {
   getResearch(researchId) {
     return this._researches.find((pResearch) => {
       return pResearch.id == researchId;
+    });
+  }
+
+  reloadElements(list) {
+    list.forEach((id) => {
+      const elm = this.getElement(id);
+      elm.reload();
     });
   }
 }

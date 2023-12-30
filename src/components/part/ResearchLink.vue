@@ -18,12 +18,12 @@
 <script setup>
 import LinkCategory from "../link/LinkCategory.vue";
 import { computed, inject } from "vue";
-import { biProject } from "../project/biProject.js";
 
+const project = inject("project");
 const research = inject("research");
 
 const link = computed(function () {
-  return biProject.main.getLink({ res: research.value.id });
+  return project.value.getLink({ res: research.value.id });
 });
 
 const categories = computed(function () {

@@ -56,10 +56,7 @@ async function sendToServer(data) {
       return null;
     }
     if (obj.objects_to_reload) {
-      obj.objects_to_reload.elements.forEach(function (id) {
-        const elm = biProject.main.getElement(id);
-        elm.reload();
-      });
+      biProject.main.reloadElements(obj.objects_to_reload.elements);
     }
     return obj;
   }
