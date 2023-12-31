@@ -27,7 +27,7 @@ import { provide, computed, inject, ref } from "vue";
 
 const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
-const elmMethods = inject("elmMethods");
+const project = inject("project");
 
 const elementAttr = computed(function () {
   return props.element.attr;
@@ -43,18 +43,15 @@ provide("element", elementObj);
 
 // element name
 function defaultName() {
-  return elmMethods.defaultName(props.element);
+  return props.element.defaultName;
 }
 
-// const elementName = ref("");
-// elementName.value = elmMethods.getName(props.element);
 const elementName = computed(function () {
-  return elmMethods.getName(props.element);
+  return props.element.name;
 });
 
 function submitName(newName) {
-  // elementName.value = newName;
-  elmMethods.changeName(props.element, newName);
+  props.element.setName(newName);
 }
 
 // display menu
@@ -76,13 +73,13 @@ function closeElement() {
 
 // change attributes of element
 function changeAttr(changedAttr) {
-  elmMethods.changeAttr(props.element, changedAttr);
+  props.element.changeAttr( changedAttr);
 }
 provide("changeAttr", changeAttr);
 
 // open a new element
 function createElement(attr) {
-  elmMethods.createFromElement({
+  project.value.createFromElement({
     attr,
     name: elementName.value,
     position: props.nextPos,
@@ -94,14 +91,13 @@ provide("createElement", createElement);
 
 async function openText(prop, openInSameElement) {
   if (openInSameElement && props.element.open_text_element != 0) {
-    const txtElm = elmMethods.getElement(props.element.open_text_element);
+    const txtElm = project.value.getElement(props.element.open_text_element);
     if (txtElm) {
-      // prop.name = '';
       if (txtElm.position <= 0) {
         prop.position = props.nextPos;
       }
-      await elmMethods.changeAttr(txtElm, prop);
-      await elmMethods.changeName(txtElm, "");
+      await txtElm.changeAttr( prop);
+      await txtElm.setName("");
       if (txtElm.position <= 0) {
         txtElm.position = props.nextPos;
       }

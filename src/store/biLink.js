@@ -1,19 +1,15 @@
-import { ref } from "vue";
-import { sendToServer } from "../../server.js";
-import { biResearch } from "./biResearch.js";
+import { sendToServer } from "../server.js";
+import { biProject } from "./biProject.js";
 
 export class biLink {
-  static _arr = ref([]);
-
   constructor(rec) {
     this._obj = rec;
+    if (rec.research_id != 0) {
+      this._research = biProject.main.getResearch(rec.research_id);
+    }
   }
 
   // getters
-  static get links() {
-    return this._arr;
-  }
-
   get id() {
     return this._obj.id;
   }
@@ -21,7 +17,7 @@ export class biLink {
   get name() {
     const link = this._obj;
     if (link.research_id != 0) {
-      return biResearch.getName({ id: link.research_id });
+      return this._research.name;
     }
     if (link.name != "") {
       return link.name;
@@ -65,9 +61,10 @@ export class biLink {
     this._obj.id = obj;
   }
 
-  set name(newName) {
+  setName(newName) {
     if (this.research_id != 0) {
-      biResearch.setName({ id: link.research_id });
+      const res = biProject.main.getResearch(link.research_id);
+      res.setName(newName);
       return;
     }
 
@@ -121,6 +118,22 @@ export class biLink {
     const obj = await sendToServer(data);
   }
 
+  async addElementToLink(elmId) {
+    if (!this.elements.includes(elmId)) {
+      this.elements.push(elmId);
+    }
+
+    const data = {
+      type: "link",
+      oper: "add_elm",
+      id: this.dbId,
+      prop: { elm: elmId },
+    };
+    const obj = await sendToServer(data);
+    const elm = biProject.main.getElement(elmId);
+    elm.reload({ add_link: true });
+  }
+
   removeElementFromLink(elmId) {
     this.elements = this.elements.filter(function (arrElmId) {
       return arrElmId != elmId;
@@ -150,71 +163,28 @@ export class biLink {
   }
 
   //static
-  static init(list) {
-    // list.forEach(function (rec) {
-    //   let obj = new biLink(rec);
-    //   biLink.links.value.push(obj);
-    // });
-    biLink._arr.value = list.map(function (rec) {
-      return new biLink(rec);
+  static initList(list) {
+    return list.map((rec) => {
+      return new this(rec);
     });
   }
 
-  static getLink(prop) {
-    if (prop.id) {
-      return biLink.links.value.find(function (pLink) {
-        return pLink.id == prop.id;
-      });
-    }
-    if (prop.res) {
-      return biLink.links.value.find(function (pLink) {
-        return pLink.research_id == prop.res;
-      });
-    }
-    return null;
-  }
-
   static getCategory(linkId, col) {
-    const link = biLink.getLink({ id: linkId });
+    const link = biProject.main.getLink({ id: linkId });
     if (link == null) {
       return null;
     }
     return link.getCategory(col);
   }
 
-  static getName(prop) {
-    let link = null;
-    if (prop.id) {
-      link = biLink.getLink({ id: prop.id });
-    }
-    if (prop.obj) {
-      link = prop.obj;
-    }
-    if (!link) {
-      return "link";
-    }
-
-    return link.name;
-  }
-
-  static async setName(prop, newName) {
-    let link = null;
-    if (prop.id) {
-      link = biLink.getLink({ id: prop.id });
-    }
-    if (prop.obj) {
-      link = prop.obj;
-    }
-    if (!link) {
-      console.log("Error: link not found");
-      return;
-    }
-
-    link.name = newName;
-  }
-
   static reloadResLink(resIdObj) {
-    const link = biLink.getLink(resIdObj);
-    link.reload();
+    const link = biProject.main.getLink(resIdObj);
+    if (link){
+      link.reload();
+    }
+  }
+
+  static createLink(options) {
+    biProject.main.createLink(options);
   }
 }

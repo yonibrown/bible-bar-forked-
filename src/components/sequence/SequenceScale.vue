@@ -8,11 +8,11 @@
 
 <script setup>
 import { watch, ref, inject, computed } from "vue";
+import { biResearch } from "../../store/biResearch.js";
 
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
 const seqIndex = inject("seqIndex");
-const resMethods = inject("resMethods");
 
 const indexLevels = ref([]);
 
@@ -48,7 +48,7 @@ watch(selected, (newVal) => {
 loadScale();
 
 async function loadScale() {
-  indexLevels.value = await resMethods.loadIndexLevels(seqIndex.value);
+  indexLevels.value = await biResearch.loadIndexLevels(seqIndex.value);
 }
 
 async function changeScale() {

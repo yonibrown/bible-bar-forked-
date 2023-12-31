@@ -50,7 +50,6 @@ import { inject, computed, provide, ref } from "vue";
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const links = inject("links");
-const elmMethods = inject("elmMethods");
 
 const barMenuRef = ref();
 
@@ -67,7 +66,7 @@ const points = computed(function () {
   return element.value.points;
 });
 
-elmMethods.reload(element.value);
+element.value.reload();
 
 const elmOpenText = inject("openText");
 function openText(prop) {
