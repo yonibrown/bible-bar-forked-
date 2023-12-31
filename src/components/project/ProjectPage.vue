@@ -27,12 +27,28 @@
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
-import { ref } from "vue";
-import { newProjectData } from "./project.js";
+import { ref, provide, computed } from "vue";
+import { biProject } from "../../store/biProject.js";
 
 const props = defineProps(["id"]);
 
-const { prjMethods, elements } = newProjectData(props.id);
+const project = ref(new biProject(props.id));
+provide("project", project);
+
+const elements = computed(function () {
+  return project.value.elements;
+});
+provide("elements", elements);
+
+const links = computed(function () {
+  return project.value.links;
+});
+provide("links", links);
+
+const researches = computed(function () {
+  return project.value.researches;
+});
+provide("researches", researches);
 
 const listRef = ref();
 
@@ -43,18 +59,18 @@ function openNewElement() {
 
 // element name
 function defaultName() {
-  return prjMethods.defaultName();
+  return project.value.defaultName;
 }
 
 const projectName = ref("");
 
 function submitName(newName) {
   projectName.value = newName;
-  prjMethods.changeName(newName);
+  project.value.changeName(newName);
 }
 
-prjMethods.loadProject().then(function () {
-  projectName.value = prjMethods.getName();
+project.value.loadProject().then(function () {
+  projectName.value = project.value.name;
 });
 </script>
 

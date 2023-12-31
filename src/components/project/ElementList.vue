@@ -21,8 +21,7 @@ import SortableCell from "../ui/SortableCell.vue";
 import { provide, computed, ref, onUpdated,inject } from "vue";
 
 const props = defineProps(["elements"]);
-const prjMethods = inject('prjMethods');
-const elmMethods = inject("elmMethods");
+const project = inject('project');
 
 const dispElements = computed(function () {
   return props.elements
@@ -105,7 +104,7 @@ function saveElmList() {
       position: idx + 1,
     };
   });
-  prjMethods.storeElementList(elmList);
+  project.value.storeElementList(elmList);
 }
 
 function closeElement(elm) {
@@ -114,7 +113,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  elmMethods.openNewElement(elementPrevPos(0));
+  project.value.openNewElement(elementPrevPos(0));
 }
 defineExpose({ openNewElement });
 </script>

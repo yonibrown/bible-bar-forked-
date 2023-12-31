@@ -16,13 +16,13 @@
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
+import { biResearch } from "../../store/biResearch.js";
 
 const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
 
 const researchObjId = inject("researchObjId");
 const research = inject("research");
-const resMethods = inject("resMethods");
 
 // const parts = ref([]);
 const links = inject("links");
@@ -79,8 +79,7 @@ function changeSortField(newField) {
 loadResearchParts();
 
 function loadResearchParts() {
-  //   parts.value = await resMethods.loadParts(research, sortAttr.value);
-  resMethods.loadParts(research.value, sortAttr.value);
+  research.value.loadParts(sortAttr.value);
 }
 
 // filter parts
@@ -125,20 +124,12 @@ const sortedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  await resMethods.updateParts(
-    research.value,
-    tableRef.value.selectedLines,
-    cat,
-  );
-  // loadResearchParts();
+  await research.value.updateParts(tableRef.value.selectedLines, cat);
 }
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
-  const newRes = await resMethods.duplicate(
-    researchObjId,
-    tableRef.value.selectedLines,
-  );
+  const newRes = await research.value.duplicate(tableRef.value.selectedLines);
   createElement({
     type: "parts",
     res: newRes.id.res,
@@ -146,7 +137,7 @@ async function duplicateSelected() {
 }
 
 function removeSelected() {
-  resMethods.deleteParts(research.value, tableRef.value.selectedLines);
+  research.value.deleteParts(tableRef.value.selectedLines);
 }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });
