@@ -255,7 +255,7 @@ class biResearchCollection {
 
   get dbId() {
     return {
-      res: this.id,
+      res: this.res,
     };
   }
 
