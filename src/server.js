@@ -53,7 +53,7 @@ async function sendToServer(data) {
 
   if (obj) {
     if (typeof obj["error"] != "undefined") {
-      console.log("Error from " + service + ".php - " + obj["error"]);
+      console.log("Error from obj_api.php - " + obj["error"]);
       return null;
     }
     if (biProject.main && obj.objects_to_reload) {

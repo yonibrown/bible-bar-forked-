@@ -28,11 +28,11 @@ export class biProject {
   // getters
 
   static get main() {
-    if (!this._project){
-        return null;
+    if (!this._project) {
+      return null;
     }
     return this._project.value;
-}
+  }
 
   get id() {
     return this._id;
@@ -208,8 +208,11 @@ export class biProject {
   }
 
   addResearch(res) {
-    const newRes = new biResearch(res);
-    this._researches.push(newRes);
+    var newRes = this.getResearch(res.id);
+    if (!newRes) {
+      newRes = new biResearch(res);
+      this._researches.push(newRes);
+    }
     return newRes;
   }
 
