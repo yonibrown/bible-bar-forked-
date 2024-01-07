@@ -20,6 +20,8 @@ export class biProject {
     this._links = [];
     this._researches = [];
 
+    this._tabs = [];
+
     this._tempElementId = -1;
 
     this.constructor._project = ref(this);
@@ -48,6 +50,10 @@ export class biProject {
 
   get elements() {
     return this._elements;
+  }
+
+  get tabs() {
+    return this._tabs;
   }
 
   get links() {
@@ -102,6 +108,7 @@ export class biProject {
     this._researches = biResearch.initList(obj.data.researches);
     this._links = biLink.initList(obj.data.links);
     this._elements = biElement.initList(obj.data.elements);
+    this._tabs = obj.data.tabs;
   }
 
   storeElementList(list) {

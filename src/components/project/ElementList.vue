@@ -20,13 +20,13 @@ import ElementBox from "./ElementBox.vue";
 import SortableCell from "../ui/SortableCell.vue";
 import { provide, computed, ref, onUpdated,inject } from "vue";
 
-const props = defineProps(["elements"]);
+const props = defineProps(["elements","tab"]);
 const project = inject('project');
 
 const dispElements = computed(function () {
   return props.elements
     .filter(function (a) {
-      return +a.position >= 0;
+      return +a.position >= 0 && a.tab == props.tab;
     })
     .sort(function (a, b) {
       return a.position - b.position;

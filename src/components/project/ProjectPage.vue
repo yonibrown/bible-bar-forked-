@@ -6,8 +6,8 @@
       >
       </project-card>
       <div class="tab-box">
-        <div class="tab">
-          <element-list :elements="elements" ref="listRef"></element-list>
+        <div class="tab" v-for="tab in tabs" :style="{width:tabWidth}">
+          <element-list :elements="elements" :tab="tab" ref="listRef"></element-list>
         </div>
         <!-- <div class="tab">
           <element-list :elements="elements" ref="listRef"></element-list>
@@ -28,6 +28,14 @@ const props = defineProps(["id"]);
 const projectLoaded = ref(false);
 const project = ref(new biProject(props.id));
 provide("project", project);
+
+const tabs = computed(function () {
+  return project.value.tabs;
+});
+
+const tabWidth = computed(function () {
+  return (100/project.value.tabs.length)+'%';
+});
 
 const elements = computed(function () {
   return project.value.elements;
@@ -78,5 +86,6 @@ project.value.loadProject().then(function(){
 .tab-box {
   display: flex;
   height: calc(100vh - 124px);
+  flex-direction: row-reverse;
 }
 </style>
