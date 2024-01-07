@@ -19,7 +19,14 @@
           </span>
         </div>
       </base-card>
-      <element-list :elements="elements" ref="listRef"></element-list>
+      <div class="tab-box">
+        <div class="tab">
+          <element-list :elements="elements" ref="listRef"></element-list>
+        </div>
+        <!-- <div class="tab">
+          <element-list :elements="elements" ref="listRef"></element-list>
+        </div> -->
+      </div>
     </section>
   </div>
 </template>
@@ -84,5 +91,15 @@ project.value.loadProject().then(function () {
   font-weight: bold;
   font-size: 1.8em;
   margin: 0.83em 0;
+}
+
+ .tab {
+  overflow-y: scroll;
+  overflow-x: hidden;
+} 
+
+.tab-box{
+  display: flex;
+  height: calc( 100vh - 250px);
 }
 </style>

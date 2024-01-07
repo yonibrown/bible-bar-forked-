@@ -185,7 +185,7 @@ export class biResearch {
     this.loadParts();
   }
 
-  async duplicate( partList) {
+  async duplicate(partList) {
     const data = {
       type: "research",
       oper: "duplicate",
