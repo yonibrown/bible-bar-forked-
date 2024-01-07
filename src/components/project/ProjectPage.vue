@@ -1,24 +1,10 @@
 <template>
   <div>
-    <section>
-      <base-card>
-        <div>
-          <!-- <span class="title">
-            Project {{ project.id }}: {{ project.attr.name }}
-          </span> -->
-          <base-editable
-            :initialValue="projectName"
-            @submitValue="submitName"
-            name="projectName"
-            :getDefault="defaultName"
-          ></base-editable>
-          <span class="menu-buttons">
-            <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
-            <menu-button type="add" @click="openNewElement"></menu-button>
-            <menu-button type="close"></menu-button>
-          </span>
-        </div>
-      </base-card>
+    <section v-if="projectLoaded">
+      <project-card
+        :openNewElement="openNewElement"
+      >
+      </project-card>
       <div class="tab-box">
         <div class="tab">
           <element-list :elements="elements" ref="listRef"></element-list>
@@ -32,13 +18,14 @@
 </template>
 
 <script setup>
-import MenuButton from "../ui/MenuButton.vue";
 import ElementList from "./ElementList.vue";
+import ProjectCard from "./ProjectCard.vue";
 import { ref, provide, computed } from "vue";
 import { biProject } from "../../store/biProject.js";
 
 const props = defineProps(["id"]);
 
+const projectLoaded = ref(false);
 const project = ref(new biProject(props.id));
 provide("project", project);
 
@@ -59,25 +46,12 @@ provide("researches", researches);
 
 const listRef = ref();
 
-// link methods
 function openNewElement() {
   listRef.value.openNewElement();
 }
 
-// element name
-function defaultName() {
-  return project.value.defaultName;
-}
-
-const projectName = ref("");
-
-function submitName(newName) {
-  projectName.value = newName;
-  project.value.changeName(newName);
-}
-
-project.value.loadProject().then(function () {
-  projectName.value = project.value.name;
+project.value.loadProject().then(function(){
+  projectLoaded.value = true;
 });
 </script>
 
@@ -93,13 +67,16 @@ project.value.loadProject().then(function () {
   margin: 0.83em 0;
 }
 
- .tab {
+.tab {
+  border: solid 1px #b4b4b4;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
   overflow-y: scroll;
   overflow-x: hidden;
-} 
+  flex-grow: 1;
+}
 
-.tab-box{
+.tab-box {
   display: flex;
-  height: calc( 100vh - 250px);
+  height: calc(100vh - 124px);
 }
 </style>
