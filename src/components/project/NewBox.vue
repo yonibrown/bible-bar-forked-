@@ -88,7 +88,14 @@ function submitElement() {
     return;
   }
   if (action.value == "open") {
-    console.log('not yet implemented');
+    if (type.value == "parts") {
+      createElement({
+        type: type.value,
+        res: selectedObject.value,
+      });
+      return;
+    }
+    console.log("not yet implemented");
     return;
   }
 }

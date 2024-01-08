@@ -20,6 +20,8 @@ export class biProject {
     this._links = [];
     this._researches = [];
 
+    this._tabs = [];
+
     this._tempElementId = -1;
 
     this.constructor._project = ref(this);
@@ -28,11 +30,11 @@ export class biProject {
   // getters
 
   static get main() {
-    if (!this._project){
-        return null;
+    if (!this._project) {
+      return null;
     }
     return this._project.value;
-}
+  }
 
   get id() {
     return this._id;
@@ -48,6 +50,10 @@ export class biProject {
 
   get elements() {
     return this._elements;
+  }
+
+  get tabs() {
+    return this._tabs;
   }
 
   get links() {
@@ -102,14 +108,15 @@ export class biProject {
     this._researches = biResearch.initList(obj.data.researches);
     this._links = biLink.initList(obj.data.links);
     this._elements = biElement.initList(obj.data.elements);
+    this._tabs = obj.data.tabs;
   }
 
-  storeElementList(list) {
+  storeElementList(prop) {
     const data = {
       type: "project",
       oper: "save_elements",
       id: this.dbId,
-      prop: { elements: list },
+      prop,
     };
     sendToServer(data);
   }
@@ -208,8 +215,11 @@ export class biProject {
   }
 
   addResearch(res) {
-    const newRes = new biResearch(res);
-    this._researches.push(newRes);
+    var newRes = this.getResearch(res.id);
+    if (!newRes) {
+      newRes = new biResearch(res);
+      this._researches.push(newRes);
+    }
     return newRes;
   }
 

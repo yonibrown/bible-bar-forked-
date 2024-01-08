@@ -23,6 +23,10 @@ export class biElement {
     return this._obj.attr;
   }
 
+  get tab() {
+    return this._obj.tab;
+  }
+
   get position() {
     return this._obj.position;
   }
@@ -60,6 +64,10 @@ export class biElement {
 
   set position(obj) {
     this._obj.position = obj;
+  }
+
+  set tab(obj) {
+    this._obj.tab = obj;
   }
 
   //methods
