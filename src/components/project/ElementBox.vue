@@ -9,6 +9,7 @@
       ></base-editable>
       <span class="menu-buttons">
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+        <menu-button type="clipboard" @click="downloadElement"></menu-button>
         <menu-button
           v-if="displayOptionsButton"
           type="edit"
@@ -73,7 +74,7 @@ function closeElement() {
 
 // change attributes of element
 function changeAttr(changedAttr) {
-  props.element.changeAttr( changedAttr);
+  props.element.changeAttr(changedAttr);
 }
 provide("changeAttr", changeAttr);
 
@@ -96,7 +97,7 @@ async function openText(prop, openInSameElement) {
       if (txtElm.position <= 0) {
         prop.position = props.nextPos;
       }
-      await txtElm.changeAttr( prop);
+      await txtElm.changeAttr(prop);
       await txtElm.setName("");
       if (txtElm.position <= 0) {
         txtElm.position = props.nextPos;
@@ -127,6 +128,11 @@ const linkIds = computed(function () {
   });
 });
 provide("linkIds", linkIds);
+
+function downloadElement() {
+  console.log("downloadElement");
+  boxRef.value.download();
+}
 </script>
 
 <style scoped>
