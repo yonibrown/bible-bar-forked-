@@ -8,7 +8,7 @@
     <links-menu title="הדגשות"></links-menu>
     <bar-menu ref="barMenuRef"></bar-menu>
   </div>
-  <div class="in_body">
+  <div class="in_body" ref="barBodyRef">
     <div class="bar_header">
       <div class="bar_area">
         <bar-sgm-header
@@ -52,6 +52,7 @@ const element = inject("element");
 const links = inject("links");
 
 const barMenuRef = ref();
+const barBodyRef = ref();
 
 const segments = computed(function () {
   if (!element.value || !element.value.segments) {
@@ -73,6 +74,47 @@ function openText(prop) {
   elmOpenText(prop, barMenuRef.value.openInSameElement);
 }
 provide("openText", openText);
+
+function download() {
+  console.log("download bar");
+  html2canvas(barBodyRef.value).then((canvas) => {
+    console.log(canvas);
+    var imgageData = canvas.toDataURL("image/png");
+    var newData = imgageData.replace(
+      /^data:image\/png/,
+      "data:application/octet-stream"
+    );
+    console.log(newData);
+
+    // download
+    // var element = document.createElement("a");
+    // element.setAttribute("href", newData);
+    // element.setAttribute("download", "bar.png");
+    // document.body.appendChild(element);
+    // element.click();
+    // document.body.removeChild(element);
+
+    //copy to clipboard
+    canvas.toBlob(function (blob) {
+      navigator.clipboard
+        .write([
+          new ClipboardItem(
+            Object.defineProperty({}, blob.type, {
+              value: blob,
+              enumerable: true,
+            })
+          ),
+        ])
+        .then(function () {
+          // do something
+        });
+    });
+
+    // barBodyRef.value.appendChild(canvas);
+  });
+}
+
+defineExpose({ download });
 </script>
 
 <style scoped>

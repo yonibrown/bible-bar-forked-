@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { provide, ref, inject, watch, computed } from "vue";
+import { provide, ref, inject, watch } from "vue";
 
 const scrollable = ref(null);
 var scrollTop = 0;
@@ -56,7 +56,7 @@ activateResizable();
   background-color: white;
   text-align: justify;
   /* margin: 15px auto; */
-    margin: 0 auto 5px auto;
+  margin: 0 auto 5px auto;
   width: 100%;
 }
 </style>
