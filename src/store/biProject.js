@@ -111,12 +111,12 @@ export class biProject {
     this._tabs = obj.data.tabs;
   }
 
-  storeElementList(list) {
+  storeElementList(prop) {
     const data = {
       type: "project",
       oper: "save_elements",
       id: this.dbId,
-      prop: { elements: list },
+      prop,
     };
     sendToServer(data);
   }

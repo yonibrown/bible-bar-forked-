@@ -66,6 +66,10 @@ export class biElement {
     this._obj.position = obj;
   }
 
+  set tab(obj) {
+    this._obj.tab = obj;
+  }
+
   //methods
   setName(newName) {
     this._obj.name = newName;
