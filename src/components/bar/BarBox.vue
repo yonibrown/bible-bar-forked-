@@ -45,6 +45,7 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
+import { writeToClipboard } from "../../general.js";
 import { inject, computed, provide, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
@@ -76,41 +77,7 @@ function openText(prop) {
 provide("openText", openText);
 
 function copyToClipboard() {
-  html2canvas(barBodyRef.value).then((canvas) => {
-    console.log(canvas);
-    var imgageData = canvas.toDataURL("image/png");
-    var newData = imgageData.replace(
-      /^data:image\/png/,
-      "data:application/octet-stream"
-    );
-    console.log(newData);
-
-    // download
-    // var element = document.createElement("a");
-    // element.setAttribute("href", newData);
-    // element.setAttribute("download", "bar.png");
-    // document.body.appendChild(element);
-    // element.click();
-    // document.body.removeChild(element);
-
-    //copy to clipboard
-    canvas.toBlob(function (blob) {
-      navigator.clipboard
-        .write([
-          new ClipboardItem(
-            Object.defineProperty({}, blob.type, {
-              value: blob,
-              enumerable: true,
-            })
-          ),
-        ])
-        .then(function () {
-          // do something
-        });
-    });
-
-    // barBodyRef.value.appendChild(canvas);
-  });
+  writeToClipboard(barBodyRef.value,'png');
 }
 
 defineExpose({ copyToClipboard });

@@ -16,12 +16,10 @@
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
-import { biResearch } from "../../store/biResearch.js";
 
 const displayOptions = inject("displayOptions");
 const elementAttr = inject("elementAttr");
 
-const researchObjId = inject("researchObjId");
 const research = inject("research");
 
 // const parts = ref([]);

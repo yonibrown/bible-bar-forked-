@@ -36,6 +36,7 @@ import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
 import { inject, ref, computed } from "vue";
+import { writeToClipboard } from "../../general.js";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
@@ -96,16 +97,7 @@ function closestAttr(elm, attr) {
 }
 
 function copyToClipboard() {
-  const blob = new Blob([textRef.value.outerHTML], { type: "text/html" });
-  const clipboardItem = new window.ClipboardItem({ "text/html": blob });
-  navigator.clipboard.write([clipboardItem]);
-
-  // var r = document.createRange();
-  // r.selectNode(textRef.value);
-  // window.getSelection().removeAllRanges();
-  // window.getSelection().addRange(r);
-  // document.execCommand("copy");
-  // window.getSelection().removeAllRanges();
+  writeToClipboard(textRef.value.outerHTML,'html');
 }
 
 defineExpose({ copyToClipboard });
