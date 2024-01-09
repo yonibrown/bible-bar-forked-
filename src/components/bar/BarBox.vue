@@ -75,8 +75,7 @@ function openText(prop) {
 }
 provide("openText", openText);
 
-function download() {
-  console.log("download bar");
+function copyToClipboard() {
   html2canvas(barBodyRef.value).then((canvas) => {
     console.log(canvas);
     var imgageData = canvas.toDataURL("image/png");
@@ -114,7 +113,7 @@ function download() {
   });
 }
 
-defineExpose({ download });
+defineExpose({ copyToClipboard });
 </script>
 
 <style scoped>

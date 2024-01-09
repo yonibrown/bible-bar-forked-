@@ -10,7 +10,16 @@
   </div>
   <div>
     <base-scrollable class="bible-text">
-      <div class="text-box" ref="textRef">
+      <div
+        class="text-box"
+        ref="textRef"
+        style="
+          font-size: 155%;
+          font-family: David, sans-serif;
+          text-align: justify;
+          direction: rtl;
+        "
+      >
         <text-verse
           v-for="vrs in verses"
           :key="vrs.part_id"
@@ -85,6 +94,21 @@ function getSelectionInElement(elm) {
 function closestAttr(elm, attr) {
   return elm.closest("[" + attr + "]").getAttribute(attr);
 }
+
+function copyToClipboard() {
+  const blob = new Blob([textRef.value.outerHTML], { type: "text/html" });
+  const clipboardItem = new window.ClipboardItem({ "text/html": blob });
+  navigator.clipboard.write([clipboardItem]);
+
+  // var r = document.createRange();
+  // r.selectNode(textRef.value);
+  // window.getSelection().removeAllRanges();
+  // window.getSelection().addRange(r);
+  // document.execCommand("copy");
+  // window.getSelection().removeAllRanges();
+}
+
+defineExpose({ copyToClipboard });
 </script>
 
 <style scoped>

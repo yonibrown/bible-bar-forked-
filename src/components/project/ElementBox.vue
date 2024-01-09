@@ -9,7 +9,7 @@
       ></base-editable>
       <span class="menu-buttons">
         <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
-        <menu-button type="clipboard" @click="downloadElement"></menu-button>
+        <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
         <menu-button
           v-if="displayOptionsButton"
           type="edit"
@@ -129,9 +129,8 @@ const linkIds = computed(function () {
 });
 provide("linkIds", linkIds);
 
-function downloadElement() {
-  console.log("downloadElement");
-  boxRef.value.download();
+function copyToClipboard() {
+  boxRef.value.copyToClipboard();
 }
 </script>
 
