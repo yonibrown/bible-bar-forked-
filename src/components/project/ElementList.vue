@@ -134,7 +134,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  project.value.openNewElement(elementPrevPos(0));
+  project.value.openNewElement(props.tab,elementPrevPos(0));
 }
 defineExpose({ openNewElement });
 </script>

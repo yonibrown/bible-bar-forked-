@@ -3,6 +3,7 @@
     <section v-if="projectLoaded">
       <project-card
         :openNewElement="openNewElement"
+        :copyToClipboard="copyToClipboard"
       >
       </project-card>
       <div class="tab-box">
@@ -33,9 +34,9 @@ const tabs = computed(function () {
   return project.value.tabs;
 });
 
-const tabWidth = computed(function () {
-  return (100/project.value.tabs.length)+'%';
-});
+// const tabWidth = computed(function () {
+//   return (100/project.value.tabs.length)+'%';
+// });
 
 const elements = computed(function () {
   return project.value.elements;
@@ -52,15 +53,20 @@ const researches = computed(function () {
 });
 provide("researches", researches);
 
-const listRef = ref();
+const listRef = ref([]);
 
 function openNewElement() {
-  listRef.value.openNewElement();
+  console.log(listRef.value);
+  listRef.value[0].openNewElement(0);
 }
 
 project.value.loadProject().then(function(){
   projectLoaded.value = true;
 });
+
+function copyToClipboard(){
+
+}
 </script>
 
 <style scoped>

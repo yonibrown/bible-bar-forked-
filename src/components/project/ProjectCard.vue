@@ -11,6 +11,7 @@
     ></base-editable>
     <span class="menu-buttons">
       <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+      <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
       <menu-button type="add" @click="openNewElement"></menu-button>
       <menu-button type="close"></menu-button>
     </span>
@@ -19,7 +20,7 @@
 
 <script setup>
 import MenuButton from "../ui/MenuButton.vue";
-const props = defineProps(["openNewElement"]);
+const props = defineProps(["openNewElement","copyToClipboard"]);
 import { inject,ref } from "vue";
 
 const project = inject("project");
