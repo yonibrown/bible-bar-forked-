@@ -6,8 +6,8 @@
       >
       </project-card>
       <div class="tab-box">
-        <div class="tab" v-for="tab in tabs" :style="{width:tabWidth}">
-          <element-list :elements="elements" :tab="tab" ref="listRef"></element-list>
+        <div class="tab" v-for="tab in tabs" :style="{width:tab.width_pct+'%'}">
+          <element-list :elements="elements" :tab="tab.id" ref="listRef"></element-list>
         </div>
         <!-- <div class="tab">
           <element-list :elements="elements" ref="listRef"></element-list>

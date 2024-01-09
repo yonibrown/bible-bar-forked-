@@ -59,8 +59,6 @@ function moveElement(dragData, dropIdx) {
 
   const dropTab = props.tab;
 
-  console.log("moveElement", dragData, dropIdx);
-
   const dropElm = dispElements.value[dropIdx];
   const dropElmPos = +dropElm.position;
 
