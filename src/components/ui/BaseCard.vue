@@ -75,7 +75,7 @@ provide("activateResizable", activateResizable);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
   padding: 1rem;
   margin: 2rem auto;
-  max-width: 85%;
+  max-width: 90%;
   position: relative;
   background-color: #f5f7fa;
 }

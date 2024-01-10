@@ -59,8 +59,6 @@ function moveElement(dragData, dropIdx) {
 
   const dropTab = props.tab;
 
-  console.log("moveElement", dragData, dropIdx);
-
   const dropElm = dispElements.value[dropIdx];
   const dropElmPos = +dropElm.position;
 
@@ -136,7 +134,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  project.value.openNewElement(elementPrevPos(0));
+  project.value.openNewElement(props.tab,elementPrevPos(0));
 }
 defineExpose({ openNewElement });
 </script>

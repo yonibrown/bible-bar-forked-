@@ -19,7 +19,6 @@ export class biProject {
     this._elements = [];
     this._links = [];
     this._researches = [];
-
     this._tabs = [];
 
     this._tempElementId = -1;
@@ -136,10 +135,11 @@ export class biProject {
     sendToServer(data);
   }
 
-  openNewElement(position) {
+  openNewElement(tab,position) {
     const newElement = biElement.init({
       id: this._tempElementId--,
       proj: this.id,
+      tab,
       position,
       type: "new",
       name: "new element",
@@ -154,11 +154,12 @@ export class biProject {
   }
 
   async createFromElement(prop) {
+    const origElm = prop.originalElement;
     const newAttr = {
       proj: this.id,
+      tab: origElm.tab,
       ...prop.attr,
     };
-    const origElm = prop.originalElement;
     if (origElm.type == "new") {
       newAttr.position = origElm.position;
       newAttr.name = prop.name;
