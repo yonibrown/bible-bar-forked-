@@ -7,20 +7,22 @@
       ref="partsMenuRef"
     ></parts-menu>
   </div>
-  <base-tabs
-    :tabList="tabList"
-    :currentTab="currentTabName"
-    @changeTab="changeTab"
-  ></base-tabs>
-  <parts-table
-    v-show="currentTabName == 'parts'"
-    ref="partsTabRef"
-  ></parts-table>
-  <collections-table
-    v-show="currentTabName == 'collections'"
-    ref="colsTabRef"
-  ></collections-table>
-  <research-link v-show="currentTabName == 'markers'"></research-link>
+  <div ref="partsBodyRef">
+    <base-tabs
+      :tabList="tabList"
+      :currentTab="currentTabName"
+      @changeTab="changeTab"
+    ></base-tabs>
+    <parts-table
+      v-show="currentTabName == 'parts'"
+      ref="partsTabRef"
+    ></parts-table>
+    <collections-table
+      v-show="currentTabName == 'collections'"
+      ref="colsTabRef"
+    ></collections-table>
+    <research-link v-show="currentTabName == 'markers'"></research-link>
+  </div>
 </template>
 
 <script setup>
@@ -30,6 +32,7 @@ import CollectionsTable from "./CollectionsTable.vue";
 import ResearchLink from "./ResearchLink.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
+import { writeToClipboard } from "../../general.js";
 
 import { ref, inject, provide, computed } from "vue";
 
@@ -50,6 +53,7 @@ provide("research", research);
 const partsTabRef = ref();
 const colsTabRef = ref();
 const partsMenuRef = ref();
+const partsBodyRef = ref();
 
 // tabs
 const tabList = [
@@ -105,4 +109,10 @@ function openText(prop) {
   elmOpenText(prop, partsMenuRef.value.openInSameElement);
 }
 provide("openText", openText);
+
+function copyToClipboard() {
+  writeToClipboard(partsBodyRef.value.outerHTML,'html');
+}
+
+defineExpose({ copyToClipboard });
 </script>

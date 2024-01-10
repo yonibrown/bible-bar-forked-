@@ -10,7 +10,16 @@
   </div>
   <div>
     <base-scrollable class="bible-text">
-      <div class="text-box" ref="textRef">
+      <div
+        class="text-box"
+        ref="textRef"
+        style="
+          font-size: 155%;
+          font-family: David, sans-serif;
+          text-align: justify;
+          direction: rtl;
+        "
+      >
         <text-verse
           v-for="vrs in verses"
           :key="vrs.part_id"
@@ -27,6 +36,7 @@ import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
 import { inject, ref, computed } from "vue";
+import { writeToClipboard } from "../../general.js";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
@@ -85,6 +95,12 @@ function getSelectionInElement(elm) {
 function closestAttr(elm, attr) {
   return elm.closest("[" + attr + "]").getAttribute(attr);
 }
+
+function copyToClipboard() {
+  writeToClipboard(textRef.value.outerHTML,'html');
+}
+
+defineExpose({ copyToClipboard });
 </script>
 
 <style scoped>
