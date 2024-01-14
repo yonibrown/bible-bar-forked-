@@ -7,7 +7,8 @@ export class biResearch {
     this._obj = {
       id: rec.id,
       name: rec.name,
-      collections: biResearchCollection.initList(rec.collections),
+      collections: this.initCollections(rec.collections),
+      // collections: biResearchCollection.initList(rec.collections),
       parts: rec.parts,
     };
   }
@@ -200,6 +201,12 @@ export class biResearch {
     return newRes;
   }
 
+  initCollections(list) {
+    return list.map((rec) => {
+      return new biResearchCollection(rec, this);
+    });
+  }
+
   //static
   static initList(list) {
     return list.map((rec) => {
@@ -236,8 +243,9 @@ export class biResearch {
 }
 
 class biResearchCollection {
-  constructor(rec) {
+  constructor(rec, research) {
     this._obj = rec;
+    this._res = research;
   }
 
   // getters
@@ -259,6 +267,12 @@ class biResearchCollection {
     };
   }
 
+  get parts() {
+    return this._res.parts.filter((prt) => {
+      return prt.col == this.id;
+    });
+  }
+
   //methods
   async changeAttr(newAttr) {
     Object.assign(this._obj, newAttr);
@@ -276,9 +290,9 @@ class biResearchCollection {
     biLink.reloadResLink({ res: this.res });
   }
 
-  static initList(list) {
-    return list.map(function (rec) {
-      return new biResearchCollection(rec);
-    });
-  }
+  // static initList(list) {
+  //   return list.map(function (rec) {
+  //     return new biResearchCollection(rec);
+  //   });
+  // }
 }
