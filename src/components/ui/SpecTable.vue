@@ -4,7 +4,11 @@
       <table>
         <tr class="header">
           <td v-show="enableSelection" class="fit-column"></td>
-          <td v-for="fld in tableFields" :class="{ 'fit-column': fld.fit }">
+          <td
+            v-for="fld in tableFields"
+            v-show="fld.display"
+            :class="{ 'fit-column': fld.fit }"
+          >
             <span
               v-if="fld.sortable"
               @dblclick="changeSort(fld.name)"
@@ -54,7 +58,9 @@ const props = defineProps([
   "enableNewLine",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
-provide("tableFields", props.tableFields);
+provide("tableFields", computed(function(){
+  return props.tableFields;
+}));
 const enableLineEdit = computed(function () {
   return props.enableSelection;
 });
@@ -104,7 +110,7 @@ const checkState = computed(function () {
   if (len == 0) {
     return "none";
   }
-  if (len == (linesRef.value.length - inactiveLines)) {
+  if (len == linesRef.value.length - inactiveLines) {
     return "all";
   }
   return "partial";

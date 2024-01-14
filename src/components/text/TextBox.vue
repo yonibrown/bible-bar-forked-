@@ -122,8 +122,6 @@ const linkedParts = computed(function () {
 });
 provide('linkedParts',linkedParts);
 
-
-
 defineExpose({ copyToClipboard });
 </script>
 

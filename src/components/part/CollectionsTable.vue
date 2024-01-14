@@ -25,12 +25,14 @@ const tableFields = [
     title: "קטגוריה",
     sortable: false,
     fit: true,
+    display: true
   },
   {
     name: "description",
     title: "הערות",
     sortable: false,
     fit: false,
+    display: true
   },
 ];
 
