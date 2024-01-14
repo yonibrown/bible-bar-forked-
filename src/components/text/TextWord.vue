@@ -16,57 +16,58 @@ const linkIds = inject("linkIds");
 
 const project = inject("project");
 const links = inject("links");
+const linkedParts = inject("linkedParts");
 
 const wordObj = ref(null);
 
-const wordFirstCategory = computed(function () {
-  for (let link of links.value) {
-    for (let cat of link.categories) {
-      let res = project.value.getResearch(cat.res);
-      let col = res.getCollection(cat.col);
-      let parts = col.parts;
-      for (let prt of parts) {
-        if (
-          props.verse.position >= prt.src_from_position &&
-          props.verse.position <= prt.src_to_position
-        ) {
-          console.log("part", prt);
-        }
-      }
+const wordFirstCat = computed(function () {
+  for (let {prt,cat} of linkedParts.value) {
+    if (
+      cat.display &&
+      (props.verse.position > prt.src_from_position ||
+        (props.verse.position == prt.src_from_position &&
+          props.word.id >= prt.src_from_word)) &&
+      (props.verse.position < prt.src_to_position ||
+        (props.verse.position == prt.src_to_position &&
+          props.word.id <= prt.src_to_word))
+    ) {
+      return cat;
     }
   }
   return null;
 });
 
-const categoryStyle = computed(function () {
-  console.log(
-    "word",
-    props.word,
-    props.verse,
-    links.value,
-    wordFirstCategory.value,
-  );
-  if (linkIds.value.includes(props.word.link)) {
-    let cat = biLink.getCategory(props.word.link, props.word.col);
-    if (cat && cat.display) {
-      return {
-        backgroundColor: cat.color,
-      };
+const spaceFirstCat = computed(function () {
+  for (let {prt,cat} of linkedParts.value) {
+    if (
+      cat.display &&
+      (props.verse.position > prt.src_from_position ||
+        (props.verse.position == prt.src_from_position &&
+          props.word.id >= prt.src_from_word)) &&
+      (props.verse.position < prt.src_to_position ||
+        (props.verse.position == prt.src_to_position &&
+          props.word.id < prt.src_to_word))
+    ) {
+      return cat;
     }
   }
-  return {}; // no category linked
+  return null;
 });
 
 const wordStyle = computed(function () {
-  if (props.word.word_linked) {
-    return categoryStyle.value;
+  if (wordFirstCat.value){
+    return {
+        backgroundColor: wordFirstCat.value.color,
+      };
   }
   return {}; // no category linked
 });
 
 const spaceStyle = computed(function () {
-  if (props.word.space_linked) {
-    return categoryStyle.value;
+  if (spaceFirstCat.value){
+    return {
+        backgroundColor: spaceFirstCat.value.color,
+      };
   }
   return {}; // no category linked
 });
