@@ -214,14 +214,12 @@ export class biResearch {
     });
   }
 
-  static async loadIndexDivisions(seqIndex, selectedKey) {
+  static async loadIndexDivisions(seqIndex, prop) {
     const data = {
       type: "res_index",
       oper: "get_divisions",
       id: seqIndex,
-      prop: {
-        key: selectedKey,
-      },
+      prop
     };
 
     const obj = await sendToServer(data);

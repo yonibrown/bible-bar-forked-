@@ -39,6 +39,7 @@ function clear() {
 }
 
 function updateKey(key) {
+  console.log(key);
   key.forEach((lvl, lvlIdx) => {
     selectedKey[lvlIdx] = {
       level: lvl.level,
@@ -49,10 +50,9 @@ function updateKey(key) {
 }
 
 async function loadKey() {
-  keyLevels.value = await biResearch.loadIndexDivisions(
-    seqIndex.value,
-    selectedKey
-  );
+  keyLevels.value = await biResearch.loadIndexDivisions(seqIndex.value, {
+    key: selectedKey,
+  });
 }
 
 async function changeKeyLevel(lvlIdx, div) {
