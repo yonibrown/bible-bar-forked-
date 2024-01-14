@@ -74,11 +74,11 @@ function changeSortField(newField) {
 }
 
 // load data
-loadResearchParts();
+// loadResearchParts();
 
-function loadResearchParts() {
-  research.value.loadParts(sortAttr.value);
-}
+// function loadResearchParts() {
+//   research.value.loadParts(sortAttr.value);
+// }
 
 // filter parts
 const filteredParts = computed(function () {

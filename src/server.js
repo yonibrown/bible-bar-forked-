@@ -1,10 +1,10 @@
 import { biProject } from "./store/biProject";
 
 // local
-const basicPath = `http://localhost/bibar-vue-php/`;
+// const basicPath = `http://localhost/bibar-vue-php/`;
 
 // bibar.site
-// const basicPath = `https://bibar.site/`;
+const basicPath = `https://bibar.site/`;
 
 const apiUrl = basicPath + `obj_api.php`;
 
@@ -47,13 +47,13 @@ async function sendToServer(data) {
   try {
     obj = JSON.parse(responseData);
   } catch (err) {
-    console.log("Error from obj_api.php - " + responseData);
+    console.log("Error from obj_api.php", data, responseData);
     return null;
   }
 
   if (obj) {
     if (typeof obj["error"] != "undefined") {
-      console.log("Error from obj_api.php - " + obj["error"]);
+      console.log("Error from obj_api.php", data, obj["error"]);
       return null;
     }
     if (biProject.main && obj.objects_to_reload) {
