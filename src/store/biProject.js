@@ -105,6 +105,7 @@ export class biProject {
       desc: obj.data.desc,
     };
     this._researches = biResearch.initList(obj.data.researches);
+    console.log(this._researches);
     this._links = biLink.initList(obj.data.links);
     this._elements = biElement.initList(obj.data.elements);
     this._tabs = obj.data.tabs;
@@ -135,7 +136,7 @@ export class biProject {
     sendToServer(data);
   }
 
-  openNewElement(tab,position) {
+  openNewElement(tab, position) {
     const newElement = biElement.init({
       id: this._tempElementId--,
       proj: this.id,
