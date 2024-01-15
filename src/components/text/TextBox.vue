@@ -35,13 +35,15 @@ import TextMenu from "./TextMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
-import { inject, ref, computed } from "vue";
+import { inject, ref, computed, provide } from "vue";
 import { writeToClipboard } from "../../general.js";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const elementAttr = inject("elementAttr");
 const project = inject("project");
+const links = inject("links");
+
 
 const textRef = ref();
 
@@ -99,6 +101,26 @@ function closestAttr(elm, attr) {
 function copyToClipboard() {
   writeToClipboard(textRef.value.outerHTML,'html');
 }
+
+const linkedParts = computed(function () {
+  const parts = [];
+  for (let link of links.value) {
+    for (let cat of link.categories) {
+      let res = project.value.getResearch(cat.res);
+      let col = res.getCollection(cat.col);
+      for (let prt of col.parts) {
+        if (
+          prt.src_from_position >= elementAttr.value.from_position &&
+           prt.src_to_position <= elementAttr.value.to_position
+        ) {
+          parts.push({prt,cat});
+        }
+      }
+    }
+  }
+  return parts;
+});
+provide('linkedParts',linkedParts);
 
 defineExpose({ copyToClipboard });
 </script>

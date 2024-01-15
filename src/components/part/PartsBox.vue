@@ -55,6 +55,14 @@ const colsTabRef = ref();
 const partsMenuRef = ref();
 const partsBodyRef = ref();
 
+const partsListMode = computed(function(){
+  if (partsMenuRef.value){
+    return partsMenuRef.value.listMode;
+  }
+  return null;
+});
+provide('partsListMode',partsListMode);
+
 // tabs
 const tabList = [
   {
