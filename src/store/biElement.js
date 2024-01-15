@@ -220,6 +220,7 @@ class biElmText extends biElement {
   }
 
   async loadText() {
+    console.log('loadText');
     const data = {
       type: "element",
       oper: "get_segment",
@@ -234,12 +235,9 @@ class biElmText extends biElement {
   reload(attr) {
     if (
       !attr ||
-      "point_research_id" in attr ||
-      "point_part_id" in attr ||
       "division_id" in attr ||
       "from_div" in attr ||
-      "to_div" in attr ||
-      "add_link" in attr
+      "to_div" in attr 
     ) {
       this.loadText();
     }

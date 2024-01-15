@@ -105,7 +105,6 @@ export class biProject {
       desc: obj.data.desc,
     };
     this._researches = biResearch.initList(obj.data.researches);
-    console.log(this._researches);
     this._links = biLink.initList(obj.data.links);
     this._elements = biElement.initList(obj.data.elements);
     this._tabs = obj.data.tabs;

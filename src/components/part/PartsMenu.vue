@@ -46,6 +46,12 @@
       :disabled="!hasChanges"
     />
     <span class="divider">|</span>
+    <span>תצוגת רשימה:</span>
+    <select v-model="listMode">
+      <option value="verse">פסוק אחד</option>
+      <option value="segment">מקטע</option>
+    </select>
+    <span class="divider">|</span>
     <input type="checkbox" v-model="openInSameElement" />
     <span>פתח טקסט בחלון קבוע</span>
   </base-menu>
@@ -95,6 +101,8 @@ const hasChanges = computed(function () {
   return action.value != "choose";
 });
 
+const listMode = ref("verse");
+
 function submitChanges() {
   let prop = { dummy: "" };
   switch (action.value) {
@@ -128,7 +136,7 @@ function submitChanges() {
     prop,
   });
 }
-defineExpose({ openInSameElement });
+defineExpose({ openInSameElement, listMode });
 </script>
 
 <style scoped>

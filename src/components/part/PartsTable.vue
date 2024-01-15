@@ -18,6 +18,7 @@ import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
 
 const displayOptions = inject("displayOptions");
+const partsListMode = inject("partsListMode");
 const elementAttr = inject("elementAttr");
 
 const research = inject("research");
@@ -35,35 +36,71 @@ const parts = computed(function () {
 });
 
 // table properties
-const tableFields = [
-  {
-    name: "col",
-    title: "קטגוריה",
-    sortable: true,
-    fit: true,
-  },
-  {
-    name: "src",
-    title: "פסוק",
-    sortable: true,
-    fit: true,
-  },
-  {
-    name: "text",
-    title: "טקסט",
-    sortable: false,
-    fit: false,
-  },
-];
+const tableFields = computed(function () {
+  return [
+    {
+      name: "col",
+      title: "קטגוריה",
+      sortable: true,
+      fit: true,
+      display: true
+    },
+    {
+      name: "src",
+      title: "פסוק",
+      sortable: true,
+      fit: true,
+      display: partsListMode.value=="verse"
+    },
+    {
+      name: "text",
+      title: "טקסט",
+      sortable: false,
+      fit: false,
+      display: partsListMode.value=="verse"
+    },
+    {
+      name: "from_div",
+      title: "פסוק התחלה",
+      sortable: true,
+      fit: true,
+      display: partsListMode.value=="segment"
+    },
+    {
+      name: "from_text",
+      title: "טקסט",
+      sortable: false,
+      fit: false,
+      display: partsListMode.value=="segment"
+    },
+    {
+      name: "to_div",
+      title: "פסוק סיום",
+      sortable: true,
+      fit: true,
+      display: partsListMode.value=="segment"
+    },
+    {
+      name: "to_text",
+      title: "טקסט",
+      sortable: false,
+      fit: false,
+      display: partsListMode.value=="segment"
+    },
+  ];
+});
+
 const sortAttr = ref({
   sort: elementAttr.value.sort,
   ordering: elementAttr.value.ordering,
 });
+
 function reverseTable() {
   sortAttr.value.ordering = sortAttr.value.ordering == "DESC" ? "ASC" : "DESC";
   //   parts.value.reverse();
   changeAttr(sortAttr.value);
 }
+
 function changeSortField(newField) {
   sortAttr.value.ordering = "ASC";
   sortAttr.value.sort = newField;
