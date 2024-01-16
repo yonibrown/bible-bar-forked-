@@ -220,7 +220,7 @@ class biElmText extends biElement {
   }
 
   async loadText() {
-    console.log('loadText');
+    // console.log('loadText');
     const data = {
       type: "element",
       oper: "get_segment",

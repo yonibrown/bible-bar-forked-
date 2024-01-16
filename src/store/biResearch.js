@@ -238,6 +238,18 @@ export class biResearch {
 
     return obj.data;
   }
+
+  static async loadKey(seqIndex, prop) {
+    const data = {
+      type: "res_index",
+      oper: "get_key",
+      id: seqIndex,
+      prop
+    };
+
+    const obj = await sendToServer(data);
+    return obj.data;
+  }
 }
 
 class biResearchCollection {
