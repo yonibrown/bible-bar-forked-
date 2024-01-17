@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import SpecLineWrapper from "./SpecLineWrapper.vue";
+import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
 import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",
@@ -58,9 +58,12 @@ const props = defineProps([
   "enableNewLine",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
-provide("tableFields", computed(function(){
-  return props.tableFields;
-}));
+provide(
+  "tableFields",
+  computed(function () {
+    return props.tableFields;
+  }),
+);
 const enableLineEdit = computed(function () {
   return props.enableSelection;
 });
