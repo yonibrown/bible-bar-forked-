@@ -1,8 +1,9 @@
 <template>
-  <base-draggable :data="{ wordIdx }">
-    <span class="divider draggable-head" v-show="wordIdx == dividerWordIdx"
-      >|</span
-    >
+  <base-draggable
+    :data="{ wordDivider: 'from' }"
+    v-show="wordIdx == dividerFromIdx"
+  >
+    <span class="divider draggable-head">|</span>
   </base-draggable>
   <base-droppable
     :drop="setDividerOnWord"
@@ -10,27 +11,43 @@
     :dragEnter="enterWord"
     :dragLeave="leaveWord"
   >
-    <span>{{ word }}</span>
+    <span :class="{ hiWord: wordHilighted }">{{ word }}</span>
   </base-droppable>
+  <base-draggable
+    :data="{ wordDivider: 'to' }"
+    v-show="wordIdx == dividerToIdx"
+  >
+    <span class="divider draggable-head">|</span>
+  </base-draggable>
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
+import { computed, inject } from "vue";
 const props = defineProps(["word", "wordIdx"]);
-const dividerWordIdx = inject("dividerWordIdx");
+const dividerFromIdx = inject("dividerFromIdx");
+const dividerToIdx = inject("dividerToIdx");
 const setDivider = inject("setDivider");
+const hilightWord = inject("hilightWord");
+const hilightFromWordIdx = inject("hilightFromWordIdx");
+const hilightToWordIdx = inject("hilightToWordIdx");
 
-function setDividerOnWord() {
-  setDivider.value(props.wordIdx);
+const wordHilighted = computed(function () {
+  return (
+    props.wordIdx >= hilightFromWordIdx.value &&
+    props.wordIdx <= hilightToWordIdx.value
+  );
+});
+
+function setDividerOnWord(dragData) {
+  console.log('dragData',dragData);
+  setDivider(props.wordIdx);
 }
 
-const hilightMenu = ref(false);
-
-function enterLinksMenu() {
-  hilightMenu.value = true;
+function enterWord() {
+  hilightWord(props.wordIdx);
 }
-function leaveLinksMenu() {
-  hilightMenu.value = false;
+function leaveWord() {
+  // hilightWord(props.wordIdx);
 }
 </script>
 
@@ -38,5 +55,9 @@ function leaveLinksMenu() {
 .divider {
   color: blue;
   cursor: col-resize;
+}
+
+.hiWord {
+  background-color: rgb(204, 233, 233);
 }
 </style>
