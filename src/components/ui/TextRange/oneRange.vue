@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import WordInRange from "./wordInRange.vue";
+import WordInRange from "./WordInRange.vue";
 import { ref, computed, provide } from "vue";
 const props = defineProps(["text", "fromWord", "toWord"]);
 
