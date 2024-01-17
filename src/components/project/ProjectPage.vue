@@ -56,7 +56,7 @@ provide("researches", researches);
 const listRef = ref([]);
 
 function openNewElement() {
-  console.log(listRef.value);
+  // console.log(listRef.value);
   listRef.value[0].openNewElement(0);
 }
 

@@ -60,28 +60,14 @@ const tableFields = computed(function () {
       display: partsListMode.value=="verse"
     },
     {
-      name: "from_div",
-      title: "פסוק התחלה",
+      name: "div_range",
+      title: "טווח פסוקים",
       sortable: true,
       fit: true,
       display: partsListMode.value=="segment"
     },
     {
-      name: "from_text",
-      title: "טקסט",
-      sortable: false,
-      fit: false,
-      display: partsListMode.value=="segment"
-    },
-    {
-      name: "to_div",
-      title: "פסוק סיום",
-      sortable: true,
-      fit: true,
-      display: partsListMode.value=="segment"
-    },
-    {
-      name: "to_text",
+      name: "text_range",
       title: "טקסט",
       sortable: false,
       fit: false,

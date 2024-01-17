@@ -12,27 +12,52 @@
         {{ line.text_after }}
       </span>
     </template>
-    <template #from_div>
-      <span>{{ line.src_name.replaceAll(",", " ") }}</span>
+    <template #div_range>
+      <span>{{ divRange }}</span>
     </template>
-    <template #from_text>
-      <span>{{ line.src_from_text }}</span>
+    <template #text_range>
+      <!-- <span>{{ textRange }}</span> -->
+      <text-range 
+      :fromPosition="line.src_from_position"
+      :fromText="line.src_from_text"
+      :fromWord="line.src_from_word"
+      :toPosition="line.src_to_position"
+      :toText="line.src_to_text"
+      :toWord="line.src_to_word"
+      ></text-range>
     </template>
-    <template #to_div>
+    <!-- <template #to_div>
+      <verse-editable
+      :initial-value="line.src_name.replaceAll(',', ' ')"
+      placeholder="פסוק"
+      :seqIndex="seqIndex"
+      :initPosition="line.src_from_position"
+      ></verse-editable>
       <span>{{ line.src_to_name.replaceAll(",", " ") }}</span>
     </template>
     <template #to_text>
       <span>{{ line.src_to_text }}</span>
-    </template>
+    </template> -->
   </spec-line>
 </template>
 
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
-import { inject, computed } from "vue";
+import VerseEditable from "../ui/VerseEditable.vue";
+import TextRange from "../ui/TextRange.vue";
+import { inject, computed, provide } from "vue";
 
 const props = defineProps(["line", "field"]);
-console.log('line',props.line);
+
+const seqIndex = computed(function () {
+  return {
+    res: props.line.src_research,
+    col: props.line.src_collection,
+    idx: 1,
+  };
+});
+provide("seqIndex", seqIndex);
+console.log("line", props.line);
 
 const researchObjId = inject("researchObjId");
 const research = inject("research");
@@ -48,4 +73,15 @@ function openText() {
     point_part_id: props.line.id,
   });
 }
+
+const divRange = computed(function () {
+  if (props.line.src_from_name == props.line.src_to_name) {
+    return props.line.src_from_name.replaceAll(",", " ");
+  }
+  return (
+    props.line.src_from_name.replaceAll(",", " ") +
+    " - " +
+    props.line.src_to_name.replaceAll(",", " ")
+  );
+});
 </script>
