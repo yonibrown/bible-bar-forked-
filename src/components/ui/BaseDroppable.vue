@@ -1,5 +1,5 @@
 <template>
-  <div
+  <span
     @drop="onDrop"
     @dragover.prevent
     @dragenter.prevent="onDragEnter"
@@ -8,7 +8,7 @@
     ref="dropPool"
   >
     <slot></slot>
-  </div>
+  </span>
 </template>
 <script setup>
 import { ref } from "vue";

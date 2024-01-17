@@ -42,36 +42,36 @@ const tableFields = computed(function () {
       name: "col",
       title: "קטגוריה",
       sortable: true,
-      fit: true,
-      display: true
+      fit: false,
+      display: true,
     },
     {
       name: "src",
       title: "פסוק",
       sortable: true,
       fit: true,
-      display: partsListMode.value=="verse"
+      display: partsListMode.value == "verse",
     },
     {
       name: "text",
       title: "טקסט",
       sortable: false,
       fit: false,
-      display: partsListMode.value=="verse"
+      display: partsListMode.value == "verse",
     },
     {
       name: "div_range",
       title: "טווח פסוקים",
       sortable: true,
       fit: true,
-      display: partsListMode.value=="segment"
+      display: partsListMode.value == "segment",
     },
     {
       name: "text_range",
       title: "טקסט",
       sortable: false,
       fit: false,
-      display: partsListMode.value=="segment"
+      display: partsListMode.value == "segment",
     },
   ];
 });
