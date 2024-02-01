@@ -34,7 +34,7 @@ const hilightToWordIdx = ref(-1);
 provide("hilightToWordIdx", hilightToWordIdx);
 
 function setDivider(idx, wordDivider) {
-  console.log("set divider 5");
+  console.log("set divider 6");
 
   if (wordDivider == "from" && props.fromWord) {
     if (idx < dividerFromIdx.value) {
@@ -68,6 +68,14 @@ function setDivider(idx, wordDivider) {
         }
       }
     }
+  }
+
+console.log(dividerFromIdx.value,dividerToIdx.value,words.value.length);
+  if (dividerFromIdx.value == words.value.length - 1){
+    dividerFromIdx.value--;
+  }
+  if (dividerToIdx.value == -1){
+    dividerToIdx.value++;
   }
 }
 provide("setDivider", setDivider);
