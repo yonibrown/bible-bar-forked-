@@ -39,7 +39,6 @@ const wordHilighted = computed(function () {
 });
 
 function setDividerOnWord(dragData) {
-  console.log('dragData',dragData);
   setDivider(props.wordIdx);
 }
 

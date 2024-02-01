@@ -95,7 +95,6 @@ const hasChanges = computed(function () {
     return moveToCat.value != "choose";
   }
   // if (displayUploadFile.value) {
-  //   console.log(fileRef.value);
   //   return fileRef.value && fileRef.value.files.length > 0;
   // }
   return action.value != "choose";

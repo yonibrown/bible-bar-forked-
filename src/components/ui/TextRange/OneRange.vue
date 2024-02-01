@@ -15,9 +15,6 @@ import WordInRange from "./WordInRange.vue";
 import { ref, computed, provide } from "vue";
 const props = defineProps(["text", "fromWord", "toWord"]);
 
-console.log('from',props.fromWord);
-console.log('to',props.toWord);
-
 const dividerFromIdx = ref(-1);
 provide("dividerFromIdx", dividerFromIdx);
 if (props.fromWord){
