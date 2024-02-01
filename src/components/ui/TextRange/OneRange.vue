@@ -34,28 +34,39 @@ const hilightToWordIdx = ref(-1);
 provide("hilightToWordIdx", hilightToWordIdx);
 
 function setDivider(idx, wordDivider) {
-  console.log("setDivider", idx);
+  console.log("set divider 3");
+  // console.log("setDivider", idx);
+  
   if (wordDivider == "from" && props.fromWord) {
-    if (idx > dividerToIdx.value) {
-      dividerFromIdx.value = dividerToIdx.value;
-      dividerToIdx.value = idx + 1;
-    } else {
+    if (idx < dividerFromIdx.value) {
       dividerFromIdx.value = idx;
+    } else {
+      if (idx > dividerToIdx.value) {
+        dividerFromIdx.value = dividerToIdx.value;
+        dividerToIdx.value = idx + 1;
+      } else {
+        dividerFromIdx.value = idx + 1;
+      }
     }
   }
+
   if (wordDivider == "to" && props.toWord) {
-    if (idx < dividerFromIdx.value) {
-      dividerToIdx.value = dividerFromIdx.value;
-      dividerFromIdx.value = idx;
+    if (idx > dividerToIdx.value) {
+      dividerToIdx.value = idx;
     } else {
-      dividerToIdx.value = idx - 1;
+      if (idx < dividerFromIdx.value) {
+        dividerToIdx.value = dividerFromIdx.value;
+        dividerFromIdx.value = idx + 1;
+      } else {
+        dividerToIdx.value = idx - 1;
+      }
     }
   }
 }
 provide("setDivider", setDivider);
 
 function hilightWord(idx) {
-  console.log("hilightWord", idx);
+  // console.log("hilightWord", idx);
 }
 provide("hilightWord", hilightWord);
 
