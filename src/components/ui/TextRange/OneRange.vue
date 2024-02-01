@@ -34,18 +34,21 @@ const hilightToWordIdx = ref(-1);
 provide("hilightToWordIdx", hilightToWordIdx);
 
 function setDivider(idx, wordDivider) {
-  console.log("set divider 3");
-  // console.log("setDivider", idx);
-  
+  console.log("set divider 5");
+
   if (wordDivider == "from" && props.fromWord) {
     if (idx < dividerFromIdx.value) {
       dividerFromIdx.value = idx;
     } else {
-      if (idx > dividerToIdx.value) {
-        dividerFromIdx.value = dividerToIdx.value;
-        dividerToIdx.value = idx + 1;
-      } else {
+      if (idx < dividerToIdx.value) {
         dividerFromIdx.value = idx + 1;
+      } else {
+        if (idx == dividerToIdx.value) {
+          dividerFromIdx.value = idx;
+        } else {
+          dividerFromIdx.value = dividerToIdx.value + 1;
+          dividerToIdx.value = idx;
+        }
       }
     }
   }
@@ -54,11 +57,15 @@ function setDivider(idx, wordDivider) {
     if (idx > dividerToIdx.value) {
       dividerToIdx.value = idx;
     } else {
-      if (idx < dividerFromIdx.value) {
-        dividerToIdx.value = dividerFromIdx.value;
-        dividerFromIdx.value = idx + 1;
-      } else {
+      if (idx > dividerFromIdx.value) {
         dividerToIdx.value = idx - 1;
+      } else {
+        if (idx == dividerFromIdx.value) {
+          dividerToIdx.value = idx;
+        } else {
+          dividerToIdx.value = dividerFromIdx.value - 1;
+          dividerFromIdx.value = idx;
+        }
       }
     }
   }
