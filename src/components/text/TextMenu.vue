@@ -3,14 +3,14 @@
     <span>פעולה:</span>
     <select v-model="action">
       <option value="choose">בחר...</option>
-      <option value="addToCat">הוסף לקטגוריה</option>
+      <option value="addToCat">הוסף לרשימה</option>
     </select>
     <span v-if="displayChangeCat">
       <span>קטגוריה:</span>
       <select v-model="moveToCat">
         <option value="0">בחר...</option>
         <optgroup v-for="res in researches" :label="res.name">
-          <option :value="res.id+'-'+col.id" v-for="col in res.collections">
+          <option :value="res.id + '-' + col.id" v-for="col in res.collections">
             {{ col.name }}
           </option>
         </optgroup>
@@ -53,11 +53,11 @@ function submitChanges() {
   let prop;
   switch (action.value) {
     case "addToCat":
-       let catArr = moveToCat.value.split('-');
-       prop = { 
+      let catArr = moveToCat.value.split("-");
+      prop = {
         research_id: catArr[0],
-        collection_id: catArr[1] 
-        };
+        collection_id: catArr[1],
+      };
       break;
   }
   emit("updateData", {

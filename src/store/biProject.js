@@ -74,7 +74,7 @@ export class biProject {
     return "project" + this.id;
   }
 
-  get primaryLink(){
+  get primaryLink() {
     return this._obj.attr.primaryLink;
   }
 
