@@ -4,14 +4,12 @@ import { biProject } from "./biProject.js";
 
 export class biResearch {
   constructor(rec) {
-    console.log(rec.parts);
     this._obj = {
       id: rec.id,
       name: rec.name,
       collections: this.initCollections(rec.collections),
-      parts: this.initParts(rec.parts),
-      // parts: rec.parts,
     };
+    this._parts = this.initParts(rec.parts);
   }
 
   // getters
@@ -32,7 +30,7 @@ export class biResearch {
   }
 
   get parts() {
-    return this._obj.parts;
+    return this._parts;
   }
 
   get dbId() {
@@ -46,9 +44,9 @@ export class biResearch {
     this._obj.collections = obj;
   }
 
-  set parts(obj) {
-    this._obj.parts = obj;
-  }
+  // set parts(rec) {
+  //   this._parts = this.initParts(rec);
+  // }
 
   setName(newName) {
     this._obj.name = newName;
@@ -85,7 +83,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections.push(new biResearchCollection(obj.data));
+    this.collections.push(new biResearchCollection(obj.data,this));
     biLink.reloadResLink(this.dbId);
   }
 
@@ -99,9 +97,9 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections.push(new biResearchCollection(obj.data.new_collection));
+    this.collections.push(new biResearchCollection(obj.data.new_collection,this));
     obj.data.new_parts.forEach((prt) => {
-      this.parts.push(prt);
+      this._parts.push(new biResearchPart(prt, this));
     });
     biLink.reloadResLink(this.dbId);
   }
@@ -140,7 +138,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.parts = obj.data;
+    this._parts = this.initParts(obj.data);
   }
 
   async newPart(prop) {
@@ -153,7 +151,7 @@ export class biResearch {
 
     const obj = await sendToServer(data);
     obj.data.new_parts.forEach((prt) => {
-      this.parts.push(prt);
+      this._parts.push(new biResearchPart(prt, this));
     });
   }
 

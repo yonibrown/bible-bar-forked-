@@ -45,7 +45,7 @@
 
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
-import VerseEditable from "../ui/VerseEditable.vue";
+// import VerseEditable from "../ui/VerseEditable.vue";
 import TextRange from "../ui/TextRange.vue";
 import { inject, computed, provide } from "vue";
 
