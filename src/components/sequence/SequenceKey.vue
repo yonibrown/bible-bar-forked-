@@ -39,7 +39,6 @@ function clear() {
 }
 
 function updateKey(key) {
-  // console.log(key);
   key.forEach((lvl, lvlIdx) => {
     selectedKey[lvlIdx] = {
       level: lvl.level,

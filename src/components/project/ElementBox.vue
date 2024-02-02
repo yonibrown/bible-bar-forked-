@@ -115,9 +115,12 @@ const projLinks = inject("links");
 const links = computed(function () {
   // return a list of links that are linked to this element
   return projLinks.value.filter(function (link) {
-    return link.elements.find(function (elmId) {
-      return elmId == props.element.id;
-    });
+    return (
+      link.id == project.value.primaryLink ||
+      link.elements.find(function (elmId) {
+        return elmId == props.element.id;
+      })
+    );
   });
 });
 provide("links", links);

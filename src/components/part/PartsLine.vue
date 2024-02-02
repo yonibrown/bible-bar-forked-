@@ -57,7 +57,6 @@ const seqIndex = computed(function () {
   };
 });
 provide("seqIndex", seqIndex);
-console.log("line", props.line);
 
 const researchObjId = inject("researchObjId");
 const research = inject("research");
