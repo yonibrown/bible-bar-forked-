@@ -4,12 +4,13 @@ import { biProject } from "./biProject.js";
 
 export class biResearch {
   constructor(rec) {
+    console.log(rec.parts);
     this._obj = {
       id: rec.id,
       name: rec.name,
       collections: this.initCollections(rec.collections),
-      // collections: biResearchCollection.initList(rec.collections),
-      parts: rec.parts,
+      parts: this.initParts(rec.parts),
+      // parts: rec.parts,
     };
   }
 
@@ -207,6 +208,12 @@ export class biResearch {
     });
   }
 
+  initParts(list) {
+    return list.map((rec) => {
+      return new biResearchPart(rec, this);
+    });
+  }
+
   //static
   static initList(list) {
     return list.map((rec) => {
@@ -305,4 +312,92 @@ class biResearchCollection {
   //     return new biResearchCollection(rec);
   //   });
   // }
+}
+
+class biResearchPart {
+  constructor(rec, research) {
+    this._obj = rec;
+    this._res = research;
+  }
+
+  // getters
+  get id() {
+    return this._obj.id;
+  }
+
+  get sort_key() {
+    return this._obj.sort_key;
+  }
+
+  get col() {
+    return this._obj.col;
+  }
+
+  get col_name() {
+    return this._obj.col_name;
+  }
+
+  get src_collection() {
+    return this._obj.src_collection;
+  }
+
+  get src_from_name() {
+    return this._obj.src_from_name;
+  }
+
+  get src_from_position() {
+    return this._obj.src_from_position;
+  }
+
+  get src_from_text() {
+    return this._obj.src_from_text;
+  }
+
+  get src_from_word() {
+    return this._obj.src_from_word;
+  }
+
+  get src_name() {
+    return this._obj.src_name;
+  }
+
+  get src_research() {
+    return this._obj.src_research;
+  }
+
+  get src_to_name() {
+    return this._obj.src_to_name;
+  }
+
+  get src_to_position() {
+    return this._obj.src_to_position;
+  }
+
+  get src_to_text() {
+    return this._obj.src_to_text;
+  }
+
+  get src_to_word() {
+    return this._obj.src_to_word;
+  }
+
+  get text_after() {
+    return this._obj.text_after;
+  }
+
+  get text_before() {
+    return this._obj.text_before;
+  }
+
+  get text_part() {
+    return this._obj.text_part;
+  }
+
+  get dbId() {
+    return {
+      res: this._res.id,
+    };
+  }
+
+  //methods
 }
