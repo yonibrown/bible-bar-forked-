@@ -7,8 +7,16 @@
       >
       </project-card>
       <div class="tab-box">
-        <div class="tab" v-for="tab in tabs" :style="{width:tab.width_pct+'%'}">
-          <element-list :elements="elements" :tab="tab.id" ref="listRef"></element-list>
+        <div
+          class="tab"
+          v-for="tab in tabs"
+          :style="{ width: tab.width_pct + '%' }"
+        >
+          <element-list
+            :elements="elements"
+            :tab="tab.id"
+            ref="listRef"
+          ></element-list>
         </div>
         <!-- <div class="tab">
           <element-list :elements="elements" ref="listRef"></element-list>
@@ -56,17 +64,14 @@ provide("researches", researches);
 const listRef = ref([]);
 
 function openNewElement() {
-  // console.log(listRef.value);
   listRef.value[0].openNewElement(0);
 }
 
-project.value.loadProject().then(function(){
+project.value.loadProject().then(function () {
   projectLoaded.value = true;
 });
 
-function copyToClipboard(){
-
-}
+function copyToClipboard() {}
 </script>
 
 <style scoped>

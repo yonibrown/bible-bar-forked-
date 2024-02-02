@@ -105,6 +105,8 @@ function changeSortField(newField) {
 
 // filter parts
 const filteredParts = computed(function () {
+  // todo: add filters
+  return parts.value;
   if (links.value.length == 0) {
     return parts.value;
   }

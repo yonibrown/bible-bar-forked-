@@ -1,6 +1,6 @@
 <template>
   <div v-show="displayOptions">
-    <links-menu title="סינון"></links-menu>
+    <!-- <links-menu title="סינון"></links-menu> -->
     <parts-menu
       @updateData="updateData"
       :currentTab="currentTabName"
@@ -55,13 +55,13 @@ const colsTabRef = ref();
 const partsMenuRef = ref();
 const partsBodyRef = ref();
 
-const partsListMode = computed(function(){
-  if (partsMenuRef.value){
+const partsListMode = computed(function () {
+  if (partsMenuRef.value) {
     return partsMenuRef.value.listMode;
   }
   return null;
 });
-provide('partsListMode',partsListMode);
+provide("partsListMode", partsListMode);
 
 // tabs
 const tabList = [
@@ -119,7 +119,7 @@ function openText(prop) {
 provide("openText", openText);
 
 function copyToClipboard() {
-  writeToClipboard(partsBodyRef.value.outerHTML,'html');
+  writeToClipboard(partsBodyRef.value.outerHTML, "html");
 }
 
 defineExpose({ copyToClipboard });

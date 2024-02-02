@@ -1,7 +1,11 @@
 <template>
   <div class="link-obj" @dblclick="openLink">
     <span>{{ name }}</span>
-    <menu-button type="close" @click="removeLink"></menu-button>
+    <menu-button
+      v-show="!primaryLink"
+      type="close"
+      @click="removeLink"
+    ></menu-button>
   </div>
 </template>
 
@@ -10,13 +14,18 @@ import MenuButton from "../ui/MenuButton.vue";
 import { computed, inject } from "vue";
 const props = defineProps(["link"]);
 const element = inject("element");
+const project = inject("project");
 
 const name = computed(function () {
   return props.link.name;
 });
 
+const primaryLink = computed(function () {
+  return props.link.id == project.value.primaryLink;
+});
+
 function removeLink() {
-  props.link.removeElementFromLink( element.value.id);
+  props.link.removeElementFromLink(element.value.id);
 }
 
 const createElement = inject("createElement");

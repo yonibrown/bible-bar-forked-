@@ -15,19 +15,16 @@ import WordInRange from "./WordInRange.vue";
 import { ref, computed, provide } from "vue";
 const props = defineProps(["text", "fromWord", "toWord"]);
 
-console.log('from',props.fromWord);
-console.log('to',props.toWord);
-
 const dividerFromIdx = ref(-1);
 provide("dividerFromIdx", dividerFromIdx);
-if (props.fromWord){
-    dividerFromIdx.value = props.fromWord;
+if (props.fromWord) {
+  dividerFromIdx.value = props.fromWord;
 }
 
 const dividerToIdx = ref(999);
 provide("dividerToIdx", dividerToIdx);
-if (props.toWord){
-    dividerToIdx.value = props.toWord;
+if (props.toWord) {
+  dividerToIdx.value = props.toWord;
 }
 
 const hilightFromWordIdx = ref(999);
@@ -36,13 +33,55 @@ provide("hilightFromWordIdx", hilightFromWordIdx);
 const hilightToWordIdx = ref(-1);
 provide("hilightToWordIdx", hilightToWordIdx);
 
-function setDivider(idx) {
-  console.log("setDivider", idx);
+function setDivider(idx, wordDivider) {
+  console.log("set divider 6");
+
+  if (wordDivider == "from" && props.fromWord) {
+    if (idx < dividerFromIdx.value) {
+      dividerFromIdx.value = idx;
+    } else {
+      if (idx < dividerToIdx.value) {
+        dividerFromIdx.value = idx + 1;
+      } else {
+        if (idx == dividerToIdx.value) {
+          dividerFromIdx.value = idx;
+        } else {
+          dividerFromIdx.value = dividerToIdx.value + 1;
+          dividerToIdx.value = idx;
+        }
+      }
+    }
+  }
+
+  if (wordDivider == "to" && props.toWord) {
+    if (idx > dividerToIdx.value) {
+      dividerToIdx.value = idx;
+    } else {
+      if (idx > dividerFromIdx.value) {
+        dividerToIdx.value = idx - 1;
+      } else {
+        if (idx == dividerFromIdx.value) {
+          dividerToIdx.value = idx;
+        } else {
+          dividerToIdx.value = dividerFromIdx.value - 1;
+          dividerFromIdx.value = idx;
+        }
+      }
+    }
+  }
+
+console.log(dividerFromIdx.value,dividerToIdx.value,words.value.length);
+  if (dividerFromIdx.value == words.value.length - 1){
+    dividerFromIdx.value--;
+  }
+  if (dividerToIdx.value == -1){
+    dividerToIdx.value++;
+  }
 }
 provide("setDivider", setDivider);
 
 function hilightWord(idx) {
-  console.log("hilightWord", idx);
+  // console.log("hilightWord", idx);
 }
 provide("hilightWord", hilightWord);
 

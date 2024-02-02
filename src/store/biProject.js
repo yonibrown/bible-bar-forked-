@@ -74,10 +74,14 @@ export class biProject {
     return "project" + this.id;
   }
 
-  // setters
-  set attr(val) {
-    this._obj.attr = val;
+  get primaryLink() {
+    return this._obj.attr.primaryLink;
   }
+
+  // setters
+  // set attr(val) {
+  //   this._obj.attr = val;
+  // }
 
   set elements(val) {
     this._elements = val;
@@ -100,10 +104,12 @@ export class biProject {
       prop: { dummy: "" },
     };
     const obj = await sendToServer(data);
-    this.attr = {
+    this._obj.attr = {
       name: obj.data.name,
       desc: obj.data.desc,
+      primaryLink: obj.data.primary_link,
     };
+
     this._researches = biResearch.initList(obj.data.researches);
     this._links = biLink.initList(obj.data.links);
     this._elements = biElement.initList(obj.data.elements);
