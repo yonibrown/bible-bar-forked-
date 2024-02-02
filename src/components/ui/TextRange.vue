@@ -13,7 +13,7 @@
 
 <script setup>
 import OneRange from "./TextRange/OneRange.vue";
-import { inject, computed, provide } from "vue";
+import { computed, provide } from "vue";
 const props = defineProps([
   "fromPosition",
   "fromText",
@@ -21,9 +21,22 @@ const props = defineProps([
   "toPosition",
   "toText",
   "toWord",
+  "disabled"
 ]);
+
+const emit = defineEmits(["changeValue"]);
 
 const oneVerse = computed(function () {
   return props.fromPosition == props.toPosition;
 });
+
+function changeValue(newVal){
+  emit("changeValue",newVal);
+};
+provide('changeValue',changeValue);
+
+const editDiabled = computed(function () {
+  return props.disabled;
+});
+provide("disabled", editDiabled);
 </script>
