@@ -25,7 +25,7 @@
         :toText="line.src_to_text"
         :toWord="line.src_to_word"
         :disabled="!enableSelection"
-        @changeValue="(newVal) => updateRange(line,newVal)"
+        @changeValue="(newVal) => updateRange(line, newVal)"
       ></text-range>
     </template>
     <!-- <template #to_div>
@@ -87,7 +87,7 @@ const divRange = computed(function () {
   );
 });
 
-function updateRange(line,newVal) {
-  console.log("updateRange", line,newVal);
+function updateRange(part, newVal) {
+  part.changeAttr(newVal);
 }
 </script>
