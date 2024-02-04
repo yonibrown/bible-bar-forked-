@@ -60,6 +60,7 @@ var fromDiv = null;
 var toDiv = null;
 
 function updateVerse(rangeEnd, newVal) {
+  console.log(props.part);
   var updAttr = {};
   if (rangeEnd == "from" || displayOneVerse.value) {
     updAttr.src_from_div = newVal.div;
@@ -68,7 +69,7 @@ function updateVerse(rangeEnd, newVal) {
   }
   if (rangeEnd == "to" || displayOneVerse.value) {
     updAttr.src_to_div = newVal.div;
-    updAttr.src_to_word = 0;
+    updAttr.src_to_word = 999;
     toDiv = newVal.div;
   }
 
