@@ -2,7 +2,7 @@
   <form @submit.prevent="submitValue" class="menu" v-if="editing">
     <sequence-key
       :initialValue="initialKey"
-      @changeValue="(newVal) => updateAttr('from_div', newVal)"
+      @changeValue="updateDiv"
       defaultValue="min"
       ref="fromRef"
     ></sequence-key>
@@ -40,7 +40,6 @@ var changedAttr = {};
 const hasChanges = ref(false);
 
 const editing = ref(false);
-const currentValue = ref(props.initialValue);
 const initialKey = ref(null);
 
 const title = computed(function () {
@@ -62,12 +61,8 @@ watch(input, function (newVal) {
 });
 
 function submitValue() {
-  if (currentValue.value == "" && !props.blankable) {
-    currentValue.value = props.getDefault();
-  }
-
   leaveEdit();
-  emit("submitValue", currentValue.value);
+  emit("submitValue", changedAttr);
 }
 
 async function startEdit() {
@@ -75,7 +70,6 @@ async function startEdit() {
     initialKey.value = await biResearch.loadKey(seqIndex.value, {
       position: props.initPosition,
     });
-    console.log("initialKey", initialKey.value);
     editing.value = true;
   }
 }
@@ -96,10 +90,9 @@ function inputKeydown(evt) {
   }
 }
 
-function updateAttr(attr, newVal) {
-  console.log("updateAttr", attr, newVal);
+function updateDiv(newVal) {
   hasChanges.value = true;
-  changedAttr[attr] = newVal;
+  changedAttr['div'] = newVal;
 
   // if ((attr = "from_div")) {
   //   if (getSeqDiv("to") < newVal) {

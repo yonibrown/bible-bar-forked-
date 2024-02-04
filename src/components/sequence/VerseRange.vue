@@ -1,41 +1,86 @@
 <template>
-  <span v-if="isRange">{{ verseRange }}</span>
-  <!-- <span v-else>{{ oneVerse }}</span> -->
   <verse-editable
-    v-else
-    :initial-value="oneVerse"
+    :initial-value="fromVerse"
     placeholder="פסוק"
-    :seqIndex="seqIndex"
     :initPosition="part.src_from_position"
     :disabled="!enableSelection"
-    @submitValue="updateVerse"
+    @submitValue="(attr) => updateVerse('from', attr)"
   ></verse-editable>
+  <span v-if="displayOneVerse">
+    <button class="disp-range" v-show="enableSelection" @click="displayRange">
+      טווח
+    </button>
+  </span>
+  <span v-else>
+    -
+    <verse-editable
+      :initial-value="toVerse"
+      placeholder="פסוק"
+      :initPosition="part.src_to_position"
+      :disabled="!enableSelection"
+      @submitValue="(attr) => updateVerse('to', attr)"
+    ></verse-editable>
+  </span>
 </template>
 
 <script setup>
 import VerseEditable from "./VerseEditable.vue";
-import { inject, computed, provide } from "vue";
+import { inject, computed, provide, ref } from "vue";
 
 const props = defineProps(["part"]);
+const emit = defineEmits(["changeValue"]);
+
 const enableSelection = inject("enableSelection");
 
-const isRange = computed(function () {
-  return props.part.src_from_name == props.part.src_to_name;
+const seqIndex = computed(function () {
+  return {
+    res: props.part.src_research,
+    col: props.part.src_collection,
+    idx: 1,
+  };
 });
+provide("seqIndex", seqIndex);
 
-const oneVerse = computed(function () {
+const displayOneVerse = ref(
+  props.part.src_from_position == props.part.src_to_position
+);
+function displayRange() {
+  displayOneVerse.value = false;
+}
+
+const fromVerse = computed(function () {
   return props.part.src_from_name.replaceAll(",", " ");
 });
 
-const verseRange = computed(function () {
-  return (
-    props.part.src_from_name.replaceAll(",", " ") +
-    " - " +
-    props.part.src_to_name.replaceAll(",", " ")
-  );
+const toVerse = computed(function () {
+  return props.part.src_to_name.replaceAll(",", " ");
 });
 
-function updateVerse(newVal) {
-  console.log("updateVerse", newVal);
+var fromDiv = null;
+var toDiv = null;
+
+function updateVerse(rangeEnd, newVal) {
+  var updAttr = {};
+  if (rangeEnd == "from" || displayOneVerse.value) {
+    updAttr.src_from_div = newVal.div;
+    updAttr.src_from_word = 0;
+    fromDiv = newVal.div;
+  }
+  if (rangeEnd == "to" || displayOneVerse.value) {
+    updAttr.src_to_div = newVal.div;
+    updAttr.src_to_word = 0;
+    toDiv = newVal.div;
+  }
+
+  if (fromDiv == toDiv) {
+    displayOneVerse.value = true;
+  }
+  emit("changeValue", updAttr);
 }
 </script>
+
+<style scoped>
+.disp-range {
+  margin-right: 5px;
+}
+</style>
