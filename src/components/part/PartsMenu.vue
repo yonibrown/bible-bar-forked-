@@ -100,7 +100,7 @@ const hasChanges = computed(function () {
   return action.value != "choose";
 });
 
-const listMode = ref("verse");
+const listMode = ref("segment");
 
 function submitChanges() {
   let prop = { dummy: "" };

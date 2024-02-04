@@ -83,7 +83,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections.push(new biResearchCollection(obj.data,this));
+    this.collections.push(new biResearchCollection(obj.data, this));
     biLink.reloadResLink(this.dbId);
   }
 
@@ -97,7 +97,9 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections.push(new biResearchCollection(obj.data.new_collection,this));
+    this.collections.push(
+      new biResearchCollection(obj.data.new_collection, this),
+    );
     obj.data.new_parts.forEach((prt) => {
       this._parts.push(new biResearchPart(prt, this));
     });
@@ -224,7 +226,7 @@ export class biResearch {
       type: "res_index",
       oper: "get_divisions",
       id: seqIndex,
-      prop
+      prop,
     };
 
     const obj = await sendToServer(data);
@@ -249,7 +251,7 @@ export class biResearch {
       type: "res_index",
       oper: "get_key",
       id: seqIndex,
-      prop
+      prop,
     };
 
     const obj = await sendToServer(data);
@@ -398,4 +400,7 @@ class biResearchPart {
   }
 
   //methods
+  changeAttr(newAttr) {
+    this._res.updateParts([this.id], newAttr);
+  }
 }
