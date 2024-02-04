@@ -33,20 +33,20 @@ function setDivider(idx, wordDivider) {
   var updAttr = {};
   if (wordDivider == "from" && props.fromWord) {
     if (idx < dividerFromIdx.value) {
-      dividerFromIdx.value = idx;
+      // dividerFromIdx.value = idx;
       updAttr.src_from_word = idx;
     } else {
       if (idx < dividerToIdx.value) {
-        dividerFromIdx.value = idx + 1;
+        // dividerFromIdx.value = idx + 1;
         updAttr.src_from_word = idx + 1;
       } else {
         if (idx == dividerToIdx.value) {
-          dividerFromIdx.value = idx;
+          // dividerFromIdx.value = idx;
           updAttr.src_from_word = idx;
         } else {
-          dividerFromIdx.value = dividerToIdx.value + 1;
+          // dividerFromIdx.value = dividerToIdx.value + 1;
           updAttr.src_from_word = dividerToIdx.value + 1;
-          dividerToIdx.value = idx;
+          // dividerToIdx.value = idx;
           updAttr.src_to_word = idx;
         }
       }
@@ -55,33 +55,37 @@ function setDivider(idx, wordDivider) {
 
   if (wordDivider == "to" && props.toWord) {
     if (idx > dividerToIdx.value) {
-      dividerToIdx.value = idx;
+      // dividerToIdx.value = idx;
       updAttr.src_to_word = idx;
     } else {
       if (idx > dividerFromIdx.value) {
-        dividerToIdx.value = idx - 1;
+        // dividerToIdx.value = idx - 1;
         updAttr.src_to_word = idx - 1;
       } else {
         if (idx == dividerFromIdx.value) {
-          dividerToIdx.value = idx;
+          // dividerToIdx.value = idx;
           updAttr.src_to_word = idx;
         } else {
-          dividerToIdx.value = dividerFromIdx.value - 1;
+          // dividerToIdx.value = dividerFromIdx.value - 1;
           updAttr.src_to_word = dividerFromIdx.value - 1;
-          dividerFromIdx.value = idx;
+          // dividerFromIdx.value = idx;
           updAttr.src_from_word = idx;
         }
       }
     }
   }
 
-  if (dividerFromIdx.value == words.value.length - 1) {
-    dividerFromIdx.value--;
-    updAttr.src_from_word--;
+  if ('src_from_word' in updAttr) {
+    if (updAttr.src_from_word == words.value.length - 1) {
+      updAttr.src_from_word--;
+    }
+    dividerFromIdx.value = updAttr.src_from_word;
   }
-  if (dividerToIdx.value == -1) {
-    dividerToIdx.value++;
-    updAttr.src_to_word++;
+  if ('src_to_word' in updAttr) {
+    if (updAttr.src_to_word == -1) {
+      updAttr.src_to_word++;
+    }
+    dividerToIdx.value = updAttr.src_to_word;
   }
   changeValue(updAttr);
 }

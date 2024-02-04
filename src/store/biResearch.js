@@ -167,7 +167,6 @@ export class biResearch {
         updAttr,
       },
     };
-    console.log(data);
     const obj = await sendToServer(data);
     this.loadParts();
   }

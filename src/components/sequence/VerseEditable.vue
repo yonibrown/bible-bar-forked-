@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed ,inject} from "vue";
+import { ref, watch, computed, inject } from "vue";
 import SequenceKey from "../sequence/SequenceKey.vue";
 import { biResearch } from "../../store/biResearch.js";
 
@@ -72,11 +72,10 @@ function submitValue() {
 
 async function startEdit() {
   if (!props.disabled) {
-
     initialKey.value = await biResearch.loadKey(seqIndex.value, {
       position: props.initPosition,
     });
-    console.log('initialKey',initialKey.value);
+    console.log("initialKey", initialKey.value);
     editing.value = true;
   }
 }
@@ -101,12 +100,12 @@ function updateAttr(attr, newVal) {
   hasChanges.value = true;
   changedAttr[attr] = newVal;
 
-  if ((attr = "from_div")) {
-    if (getSeqDiv("to") < newVal) {
-      toRef.value.updateKey(fromRef.value.getKey());
-      changedAttr["to_div"] = newVal;
-    }
-  }
+  // if ((attr = "from_div")) {
+  //   if (getSeqDiv("to") < newVal) {
+  //     toRef.value.updateKey(fromRef.value.getKey());
+  //     changedAttr["to_div"] = newVal;
+  //   }
+  // }
 }
 </script>
 
