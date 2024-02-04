@@ -8,9 +8,8 @@ export class biResearch {
       id: rec.id,
       name: rec.name,
       collections: this.initCollections(rec.collections),
-      // collections: biResearchCollection.initList(rec.collections),
-      parts: rec.parts,
     };
+    this._parts = this.initParts(rec.parts);
   }
 
   // getters
@@ -31,7 +30,7 @@ export class biResearch {
   }
 
   get parts() {
-    return this._obj.parts;
+    return this._parts;
   }
 
   get dbId() {
@@ -45,9 +44,9 @@ export class biResearch {
     this._obj.collections = obj;
   }
 
-  set parts(obj) {
-    this._obj.parts = obj;
-  }
+  // set parts(rec) {
+  //   this._parts = this.initParts(rec);
+  // }
 
   setName(newName) {
     this._obj.name = newName;
@@ -84,7 +83,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections.push(new biResearchCollection(obj.data));
+    this.collections.push(new biResearchCollection(obj.data,this));
     biLink.reloadResLink(this.dbId);
   }
 
@@ -98,9 +97,9 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.collections.push(new biResearchCollection(obj.data.new_collection));
+    this.collections.push(new biResearchCollection(obj.data.new_collection,this));
     obj.data.new_parts.forEach((prt) => {
-      this.parts.push(prt);
+      this._parts.push(new biResearchPart(prt, this));
     });
     biLink.reloadResLink(this.dbId);
   }
@@ -139,7 +138,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    this.parts = obj.data;
+    this._parts = this.initParts(obj.data);
   }
 
   async newPart(prop) {
@@ -152,7 +151,7 @@ export class biResearch {
 
     const obj = await sendToServer(data);
     obj.data.new_parts.forEach((prt) => {
-      this.parts.push(prt);
+      this._parts.push(new biResearchPart(prt, this));
     });
   }
 
@@ -204,6 +203,12 @@ export class biResearch {
   initCollections(list) {
     return list.map((rec) => {
       return new biResearchCollection(rec, this);
+    });
+  }
+
+  initParts(list) {
+    return list.map((rec) => {
+      return new biResearchPart(rec, this);
     });
   }
 
@@ -305,4 +310,92 @@ class biResearchCollection {
   //     return new biResearchCollection(rec);
   //   });
   // }
+}
+
+class biResearchPart {
+  constructor(rec, research) {
+    this._obj = rec;
+    this._res = research;
+  }
+
+  // getters
+  get id() {
+    return this._obj.id;
+  }
+
+  get sort_key() {
+    return this._obj.sort_key;
+  }
+
+  get col() {
+    return this._obj.col;
+  }
+
+  get col_name() {
+    return this._obj.col_name;
+  }
+
+  get src_collection() {
+    return this._obj.src_collection;
+  }
+
+  get src_from_name() {
+    return this._obj.src_from_name;
+  }
+
+  get src_from_position() {
+    return this._obj.src_from_position;
+  }
+
+  get src_from_text() {
+    return this._obj.src_from_text;
+  }
+
+  get src_from_word() {
+    return this._obj.src_from_word;
+  }
+
+  get src_name() {
+    return this._obj.src_name;
+  }
+
+  get src_research() {
+    return this._obj.src_research;
+  }
+
+  get src_to_name() {
+    return this._obj.src_to_name;
+  }
+
+  get src_to_position() {
+    return this._obj.src_to_position;
+  }
+
+  get src_to_text() {
+    return this._obj.src_to_text;
+  }
+
+  get src_to_word() {
+    return this._obj.src_to_word;
+  }
+
+  get text_after() {
+    return this._obj.text_after;
+  }
+
+  get text_before() {
+    return this._obj.text_before;
+  }
+
+  get text_part() {
+    return this._obj.text_part;
+  }
+
+  get dbId() {
+    return {
+      res: this._res.id,
+    };
+  }
+
+  //methods
 }
