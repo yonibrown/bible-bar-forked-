@@ -13,7 +13,7 @@
       </span>
     </template>
     <template #div_range>
-      <span>{{ divRange }}</span>
+      <verse-range :part="line"></verse-range>
     </template>
     <template #text_range>
       <!-- <span>{{ textRange }}</span> -->
@@ -25,7 +25,7 @@
         :toText="line.src_to_text"
         :toWord="line.src_to_word"
         :disabled="!enableSelection"
-        @changeValue="(newVal) => updateRange(line,newVal)"
+        @changeValue="(newVal) => updateRange(line, newVal)"
       ></text-range>
     </template>
     <!-- <template #to_div>
@@ -45,7 +45,7 @@
 
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
-// import VerseEditable from "../ui/VerseEditable.vue";
+import VerseRange from "../sequence/VerseRange.vue";
 import TextRange from "../ui/TextRange.vue";
 import { inject, computed, provide } from "vue";
 
@@ -76,18 +76,7 @@ function openText() {
   });
 }
 
-const divRange = computed(function () {
-  if (props.line.src_from_name == props.line.src_to_name) {
-    return props.line.src_from_name.replaceAll(",", " ");
-  }
-  return (
-    props.line.src_from_name.replaceAll(",", " ") +
-    " - " +
-    props.line.src_to_name.replaceAll(",", " ")
-  );
-});
-
-function updateRange(line,newVal) {
-  console.log("updateRange", line,newVal);
+function updateRange(part, newVal) {
+  part.changeAttr(newVal);
 }
 </script>
