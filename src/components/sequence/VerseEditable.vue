@@ -97,6 +97,7 @@ function inputKeydown(evt) {
 }
 
 function updateAttr(attr, newVal) {
+  console.log("updateAttr", attr, newVal);
   hasChanges.value = true;
   changedAttr[attr] = newVal;
 

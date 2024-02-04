@@ -8,7 +8,7 @@
     :seqIndex="seqIndex"
     :initPosition="part.src_from_position"
     :disabled="!enableSelection"
-    :submitValue="updateVerse"
+    @submitValue="updateVerse"
   ></verse-editable>
 </template>
 
