@@ -1,24 +1,20 @@
 <template>
-  <base-draggable
-    :data="{ wordDivider: 'from' }"
-    v-show="wordIdx == dividerFromIdx"
-  >
-    <span class="divider draggable-head">|</span>
-  </base-draggable>
-  <base-droppable
-    :drop="setDividerOnWord"
-    :dragStruct="['wordDivider']"
-    :dragEnter="enterWord"
-    :dragLeave="leaveWord"
-  >
-    <span :class="{ hiWord: !wordHilighted }">{{ word }}</span>
-  </base-droppable>
-  <base-draggable
-    :data="{ wordDivider: 'to' }"
-    v-show="wordIdx == dividerToIdx"
-  >
-    <span class="divider draggable-head">|</span>
-  </base-draggable>
+  <span>
+    <base-draggable :data="{ wordDivider: 'from' }" v-show="displayFromDivider">
+      <span class="divider draggable-head">|</span>
+    </base-draggable>
+    <base-droppable
+      :drop="setDividerOnWord"
+      :dragStruct="['wordDivider']"
+      :dragEnter="enterWord"
+      :dragLeave="leaveWord"
+    >
+      <span class="bible-text" :class="wordClass">{{ word }}</span>
+    </base-droppable>
+    <base-draggable :data="{ wordDivider: 'to' }" v-show="displayToDivider">
+      <span class="divider draggable-head">|</span>
+    </base-draggable>
+  </span>
 </template>
 
 <script setup>
@@ -28,13 +24,21 @@ const dividerFromIdx = inject("dividerFromIdx");
 const dividerToIdx = inject("dividerToIdx");
 const setDivider = inject("setDivider");
 const hilightWord = inject("hilightWord");
-const hilightFromWordIdx = inject("hilightFromWordIdx");
-const hilightToWordIdx = inject("hilightToWordIdx");
+const disabled = inject("disabled");
 
-const wordHilighted = computed(function () {
-  return (
-    props.wordIdx >= dividerFromIdx.value && props.wordIdx <= dividerToIdx.value
-  );
+const wordClass = computed(function () {
+  return props.wordIdx >= dividerFromIdx.value &&
+    props.wordIdx <= dividerToIdx.value
+    ? "inWord"
+    : "outWord";
+});
+
+const displayFromDivider = computed(function () {
+  return !disabled.value && props.wordIdx == dividerFromIdx.value;
+});
+
+const displayToDivider = computed(function () {
+  return !disabled.value && props.wordIdx == dividerToIdx.value;
 });
 
 function setDividerOnWord(dragData) {
@@ -57,7 +61,11 @@ function leaveWord() {
   padding: 0 5px;
 }
 
-.hiWord {
+.inWord {
+  /* background-color: rgb(204, 233, 233); */
+  font-weight: bold;
+}
+.outWord {
   /* background-color: rgb(204, 233, 233); */
   color: gray;
 }

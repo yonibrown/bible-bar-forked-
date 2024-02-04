@@ -17,13 +17,15 @@
     </template>
     <template #text_range>
       <!-- <span>{{ textRange }}</span> -->
-      <text-range 
-      :fromPosition="line.src_from_position"
-      :fromText="line.src_from_text"
-      :fromWord="line.src_from_word"
-      :toPosition="line.src_to_position"
-      :toText="line.src_to_text"
-      :toWord="line.src_to_word"
+      <text-range
+        :fromPosition="line.src_from_position"
+        :fromText="line.src_from_text"
+        :fromWord="line.src_from_word"
+        :toPosition="line.src_to_position"
+        :toText="line.src_to_text"
+        :toWord="line.src_to_word"
+        :disabled="!enableSelection"
+        @changeValue="(newVal) => updateRange(line,newVal)"
       ></text-range>
     </template>
     <!-- <template #to_div>
@@ -43,11 +45,12 @@
 
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
-import VerseEditable from "../ui/VerseEditable.vue";
+// import VerseEditable from "../ui/VerseEditable.vue";
 import TextRange from "../ui/TextRange.vue";
 import { inject, computed, provide } from "vue";
 
 const props = defineProps(["line", "field"]);
+const enableSelection = inject("enableSelection");
 
 const seqIndex = computed(function () {
   return {
@@ -83,4 +86,8 @@ const divRange = computed(function () {
     props.line.src_to_name.replaceAll(",", " ")
   );
 });
+
+function updateRange(line,newVal) {
+  console.log("updateRange", line,newVal);
+}
 </script>
