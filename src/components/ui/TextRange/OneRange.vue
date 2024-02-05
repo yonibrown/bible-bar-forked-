@@ -12,41 +12,56 @@
 
 <script setup>
 import WordInRange from "./WordInRange.vue";
-import { ref, computed, provide, inject } from "vue";
+import { computed, provide, inject } from "vue";
 const props = defineProps(["text", "fromWord", "toWord"]);
 
 const changeValue = inject("changeValue");
 
-const dividerFromIdx = ref(-1);
-provide("dividerFromIdx", dividerFromIdx);
-if (props.fromWord) {
-  dividerFromIdx.value = props.fromWord;
+const words = computed(function () {
+  return props.text
+    .replaceAll(/[\s־׃]/g, (ch) => {
+      return ch + "w";
+    })
+    .split("w");
+});
+
+const lastWord = computed(function () {
+  return words.value.length - 2;
+});
+
+function idxInRange(idx, from, to) {
+  return Math.min(Math.max(idx, from), to);
 }
 
-const dividerToIdx = ref(999);
+const dividerFromIdx = computed(function () {
+  if (props.fromWord) {
+    return idxInRange(props.fromWord, 0, lastWord.value);
+  }
+  return -1;
+});
+provide("dividerFromIdx", dividerFromIdx);
+
+const dividerToIdx = computed(function () {
+  if (props.toWord) {
+    return idxInRange(props.toWord, 0, lastWord.value);
+  }
+  return 999;
+});
 provide("dividerToIdx", dividerToIdx);
-if (props.toWord) {
-  dividerToIdx.value = props.toWord;
-}
 
 function setDivider(idx, wordDivider) {
   var updAttr = {};
   if (wordDivider == "from" && props.fromWord) {
     if (idx < dividerFromIdx.value) {
-      // dividerFromIdx.value = idx;
       updAttr.src_from_word = idx;
     } else {
       if (idx < dividerToIdx.value) {
-        // dividerFromIdx.value = idx + 1;
         updAttr.src_from_word = idx + 1;
       } else {
         if (idx == dividerToIdx.value) {
-          // dividerFromIdx.value = idx;
           updAttr.src_from_word = idx;
         } else {
-          // dividerFromIdx.value = dividerToIdx.value + 1;
           updAttr.src_from_word = dividerToIdx.value + 1;
-          // dividerToIdx.value = idx;
           updAttr.src_to_word = idx;
         }
       }
@@ -55,37 +70,28 @@ function setDivider(idx, wordDivider) {
 
   if (wordDivider == "to" && props.toWord) {
     if (idx > dividerToIdx.value) {
-      // dividerToIdx.value = idx;
       updAttr.src_to_word = idx;
     } else {
       if (idx > dividerFromIdx.value) {
-        // dividerToIdx.value = idx - 1;
         updAttr.src_to_word = idx - 1;
       } else {
         if (idx == dividerFromIdx.value) {
-          // dividerToIdx.value = idx;
           updAttr.src_to_word = idx;
         } else {
-          // dividerToIdx.value = dividerFromIdx.value - 1;
           updAttr.src_to_word = dividerFromIdx.value - 1;
-          // dividerFromIdx.value = idx;
           updAttr.src_from_word = idx;
         }
       }
     }
   }
 
-  if ('src_from_word' in updAttr) {
-    if (updAttr.src_from_word == words.value.length - 1) {
-      updAttr.src_from_word--;
-    }
-    dividerFromIdx.value = updAttr.src_from_word;
+  if ("src_from_word" in updAttr) {
+    updAttr.src_from_word = idxInRange(
+      updAttr.src_from_word,0,lastWord.value
+    );
   }
-  if ('src_to_word' in updAttr) {
-    if (updAttr.src_to_word == -1) {
-      updAttr.src_to_word++;
-    }
-    dividerToIdx.value = updAttr.src_to_word;
+  if ("src_to_word" in updAttr) {
+    updAttr.src_to_word = idxInRange(updAttr.src_to_word, 0, lastWord.value);
   }
   changeValue(updAttr);
 }
@@ -95,12 +101,4 @@ function hilightWord(idx) {
   // console.log("hilightWord", idx);
 }
 provide("hilightWord", hilightWord);
-
-const words = computed(function () {
-  return props.text
-    .replaceAll(/[\s־׃]/g, (ch) => {
-      return ch + "w";
-    })
-    .split("w");
-});
 </script>

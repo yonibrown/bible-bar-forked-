@@ -13,7 +13,10 @@
       </span>
     </template>
     <template #div_range>
-      <verse-range :part="line"></verse-range>
+      <verse-range
+        :part="line"
+        @changeValue="(newVal) => updateRange(line, newVal)"
+      ></verse-range>
     </template>
     <template #text_range>
       <!-- <span>{{ textRange }}</span> -->
@@ -51,15 +54,6 @@ import { inject, computed, provide } from "vue";
 
 const props = defineProps(["line", "field"]);
 const enableSelection = inject("enableSelection");
-
-const seqIndex = computed(function () {
-  return {
-    res: props.line.src_research,
-    col: props.line.src_collection,
-    idx: 1,
-  };
-});
-provide("seqIndex", seqIndex);
 
 const researchObjId = inject("researchObjId");
 const research = inject("research");
