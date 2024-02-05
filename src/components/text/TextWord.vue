@@ -1,21 +1,17 @@
 <template>
-  <span :style="wordStyle" ref="wordObj" :res-word="word.id"
-    >{{ word.word }}
+  <span :style="wordStyle" ref="wordObj" :res-word="word.id">
+    {{ word.word }}
   </span>
-  <span class="text_space" :style="spaceStyle" :res-word="0.5 + word.id">{{
-    word.space
-  }}</span>
+  <span class="text_space" :style="spaceStyle" :res-word="0.5 + word.id">
+   {{ word.space }}
+  </span>
 </template>
 
 <script setup>
 import { computed, inject, ref, onMounted } from "vue";
-import { biLink } from "../../store/biLink.js";
 
 const props = defineProps(["word", "verse"]);
-const linkIds = inject("linkIds");
 
-const project = inject("project");
-const links = inject("links");
 const linkedParts = inject("linkedParts");
 
 const wordObj = ref(null);
@@ -79,5 +75,3 @@ onMounted(function () {
   }
 });
 </script>
-
-<style scoped></style>

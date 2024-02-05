@@ -30,7 +30,7 @@ import BaseTabs from "../ui/BaseTabs.vue";
 import PartsTable from "./PartsTable.vue";
 import CollectionsTable from "./CollectionsTable.vue";
 import ResearchLink from "./ResearchLink.vue";
-import LinksMenu from "../link/LinksMenu.vue";
+// import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
 import { writeToClipboard } from "../../general.js";
 

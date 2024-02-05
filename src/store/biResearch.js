@@ -404,3 +404,11 @@ class biResearchPart {
     this._res.updateParts([this.id], newAttr);
   }
 }
+
+// function splitTextToWords(text){
+//   return props.text
+//     .replaceAll(/[\s־׃]/g, (ch) => {
+//       return ch + "w";
+//     })
+//     .split("w");
+// }
