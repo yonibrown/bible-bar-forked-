@@ -19,7 +19,6 @@
       ></verse-range>
     </template>
     <template #text_range>
-      <!-- <span>{{ textRange }}</span> -->
       <text-range
         :fromPosition="line.src_from_position"
         :fromText="line.src_from_text"
@@ -31,18 +30,6 @@
         @changeValue="(newVal) => updateRange(line, newVal)"
       ></text-range>
     </template>
-    <!-- <template #to_div>
-      <verse-editable
-      :initial-value="line.src_name.replaceAll(',', ' ')"
-      placeholder="פסוק"
-      :seqIndex="seqIndex"
-      :initPosition="line.src_from_position"
-      ></verse-editable>
-      <span>{{ line.src_to_name.replaceAll(",", " ") }}</span>
-    </template>
-    <template #to_text>
-      <span>{{ line.src_to_text }}</span>
-    </template> -->
   </spec-line>
 </template>
 
@@ -50,7 +37,7 @@
 import SpecLine from "../ui/SpecLine.vue";
 import VerseRange from "../sequence/VerseRange.vue";
 import TextRange from "../ui/TextRange.vue";
-import { inject, computed, provide } from "vue";
+import { inject, computed } from "vue";
 
 const props = defineProps(["line", "field"]);
 const enableSelection = inject("enableSelection");

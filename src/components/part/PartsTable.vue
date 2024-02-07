@@ -23,7 +23,6 @@ const elementAttr = inject("elementAttr");
 
 const research = inject("research");
 
-// const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
 const tableRef = ref([]);
@@ -45,20 +44,20 @@ const tableFields = computed(function () {
       fit: false,
       display: true,
     },
-    // {
-    //   name: "src",
-    //   title: "פסוק",
-    //   sortable: true,
-    //   fit: true,
-    //   display: partsListMode.value == "verse",
-    // },
-    // {
-    //   name: "text",
-    //   title: "טקסט",
-    //   sortable: false,
-    //   fit: false,
-    //   display: partsListMode.value == "verse",
-    // },
+    {
+      name: "src",
+      title: "פסוק",
+      sortable: true,
+      fit: true,
+      display: partsListMode.value == "verse",
+    },
+    {
+      name: "text",
+      title: "טקסט",
+      sortable: false,
+      fit: false,
+      display: partsListMode.value == "verse",
+    },
     {
       name: "div_range",
       title: "פסוק",
