@@ -31,6 +31,10 @@ export class biElement {
     return this._obj.position;
   }
 
+  get yAddition(){
+    return this._obj.y_addition;
+  }
+
   get defaultName() {
     return "element" + this.id;
   }

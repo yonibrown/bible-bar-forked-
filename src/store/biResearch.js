@@ -381,7 +381,11 @@ class biResearchPart {
     return this._obj.src_to_word;
   }
 
-  get text_after() {
+  get src_to_word_count() {
+    return this._obj.src_to_word_count;
+  }
+
+    get text_after() {
     return this._obj.text_after;
   }
 
