@@ -1,5 +1,5 @@
 <template>
-  <base-card :shadow="true">
+  <base-card :shadow="true" :initialYAdd="elementYAdd" @resize="resizeElement">
     <div class="draggable-head">
       <base-editable
         :initialValue="elementName"
@@ -54,6 +54,10 @@ const elementName = computed(function () {
 function submitName(newName) {
   props.element.setName(newName);
 }
+
+const elementYAdd = computed(function(){
+  return props.element.yAddition;
+});
 
 // display menu
 const displayOptions = ref(false);
@@ -134,6 +138,10 @@ provide("linkIds", linkIds);
 
 function copyToClipboard() {
   boxRef.value.copyToClipboard();
+}
+
+function resizeElement(yAddition) {
+  changeAttr({ y_addition: yAddition });
 }
 </script>
 
