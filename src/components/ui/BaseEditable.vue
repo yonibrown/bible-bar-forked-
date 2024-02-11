@@ -38,7 +38,6 @@ const editing = ref(false);
 const currentValue = ref(props.initialValue);
 
 const title = computed(function () {
-  console.log("title", props.initialValue);
   if (noTitle.value) {
     return props.placeholder;
   }

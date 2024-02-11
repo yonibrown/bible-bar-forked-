@@ -277,6 +277,10 @@ class biResearchCollection {
     return this._obj.name;
   }
 
+  get description() {
+    return this._obj.description;
+  }
+
   get res() {
     return this._obj.res;
   }
