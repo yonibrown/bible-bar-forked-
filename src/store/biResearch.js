@@ -209,6 +209,9 @@ export class biResearch {
   }
 
   initParts(list) {
+    if (!list) {
+      return [];
+    }
     return list.map((rec) => {
       return new biResearchPart(rec, this);
     });
@@ -272,6 +275,10 @@ class biResearchCollection {
 
   get name() {
     return this._obj.name;
+  }
+
+  get description() {
+    return this._obj.description;
   }
 
   get res() {
@@ -385,7 +392,7 @@ class biResearchPart {
     return this._obj.src_to_word_count;
   }
 
-    get text_after() {
+  get text_after() {
     return this._obj.text_after;
   }
 
