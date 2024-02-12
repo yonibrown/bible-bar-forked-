@@ -38,13 +38,13 @@ const editing = ref(false);
 const currentValue = ref(props.initialValue);
 
 const title = computed(function () {
-  if (props.initialValue == "" && !props.disabled) {
+  if (noTitle.value) {
     return props.placeholder;
   }
   return props.initialValue;
 });
 const noTitle = computed(function () {
-  return props.initialValue == "";
+  return (!props.initialValue || props.initialValue == "") && !props.disabled;
 });
 
 const input = ref(null);
@@ -70,18 +70,18 @@ function startEdit() {
   }
 }
 
-function leaveEdit(){
+function leaveEdit() {
   editing.value = false;
 }
 
 function inputFocusout(evt) {
-  if (!evt.relatedTarget){
+  if (!evt.relatedTarget) {
     leaveEdit();
   }
 }
 
-function inputKeydown(evt){
-  if (evt.keyCode == 27){
+function inputKeydown(evt) {
+  if (evt.keyCode == 27) {
     leaveEdit();
   }
 }

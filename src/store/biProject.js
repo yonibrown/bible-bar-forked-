@@ -184,7 +184,7 @@ export class biProject {
     this._elements.push(elm);
 
     prop.originalLinks.forEach(function (lnk) {
-      lnk.elements.push(elmRec.id);
+      lnk.elements.push(elm.id);
     });
   }
 
