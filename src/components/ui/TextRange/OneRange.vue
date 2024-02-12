@@ -87,7 +87,9 @@ function setDivider(idx, wordDivider) {
 
   if ("src_from_word" in updAttr) {
     updAttr.src_from_word = idxInRange(
-      updAttr.src_from_word,0,lastWord.value
+      updAttr.src_from_word,
+      0,
+      lastWord.value,
     );
   }
   if ("src_to_word" in updAttr) {

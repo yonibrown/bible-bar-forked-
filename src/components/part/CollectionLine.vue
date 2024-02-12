@@ -62,13 +62,13 @@ const description = computed(function () {
 function submitName(newVal) {
   const newAttr = { name: newVal };
   if (props.line.newLine) {
-    research.value.newCollection( {
+    research.value.newCollection({
       ...attr.value,
       ...newAttr,
     });
     attr.value = { ...emptyAttr };
   } else {
-    props.line.changeAttr( newAttr);
+    props.line.changeAttr(newAttr);
   }
 }
 
@@ -77,7 +77,7 @@ function submitDesc(newVal) {
   if (props.line.newLine) {
     Object.assign(attr.value, newAttr);
   } else {
-    props.line.changeAttr( newAttr);
+    props.line.changeAttr(newAttr);
   }
 }
 </script>
