@@ -1,18 +1,19 @@
 <template>
-  <div>
+  <edit-box>
     <table class="in_body">
       <link-category
         v-for="cat in categories"
         :key="cat.id"
         :category="cat"
-        @update-category="(data) => link.updateCategory( cat, data)"
+        @update-category="(data) => link.updateCategory(cat, data)"
       ></link-category>
     </table>
-  </div>
+  </edit-box>
 </template>
 
 <script setup>
 import LinkCategory from "./LinkCategory.vue";
+import EditBox from "../ui/EditBox.vue";
 import { computed, inject } from "vue";
 
 const project = inject("project");
@@ -26,3 +27,10 @@ const categories = computed(function () {
   return link.value.categories;
 });
 </script>
+
+<style scoped>
+.edit-table {
+  min-height: 40px;
+  border: dashed lightgray;
+}
+</style>
