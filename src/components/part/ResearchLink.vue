@@ -1,14 +1,12 @@
 <template>
   <base-scrollable>
     <div class="links">
-      <table class="in_body">
+      <table>
         <link-category
           v-for="cat in categories"
           :key="cat.id"
           :category="cat"
-          @update-category="
-            (data) => link.updateCategory( cat, data)
-          "
+          @update-category="(data) => link.updateCategory(cat, data)"
         ></link-category>
       </table>
     </div>

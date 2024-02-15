@@ -1,13 +1,13 @@
 <template>
   <edit-box :drop="addToLink" :dragStruct="['resId']">
-    <table class="in_body">
+    <div>
       <link-category
         v-for="cat in categories"
         :key="cat.id"
         :category="cat"
         @update-category="(data) => link.updateCategory(cat, data)"
       ></link-category>
-    </table>
+    </div>
   </edit-box>
 </template>
 
