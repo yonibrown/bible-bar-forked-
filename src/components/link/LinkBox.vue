@@ -1,5 +1,5 @@
 <template>
-  <edit-box>
+  <edit-box :drop="addToLink" :dragStruct="['resId']">
     <table class="in_body">
       <link-category
         v-for="cat in categories"
@@ -26,6 +26,10 @@ const link = computed(function () {
 const categories = computed(function () {
   return link.value.categories;
 });
+
+function addToLink(data) {
+  link.value.addResearch(data.resId);
+}
 </script>
 
 <style scoped>

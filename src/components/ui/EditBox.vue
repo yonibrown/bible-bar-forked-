@@ -1,8 +1,8 @@
 <template>
   <base-droppable
     v-if="displayOptions"
-    :drop="addToLink"
-    :dragStruct="['linkId', 'resId']"
+    :drop="drop"
+    :dragStruct="dragStruct"
     :dragEnter="enterLinksMenu"
     :dragLeave="leaveLinksMenu"
   >
@@ -18,6 +18,8 @@
 <script setup>
 import { ref, inject } from "vue";
 const displayOptions = inject("displayOptions");
+
+const props = defineProps(["drop", "dragStruct"]);
 
 const hilightMenu = ref(false);
 
