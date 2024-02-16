@@ -118,6 +118,18 @@ export class biLink {
     const obj = await sendToServer(data);
   }
 
+  async addResearch(res) {
+    const data = {
+      type: "link",
+      oper: "add_cat",
+      id: this.dbId,
+      prop: { type: "research", data: res },
+    };
+    console.log("addResearch", data);
+    const obj = await sendToServer(data);
+    this.reload();
+  }
+
   async addElementToLink(elmId) {
     if (!this.elements.includes(elmId)) {
       this.elements.push(elmId);
@@ -179,7 +191,7 @@ export class biLink {
 
   static reloadResLink(resIdObj) {
     const link = biProject.main.getLink(resIdObj);
-    if (link){
+    if (link) {
       link.reload();
     }
   }
