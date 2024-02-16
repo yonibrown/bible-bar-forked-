@@ -1,11 +1,9 @@
 <template>
-  <tr class="link-category">
-    <td>
-      <input type="checkbox" v-model="checked" />
-      <input type="color" name="color" v-model="color" />
-      <span class="category">{{ category.name }}</span>
-    </td>
-  </tr>
+  <div class="link-category">
+    <input type="checkbox" v-model="checked" />
+    <input type="color" name="color" v-model="color" />
+    <span class="category">{{ category.name }}</span>
+  </div>
 </template>
 
 <script setup>
@@ -27,6 +25,11 @@ watch(color, (newVal) => {
 <style scoped>
 .category {
   margin-right: 4px;
+}
+
+.link-category {
+  margin: 3px;
+  width: 100%;
 }
 
 input[type="color"] {
