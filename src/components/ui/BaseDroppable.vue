@@ -40,14 +40,17 @@ function onDrop(evt) {
   props.drop(dragData, props.data);
 }
 
+var enterCounter = 0;
 function onDragEnter() {
+  enterCounter++;
   if (props.dragEnter) {
     props.dragEnter();
   }
 }
 
 function onDragLeave() {
-  if (props.dragLeave) {
+  enterCounter--;
+  if (enterCounter == 0 && props.dragLeave) {
     props.dragLeave();
   }
 }

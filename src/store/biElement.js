@@ -31,7 +31,7 @@ export class biElement {
     return this._obj.position;
   }
 
-  get yAddition(){
+  get yAddition() {
     return this._obj.y_addition;
   }
 

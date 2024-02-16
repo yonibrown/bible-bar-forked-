@@ -4,21 +4,12 @@
       <span>{{ collection.name }}</span>
     </template>
     <template #src>
-      <span @dblclick="openText">{{ line.src_name.replaceAll(",", " ") }}</span>
-    </template>
-    <template #text>
-      <span class="bible-text" @dblclick="openText">
-        {{ line.text_before }}<b> {{ line.text_part }}</b>
-        {{ line.text_after }}
-      </span>
-    </template>
-    <template #div_range>
       <verse-range
         :part="line"
         @changeValue="(newVal) => updateRange(line, newVal)"
       ></verse-range>
     </template>
-    <template #text_range>
+    <template #text>
       <text-range
         :fromPosition="line.src_from_position"
         :fromText="line.src_from_text"
