@@ -117,7 +117,9 @@ export class biElement {
         return new biElmParts(rec);
       case "link":
         return new biElmLink(rec);
-    }
+      case "btext":
+          return new biBElmText(rec);
+      }
   }
 
   static async create(prop) {
@@ -244,6 +246,24 @@ class biElmText extends biElement {
     ) {
       this.loadText();
     }
+  }
+}
+
+class biBElmText extends biElement {
+  get defaultName() {
+    return 'bText';
+  }
+
+  get fromPart(){
+    return this.attr.from_part;
+  }
+
+  get toPart(){
+    return this.attr.to_part;
+  }
+
+  get sourceId(){
+    return this.attr.source_id;
   }
 }
 

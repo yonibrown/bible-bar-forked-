@@ -30,6 +30,8 @@ const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
 const project = inject("project");
 
+console.log(props.element);
+
 const elementAttr = computed(function () {
   return props.element.attr;
 });

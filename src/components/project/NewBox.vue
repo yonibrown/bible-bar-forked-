@@ -62,6 +62,11 @@ const typeList = [
     name: "הערות",
     openList: false,
   },
+  {
+    id: "btext",
+    name: "טקסט2",
+    openList: false,
+  },
 ];
 
 watch(action, function () {
