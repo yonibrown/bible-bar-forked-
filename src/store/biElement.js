@@ -118,8 +118,8 @@ export class biElement {
       case "link":
         return new biElmLink(rec);
       case "btext":
-          return new biBElmText(rec);
-      }
+        return new biBElmText(rec);
+    }
   }
 
   static async create(prop) {
@@ -251,19 +251,39 @@ class biElmText extends biElement {
 
 class biBElmText extends biElement {
   get defaultName() {
-    return 'bText';
+    return "bText";
   }
 
-  get fromPart(){
+  get fromPart() {
     return this.attr.from_part;
   }
 
-  get toPart(){
+  get toPart() {
     return this.attr.to_part;
   }
 
-  get sourceId(){
+  get sourceId() {
     return this.attr.source_id;
+  }
+
+  get verses() {
+    return this._verses;
+  }
+
+  async loadText() {
+    const data = {
+      type: "element",
+      oper: "b_get_segment",
+      id: this.dbId,
+      prop: { dummy: "" },
+    };
+
+    const obj = await sendToServer(data);
+    this._verses = obj.data.part_list;
+  }
+
+  reload() {
+    this.loadText();
   }
 }
 
