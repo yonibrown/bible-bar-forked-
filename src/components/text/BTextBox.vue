@@ -1,7 +1,4 @@
 <template>
-  <div>sourceId:{{ element.sourceId }}</div>
-  <div>fromPart:{{ element.fromPart }}</div>
-  <div>toPart:{{ element.toPart }}</div>
   <base-scrollable class="bible-text">
     <div
       class="text-box"
@@ -39,4 +36,8 @@ const verses = computed(function () {
 element.value.loadText();
 </script>
 
-<style scoped></style>
+<style scoped>
+.text-box {
+  padding: 15px;
+}
+</style>
