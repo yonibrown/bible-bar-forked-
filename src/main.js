@@ -15,7 +15,7 @@ import BarBox from './components/bar/BarBox.vue';
 import TextBox from './components/text/TextBox.vue';
 import PartsBox from './components/part/PartsBox.vue';
 import NewBox from './components/project/NewBox.vue';
-import BTextBox from './components/text/BTextBox.vue';
+import BTextBox from './components/b_text/TextBox.vue';
 
 import PartsLine from './components/part/PartsLine.vue';
 import CollectionLine from './components/part/CollectionLine.vue';

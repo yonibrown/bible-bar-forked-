@@ -1,4 +1,13 @@
 <template>
+  <div v-show="displayOptions">
+    <sequence-menu
+      v-show="displayOptions"
+      :displayScale="false"
+      :enableWholeText="false"
+    ></sequence-menu>
+    <!-- <links-menu title="הדגשות"></links-menu> -->
+    <!-- <text-menu @updateData="updateData"></text-menu> -->
+  </div>
   <base-scrollable class="bible-text">
     <div
       class="text-box"
@@ -10,19 +19,22 @@
         direction: rtl;
       "
     >
-      <b-text-verse
+      <text-verse
         v-for="vrs in verses"
         :key="vrs.part_id"
         :verse="vrs"
-      ></b-text-verse>
+      ></text-verse>
     </div>
   </base-scrollable>
 </template>
 
 <script setup>
-import BTextVerse from "./BTextVerse.vue";
+import TextVerse from "./TextVerse.vue";
+import SequenceMenu from "../b_sequence/SequenceMenu.vue";
 import { inject,ref,computed } from "vue";
+
 const element = inject("element");
+const displayOptions = inject("displayOptions");
 
 const textRef = ref();
 

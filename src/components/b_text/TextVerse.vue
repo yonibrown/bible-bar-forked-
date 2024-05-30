@@ -8,18 +8,18 @@
       {{ space }}
     </span>
     <span class="text">
-      <b-text-word
+      <text-word
         v-for="wrd in verse.txt_list"
         :key="wrd.id"
         :word="wrd"
       >
-      </b-text-word>
+      </text-word>
     </span>
   </span>
 </template>
 
 <script setup>
-import BTextWord from "./BTextWord.vue";
+import TextWord from "./TextWord.vue";
 
 const props = defineProps(['verse']);
 
