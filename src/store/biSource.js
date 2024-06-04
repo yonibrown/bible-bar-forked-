@@ -1,30 +1,51 @@
 import { sendToServer } from "../server.js";
 export class biSource {
-  static async loadKeyLevel(prop) {
+  constructor(id) {
+    this._id = id;
+    this._books = [];
+    this.loadBooks();
+  }
 
-    this.constructor._books = [
-      { id: 1, name: "בראשית" },
-      { id: 2, name: "שמות" },
-    ];
+  get id() {
+    return this._id;
+  }
 
-    if (prop.level == "book") {
-      if (this.constructor._books) {
-        return this.constructor._books;
-      }
+  get dbId() {
+    return { source_id: this._id };
+  }
+
+  get books() {
+    return this._books;
+  }
+
+  loadKeyLevel(prop){
+    if (prop.level == 'book'){
+      console.log('get books',this._books);
+      return this._books;
     }
 
+    return [
+      { id: 1, name: "א" },
+      { id: 2, name: "ב" },
+      { id: 3, name: "ג" },
+    ];
+  }
+
+  async loadBooks() {
     const data = {
       type: "source",
-      oper: "get_level",
-      id: { dummy: 0 },
-      prop,
+      oper: "get_books",
+      id: this.dbId,
+      prop: { dummy: null },
     };
     const obj = await sendToServer(data);
+    this._books = obj.data;
+    console.log('set books',this._books);
+  }
 
-    if (prop.level == "book") {
-      this.constructor._books = obj.data;
-    }
-
-    return obj.data;
+  static initList(list) {
+    return list.map((rec) => {
+      return new this(rec);
+    });
   }
 }

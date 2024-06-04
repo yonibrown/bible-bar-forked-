@@ -7,22 +7,20 @@
 </template>
 
 <script setup>
-import { watch, ref, computed } from "vue";
-import { biSource } from "../../store/biSource.js";
+import { watch, ref, inject } from "vue";
 
 const props = defineProps(["name"]);
 
 const selected = ref(1);
+const source = inject('source');
 
-const keyLvl = ref([
-  { id: 1, name: "א" },
-  { id: 2, name: "ב" },
-  { id: 3, name: "ג" },
-]);
+if (props.name == 'book'){
+  
+}
 
 loadKey();
 async function loadKey() {
-  keyLvl.value = await biSource.loadKeyLevel({
+  keyLvl.value = await source.loadKeyLevel({
     level: props.name,
     key: null,
   });

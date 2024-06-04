@@ -20,6 +20,13 @@ import SequenceKey from "./SequenceKey.vue";
 
 import { computed, provide, inject, ref } from "vue";
 
+const project = inject("project");
+const elementAttr = inject("elementAttr");
+
+const source = project.value.getSource(elementAttr.value.source_id);
+provide('source',source);
+
+
 </script>
 
 <style scoped>

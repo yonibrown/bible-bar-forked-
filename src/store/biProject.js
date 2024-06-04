@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { sendToServer } from "../server.js";
 import { biLink } from "./biLink.js";
 import { biResearch } from "./biResearch.js";
+import { biSource } from "./biSource.js";
 import { biElement } from "./biElement.js";
 
 export class biProject {
@@ -20,6 +21,7 @@ export class biProject {
     this._links = [];
     this._researches = [];
     this._tabs = [];
+    this._sources = [];
 
     this._tempElementId = -1;
 
@@ -63,6 +65,10 @@ export class biProject {
     return this._researches;
   }
 
+  get sources() {
+    return this._sources;
+  }
+
   get name() {
     if (this.attr.name.trim() == "") {
       return this.defaultName;
@@ -95,6 +101,10 @@ export class biProject {
     this._researches = val;
   }
 
+  set sources(val) {
+    this._sources = val;
+  }
+
   //methods
   async loadProject() {
     const data = {
@@ -110,6 +120,7 @@ export class biProject {
       primaryLink: obj.data.primary_link,
     };
 
+    this._sources = biSource.initList(obj.data.sources);
     this._researches = biResearch.initList(obj.data.researches);
     this._links = biLink.initList(obj.data.links);
     this._elements = biElement.initList(obj.data.elements);
@@ -233,6 +244,12 @@ export class biProject {
   getResearch(researchId) {
     return this._researches.find((pResearch) => {
       return pResearch.id == researchId;
+    });
+  }
+
+  getSource(sourceId) {
+    return this._sources.find((pSource) => {
+      return pSource.id == sourceId;
     });
   }
 
