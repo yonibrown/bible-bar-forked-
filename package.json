@@ -7,6 +7,7 @@
     "preview": "vite preview --port 4173"
   },
   "dependencies": {
+    "primevue": "^3.52.0",
     "vue": "^3.3.9",
     "vue-router": "^4.1.3"
   },

@@ -3,6 +3,9 @@ import { createApp } from 'vue';
 import router from './router.js';
 import App from './App.vue';
 
+import PrimeVue from 'primevue/config';
+import 'primevue/resources/themes/aura-light-green/theme.css';
+
 import BaseCard from './components/ui/BaseCard.vue';
 import BaseEditable from './components/ui/BaseEditable.vue';
 import BaseScrollable from './components/ui/BaseScrollable.vue';
@@ -22,6 +25,7 @@ import CollectionLine from './components/part/CollectionLine.vue';
 const app = createApp(App)
 
 app.use(router);
+app.use(PrimeVue);
 
 app.component('base-card', BaseCard);
 app.component('base-editable', BaseEditable);
