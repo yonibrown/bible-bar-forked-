@@ -8,11 +8,13 @@
     <links-menu title="הדגשות"></links-menu>
     <text-menu @updateData="updateData"></text-menu>
   </div>
+  <ContextMenu ref="menu" :model="items" />
   <div>
     <base-scrollable class="bible-text">
       <div
         class="text-box"
         ref="textRef"
+        @contextmenu="onImageRightClick"
         style="
           font-size: 155%;
           font-family: David, sans-serif;
@@ -37,6 +39,7 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
 import { inject, ref, computed, provide } from "vue";
 import { writeToClipboard } from "../../general.js";
+import ContextMenu from 'primevue/contextmenu';
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
@@ -44,8 +47,17 @@ const elementAttr = inject("elementAttr");
 const project = inject("project");
 const links = inject("links");
 
-
 const textRef = ref();
+
+const menu = ref();
+const items = ref([
+    { label: 'Copy', icon: 'pi pi-copy' },
+    { label: 'Rename', icon: 'pi pi-file-edit' }
+]);
+
+const onImageRightClick = (event) => {
+    menu.value.show(event);
+};
 
 const verses = computed(function () {
   if (!element.value || !element.value.verses) {

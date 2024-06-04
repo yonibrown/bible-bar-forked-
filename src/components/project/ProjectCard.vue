@@ -11,6 +11,7 @@
     ></base-editable>
     <span class="menu-buttons">
       <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+      <menu-button type="addtab" @click="addTab"></menu-button>
       <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
       <menu-button type="add" @click="openNewElement"></menu-button>
       <menu-button type="close"></menu-button>
@@ -34,6 +35,12 @@ function submitName(newName) {
 
 function defaultName() {
   return project.value.defaultName;
+}
+
+function addTab(){
+  console.log('project',project.value);
+  project.value.addTab();
+  console.log('tabs',project.value._tabs);
 }
 </script>
 

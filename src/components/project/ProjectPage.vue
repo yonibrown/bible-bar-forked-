@@ -1,7 +1,6 @@
 <template>
   <div>
-    <ContextMenu ref="menu" :model="items" />
-    <section v-if="projectLoaded" @contextmenu="onImageRightClick">
+    <section v-if="projectLoaded" >
       <project-card
         :openNewElement="openNewElement"
         :copyToClipboard="copyToClipboard"
@@ -32,19 +31,8 @@ import ElementList from "./ElementList.vue";
 import ProjectCard from "./ProjectCard.vue";
 import { ref, provide, computed } from "vue";
 import { biProject } from "../../store/biProject.js";
-import ContextMenu from 'primevue/contextmenu';
 
 const props = defineProps(["id"]);
-
-const menu = ref();
-const items = ref([
-    { label: 'Copy', icon: 'pi pi-copy' },
-    { label: 'Rename', icon: 'pi pi-file-edit' }
-]);
-
-const onImageRightClick = (event) => {
-    menu.value.show(event);
-};
 
 const projectLoaded = ref(false);
 const project = ref(new biProject(props.id));

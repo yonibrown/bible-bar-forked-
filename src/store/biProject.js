@@ -242,4 +242,17 @@ export class biProject {
       elm.reload();
     });
   }
+
+  addTab() {
+    let maxId = 0;
+    this._tabs.forEach(function (tab) {
+      tab.width_pct *= 0.8;
+      maxId = Math.max(maxId, tab.id);
+    });
+    this._tabs.push({
+      id: maxId + 1,
+      width_pct: 20,
+      type: "elements",
+    });
+  }
 }
