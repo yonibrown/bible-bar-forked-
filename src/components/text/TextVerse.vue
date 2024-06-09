@@ -3,7 +3,7 @@
     <span :style="beginingStyle">
       {{ space }}
       <span style="font-size: medium; color: #2243b2">{{
-        verse.part_name
+        verseTitle
       }}</span>
       {{ space }}
     </span>
@@ -26,6 +26,13 @@ import TextWord from "./TextWord.vue";
 
 const props = defineProps(["verse"]);
 const linkedParts = inject("linkedParts");
+const element = inject("element");
+
+const verseTitle = computed(function () {
+  return element.value.numbering == "letters"
+    ? props.verse.name_letter
+    : props.verse.name_number;
+});
 
 const space = " ";
 
