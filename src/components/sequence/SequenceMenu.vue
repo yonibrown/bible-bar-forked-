@@ -40,6 +40,11 @@
         ref="scaleRef"
       ></sequence-scale>
     </span>
+    <span>מספור פסוקים:</span>
+    <select v-model="numbering">
+      <option value="letters">אותיות</option>
+      <option value="numbers">מספרים</option>
+    </select>
     <input
       type="submit"
       value="החל"
@@ -53,7 +58,7 @@
 import SequenceKey from "./SequenceKey.vue";
 import SequenceScale from "./SequenceScale.vue";
 
-import { computed, provide, inject, ref } from "vue";
+import { computed, provide, inject, ref, watch } from "vue";
 
 const props = defineProps(["displayScale", "enableWholeText"]);
 
@@ -147,6 +152,11 @@ function removeFilter() {
   toRef.value.clear();
   scaleRef.value.clear();
 }
+
+const numbering = ref(elementAttr.value.numbering);
+watch(numbering, function (newVal) {
+  changeAttr({ numbering: newVal });
+});
 </script>
 
 <style scoped>

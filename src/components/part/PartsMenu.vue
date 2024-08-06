@@ -46,11 +46,11 @@
       :disabled="!hasChanges"
     />
     <span class="divider">|</span>
-    <!-- <span>תצוגת רשימה:</span>
+    <span>תצוגת רשימה:</span>
     <select v-model="listMode">
       <option value="verse">פסוק אחד</option>
       <option value="segment">מקטע</option>
-    </select> -->
+    </select>
     <span class="divider">|</span>
     <input type="checkbox" v-model="openInSameElement" />
     <span>פתח טקסט בחלון קבוע</span>

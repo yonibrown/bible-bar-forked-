@@ -46,6 +46,10 @@ export class biElement {
     return this._obj.name;
   }
 
+  get numbering(){
+    return this.attr.numbering;
+  }
+
   get dbId() {
     return {
       proj: this.proj,

@@ -23,7 +23,6 @@ const elementAttr = inject("elementAttr");
 
 const research = inject("research");
 
-// const parts = ref([]);
 const links = inject("links");
 const changeAttr = inject("changeAttr");
 const tableRef = ref([]);

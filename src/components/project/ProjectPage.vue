@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section v-if="projectLoaded">
+    <section v-if="projectLoaded" >
       <project-card
         :openNewElement="openNewElement"
         :copyToClipboard="copyToClipboard"

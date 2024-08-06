@@ -28,7 +28,7 @@
 import SpecLine from "../ui/SpecLine.vue";
 import VerseRange from "../sequence/VerseRange.vue";
 import TextRange from "../ui/TextRange.vue";
-import { inject, computed, provide } from "vue";
+import { inject, computed } from "vue";
 
 const props = defineProps(["line", "field"]);
 const enableSelection = inject("enableSelection");

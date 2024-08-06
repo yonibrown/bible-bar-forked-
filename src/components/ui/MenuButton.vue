@@ -23,6 +23,8 @@ const faClass = computed(function () {
       return "fa-bars";
     case "edit":
       return "fa-pencil";
+    case "addtab":
+      return "fa-columns";
     default:
       return null;
   }

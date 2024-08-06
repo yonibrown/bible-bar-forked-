@@ -77,7 +77,7 @@ function openText(prop) {
 provide("openText", openText);
 
 function copyToClipboard() {
-  writeToClipboard(barBodyRef.value,'png');
+  writeToClipboard(barBodyRef.value, "png");
 }
 
 defineExpose({ copyToClipboard });
@@ -86,6 +86,10 @@ defineExpose({ copyToClipboard });
 <style scoped>
 .in_body {
   margin: 15px;
+}
+
+.in_body * {
+  box-sizing: content-box;
 }
 
 /* bar */
