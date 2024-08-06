@@ -1,3 +1,5 @@
+import { biProject } from "./store/biProject";
+
 // local
 const basicPath = `http://localhost/bibar-vue-php/`;
 
@@ -12,11 +14,16 @@ async function sendToServer(data) {
   form.append("oper", data.oper);
   form.append("id", JSON.stringify(data.id));
   form.append("prop", JSON.stringify(data.prop));
-  if (data.reload) {
-    form.append("reload", JSON.stringify(data.reload));
-  }
+
   if (data.file) {
     form.append("file", data.file);
+  }
+
+  if (biProject.main) {
+    data.reload = biProject.main.dbId;
+  }
+  if (data.reload) {
+    form.append("reload", JSON.stringify(data.reload));
   }
 
   // for (const pair of form.entries()) {
@@ -36,17 +43,23 @@ async function sendToServer(data) {
   });
   const responseData = await response.text();
 
-  var obj;
+  var obj = null;
   try {
     obj = JSON.parse(responseData);
+  } catch (err) {
+    console.log("Error from obj_api.php", data, responseData);
+    return null;
+  }
+
+  if (obj) {
     if (typeof obj["error"] != "undefined") {
-      console.log("Error from " + service + ".php - " + obj["error"]);
+      console.log("Error from obj_api.php", data, obj["error"]);
       return null;
     }
+    if (biProject.main && obj.objects_to_reload) {
+      biProject.main.reloadElements(obj.objects_to_reload.elements);
+    }
     return obj;
-  } catch (err) {
-    console.log("Error from obj_api.php - " + responseData);
-    return null;
   }
 
   // if (!response.ok) {

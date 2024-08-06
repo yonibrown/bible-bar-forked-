@@ -18,11 +18,10 @@ import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
 
 const displayOptions = inject("displayOptions");
+const partsListMode = inject("partsListMode");
 const elementAttr = inject("elementAttr");
 
-const researchObjId = inject("researchObjId");
 const research = inject("research");
-const resMethods = inject("resMethods");
 
 // const parts = ref([]);
 const links = inject("links");
@@ -37,35 +36,43 @@ const parts = computed(function () {
 });
 
 // table properties
-const tableFields = [
-  {
-    name: "col",
-    title: "קטגוריה",
-    sortable: true,
-    fit: true,
-  },
-  {
-    name: "src",
-    title: "פסוק",
-    sortable: true,
-    fit: true,
-  },
-  {
-    name: "text",
-    title: "טקסט",
-    sortable: false,
-    fit: false,
-  },
-];
+const tableFields = computed(function () {
+  return [
+    {
+      name: "col",
+      title: "קטגוריה",
+      sortable: true,
+      fit: false,
+      display: true,
+    },
+    {
+      name: "src",
+      title: "פסוק",
+      sortable: true,
+      fit: true,
+      display: partsListMode.value == "segment",
+    },
+    {
+      name: "text",
+      title: "טקסט",
+      sortable: false,
+      fit: false,
+      display: partsListMode.value == "segment",
+    },
+  ];
+});
+
 const sortAttr = ref({
   sort: elementAttr.value.sort,
   ordering: elementAttr.value.ordering,
 });
+
 function reverseTable() {
   sortAttr.value.ordering = sortAttr.value.ordering == "DESC" ? "ASC" : "DESC";
   //   parts.value.reverse();
   changeAttr(sortAttr.value);
 }
+
 function changeSortField(newField) {
   sortAttr.value.ordering = "ASC";
   sortAttr.value.sort = newField;
@@ -76,15 +83,16 @@ function changeSortField(newField) {
 }
 
 // load data
-loadResearchParts();
+// loadResearchParts();
 
-function loadResearchParts() {
-  //   parts.value = await resMethods.loadParts(research, sortAttr.value);
-  resMethods.loadParts(research.value, sortAttr.value);
-}
+// function loadResearchParts() {
+//   research.value.loadParts(sortAttr.value);
+// }
 
 // filter parts
 const filteredParts = computed(function () {
+  // todo: add filters
+  return parts.value;
   if (links.value.length == 0) {
     return parts.value;
   }
@@ -125,20 +133,12 @@ const sortedParts = computed(function () {
 });
 
 async function moveSelectedToCat(cat) {
-  await resMethods.updateParts(
-    research.value,
-    tableRef.value.selectedLines,
-    cat,
-  );
-  // loadResearchParts();
+  await research.value.updateParts(tableRef.value.selectedLines, cat);
 }
 
 const createElement = inject("createElement");
 async function duplicateSelected() {
-  const newRes = await resMethods.duplicate(
-    researchObjId,
-    tableRef.value.selectedLines,
-  );
+  const newRes = await research.value.duplicate(tableRef.value.selectedLines);
   createElement({
     type: "parts",
     res: newRes.id.res,
@@ -146,7 +146,7 @@ async function duplicateSelected() {
 }
 
 function removeSelected() {
-  resMethods.deleteParts(research.value, tableRef.value.selectedLines);
+  research.value.deleteParts(tableRef.value.selectedLines);
 }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });

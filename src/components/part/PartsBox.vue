@@ -1,26 +1,28 @@
 <template>
   <div v-show="displayOptions">
-    <links-menu title="סינון"></links-menu>
+    <!-- <links-menu title="סינון"></links-menu> -->
     <parts-menu
       @updateData="updateData"
       :currentTab="currentTabName"
       ref="partsMenuRef"
     ></parts-menu>
   </div>
-  <base-tabs
-    :tabList="tabList"
-    :currentTab="currentTabName"
-    @changeTab="changeTab"
-  ></base-tabs>
-  <parts-table
-    v-show="currentTabName == 'parts'"
-    ref="partsTabRef"
-  ></parts-table>
-  <collections-table
-    v-show="currentTabName == 'collections'"
-    ref="colsTabRef"
-  ></collections-table>
-  <research-link v-show="currentTabName == 'markers'"></research-link>
+  <div ref="partsBodyRef">
+    <base-tabs
+      :tabList="tabList"
+      :currentTab="currentTabName"
+      @changeTab="changeTab"
+    ></base-tabs>
+    <parts-table
+      v-show="currentTabName == 'parts'"
+      ref="partsTabRef"
+    ></parts-table>
+    <collections-table
+      v-show="currentTabName == 'collections'"
+      ref="colsTabRef"
+    ></collections-table>
+    <research-link v-show="currentTabName == 'markers'"></research-link>
+  </div>
 </template>
 
 <script setup>
@@ -28,8 +30,9 @@ import BaseTabs from "../ui/BaseTabs.vue";
 import PartsTable from "./PartsTable.vue";
 import CollectionsTable from "./CollectionsTable.vue";
 import ResearchLink from "./ResearchLink.vue";
-import LinksMenu from "../link/LinksMenu.vue";
+// import LinksMenu from "../link/LinksMenu.vue";
 import PartsMenu from "./PartsMenu.vue";
+import { writeToClipboard } from "../../general.js";
 
 import { ref, inject, provide, computed } from "vue";
 
@@ -37,19 +40,28 @@ const displayOptions = inject("displayOptions");
 
 const elementAttr = inject("elementAttr");
 const changeAttr = inject("changeAttr");
+const project = inject("project");
 
 const researchObjId = { res: elementAttr.value.res };
 provide("researchObjId", researchObjId);
 
-const resMethods = inject("resMethods");
 const research = computed(function () {
-  return resMethods.getResearch(elementAttr.value.res);
+  return project.value.getResearch(elementAttr.value.res);
 });
 provide("research", research);
 
 const partsTabRef = ref();
 const colsTabRef = ref();
 const partsMenuRef = ref();
+const partsBodyRef = ref();
+
+const partsListMode = computed(function () {
+  if (partsMenuRef.value) {
+    return partsMenuRef.value.listMode;
+  }
+  return null;
+});
+provide("partsListMode", partsListMode);
 
 // tabs
 const tabList = [
@@ -83,7 +95,7 @@ const currentTabTable = computed(function () {
 function updateData(data) {
   switch (data.action) {
     case "newCat":
-      resMethods.newCollection(research.value, data.prop);
+      research.value.newCollection(data.prop);
       break;
     case "changeCat":
       currentTabTable.value.moveSelectedToCat(data.prop);
@@ -95,7 +107,7 @@ function updateData(data) {
       currentTabTable.value.removeSelected();
       break;
     case "upload":
-      resMethods.uploadParts(research.value, data.prop);
+      research.value.uploadParts(data.prop);
       break;
   }
 }
@@ -105,4 +117,10 @@ function openText(prop) {
   elmOpenText(prop, partsMenuRef.value.openInSameElement);
 }
 provide("openText", openText);
+
+function copyToClipboard() {
+  writeToClipboard(partsBodyRef.value.outerHTML, "html");
+}
+
+defineExpose({ copyToClipboard });
 </script>

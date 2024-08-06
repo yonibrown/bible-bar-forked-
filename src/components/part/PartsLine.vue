@@ -1,29 +1,42 @@
 <template>
-  <spec-line @dblclick="openText">
+  <spec-line>
     <template #col>
       <span>{{ collection.name }}</span>
     </template>
     <template #src>
-      <span>{{ line.src_name.replaceAll(",", " ") }}</span>
+      <verse-range
+        :part="line"
+        @changeValue="(newVal) => updateRange(line, newVal)"
+      ></verse-range>
     </template>
     <template #text>
-      <span class="bible-text">
-        {{ line.text_before }}<b> {{ line.text_part }}</b>
-        {{ line.text_after }}
-      </span>
+      <text-range
+        :fromPosition="line.src_from_position"
+        :fromText="line.src_from_text"
+        :fromWord="line.src_from_word"
+        :toPosition="line.src_to_position"
+        :toText="line.src_to_text"
+        :toWord="line.src_to_word"
+        :disabled="!enableSelection"
+        @changeValue="(newVal) => updateRange(line, newVal)"
+      ></text-range>
     </template>
   </spec-line>
 </template>
 
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
-import { inject, computed } from "vue";
+import VerseRange from "../sequence/VerseRange.vue";
+import TextRange from "../ui/TextRange.vue";
+import { inject, computed, provide } from "vue";
+
 const props = defineProps(["line", "field"]);
+const enableSelection = inject("enableSelection");
 
 const researchObjId = inject("researchObjId");
-const resMethods = inject("resMethods");
+const research = inject("research");
 const collection = computed(function () {
-  return resMethods.getCollection(researchObjId.res, props.line.col);
+  return research.value.getCollection(props.line.col);
 });
 
 const partOpenText = inject("openText");
@@ -33,5 +46,9 @@ function openText() {
     point_research_id: researchObjId.res,
     point_part_id: props.line.id,
   });
+}
+
+function updateRange(part, newVal) {
+  part.changeAttr(newVal);
 }
 </script>

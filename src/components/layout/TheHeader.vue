@@ -17,7 +17,7 @@
 <style scoped>
 header {
   width: 100%;
-  height: 5rem;
+  height: 70px;
   background-color: #476090;
   display: flex;
   justify-content: center;

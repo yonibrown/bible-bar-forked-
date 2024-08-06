@@ -1,6 +1,7 @@
 <template>
   <td
     v-for="fld in tableFields"
+    v-show="fld.display"
     :class="{ 'fit-column': fld.fit }"
     @dblclick="$emit('dblclick')"
   >

@@ -19,10 +19,11 @@
 <script setup>
 import { inject, ref } from "vue";
 import LinksMenuObj from "./LinksMenuObj.vue";
+import { biLink } from "../../store/biLink.js";
 
 const props = defineProps(["title"]);
 
-const lnkMethods = inject("lnkMethods");
+const project = inject("project");
 const element = inject("element");
 
 const links = inject("links");
@@ -37,18 +38,18 @@ function leaveLinksMenu() {
 function addToLink(dragData) {
   const linkId = +dragData.linkId;
   if (linkId != 0) {
-    const link = lnkMethods.getLink({ id: linkId });
-    lnkMethods.addElementToLink(link, element.value.id);
+    const link = project.value.getLink({ id: linkId });
+    link.addElementToLink( element.value.id);
     return;
   }
 
   const resId = +dragData.resId;
   if (resId != 0) {
-    const link = lnkMethods.getLink({ res: resId });
+    const link = project.value.getLink({ res: resId });
     if (link) {
-      lnkMethods.addElementToLink(link, element.value.id);
+      link.addElementToLink( element.value.id);
     } else {
-      lnkMethods.createLink({
+      biLink.createLink({
         researchId: resId,
         element: element.value,
       });

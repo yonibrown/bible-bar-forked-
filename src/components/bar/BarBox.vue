@@ -8,7 +8,7 @@
     <links-menu title="הדגשות"></links-menu>
     <bar-menu ref="barMenuRef"></bar-menu>
   </div>
-  <div class="in_body">
+  <div class="in_body" ref="barBodyRef">
     <div class="bar_header">
       <div class="bar_area">
         <bar-sgm-header
@@ -45,14 +45,15 @@ import SequenceMenu from "../sequence/SequenceMenu.vue";
 import BarSgmHeader from "./BarSgmHeader.vue";
 import BarSegment from "./BarSegment.vue";
 import BarLinkPoints from "./BarLinkPoints.vue";
+import { writeToClipboard } from "../../general.js";
 import { inject, computed, provide, ref } from "vue";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const links = inject("links");
-const elmMethods = inject("elmMethods");
 
 const barMenuRef = ref();
+const barBodyRef = ref();
 
 const segments = computed(function () {
   if (!element.value || !element.value.segments) {
@@ -67,13 +68,19 @@ const points = computed(function () {
   return element.value.points;
 });
 
-elmMethods.reload(element.value);
+element.value.reload();
 
 const elmOpenText = inject("openText");
 function openText(prop) {
   elmOpenText(prop, barMenuRef.value.openInSameElement);
 }
 provide("openText", openText);
+
+function copyToClipboard() {
+  writeToClipboard(barBodyRef.value,'png');
+}
+
+defineExpose({ copyToClipboard });
 </script>
 
 <style scoped>

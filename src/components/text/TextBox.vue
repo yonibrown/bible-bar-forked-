@@ -10,7 +10,16 @@
   </div>
   <div>
     <base-scrollable class="bible-text">
-      <div class="text-box" ref="textRef">
+      <div
+        class="text-box"
+        ref="textRef"
+        style="
+          font-size: 155%;
+          font-family: David, sans-serif;
+          text-align: justify;
+          direction: rtl;
+        "
+      >
         <text-verse
           v-for="vrs in verses"
           :key="vrs.part_id"
@@ -26,13 +35,15 @@ import TextMenu from "./TextMenu.vue";
 import LinksMenu from "../link/LinksMenu.vue";
 import SequenceMenu from "../sequence/SequenceMenu.vue";
 import TextVerse from "./TextVerse.vue";
-import { inject, ref, computed } from "vue";
+import { inject, ref, computed, provide } from "vue";
+import { writeToClipboard } from "../../general.js";
 
 const displayOptions = inject("displayOptions");
 const element = inject("element");
 const elementAttr = inject("elementAttr");
-const elmMethods = inject("elmMethods");
-const resMethods = inject("resMethods");
+const project = inject("project");
+const links = inject("links");
+
 
 const textRef = ref();
 
@@ -43,15 +54,15 @@ const verses = computed(function () {
   return element.value.verses;
 });
 
-elmMethods.loadText(element.value);
+element.value.loadText();
 
 function updateData(data) {
   switch (data.action) {
     case "addToCat":
       const range = getSelectionInElement(textRef.value);
       if (range) {
-        const res = resMethods.getResearch(data.prop.research_id);
-        resMethods.newPart(res, {
+        const res = project.value.getResearch(data.prop.research_id);
+        res.newPart({
           collection_id: data.prop.collection_id,
           src_research: elementAttr.value.research_id,
           src_collection: elementAttr.value.collection_id,
@@ -86,6 +97,32 @@ function getSelectionInElement(elm) {
 function closestAttr(elm, attr) {
   return elm.closest("[" + attr + "]").getAttribute(attr);
 }
+
+function copyToClipboard() {
+  writeToClipboard(textRef.value.outerHTML,'html');
+}
+
+const linkedParts = computed(function () {
+  const parts = [];
+  for (let link of links.value) {
+    for (let cat of link.categories) {
+      let res = project.value.getResearch(cat.res);
+      let col = res.getCollection(cat.col);
+      for (let prt of col.parts) {
+        if (
+          prt.src_from_position >= elementAttr.value.from_position &&
+           prt.src_to_position <= elementAttr.value.to_position
+        ) {
+          parts.push({prt,cat});
+        }
+      }
+    }
+  }
+  return parts;
+});
+provide('linkedParts',linkedParts);
+
+defineExpose({ copyToClipboard });
 </script>
 
 <style scoped>

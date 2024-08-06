@@ -5,7 +5,7 @@
     :idx="dispElmIdx"
     :dragData="dragData"
     :moveElement="moveElement"
-    :dragStruct="['dispElmIdx']"
+    :dragStruct="dragStruct"
   >
     <element-box
       :element="elm"
@@ -18,25 +18,31 @@
 <script setup>
 import ElementBox from "./ElementBox.vue";
 import SortableCell from "../ui/SortableCell.vue";
-import { provide, computed, ref, onUpdated,inject } from "vue";
+import { provide, computed, ref, onUpdated, inject } from "vue";
 
-const props = defineProps(["elements"]);
-const prjMethods = inject('prjMethods');
-const elmMethods = inject("elmMethods");
+const props = defineProps(["elements", "tab"]);
+const project = inject("project");
 
 const dispElements = computed(function () {
   return props.elements
     .filter(function (a) {
-      return +a.position >= 0;
+      return +a.position >= 0 && a.tab == props.tab;
     })
     .sort(function (a, b) {
       return a.position - b.position;
     });
 });
 
+const dragStruct = ["dispElmId", "dispElmIdx", "dispElmTab"];
 function dragData(dispElmIdx) {
-  const data = { dispElmIdx };
   const elm = dispElements.value[dispElmIdx];
+
+  const data = {
+    dispElmId: elm.id,
+    dispElmIdx,
+    dispElmTab: props.tab,
+  };
+
   if (elm.type == "link") {
     data.linkId = elm.attr.link_id;
   }
@@ -48,24 +54,35 @@ function dragData(dispElmIdx) {
 
 function moveElement(dragData, dropIdx) {
   const dragIdx = +dragData.dispElmIdx;
+  const dragTab = +dragData.dispElmTab;
+  const dragId = +dragData.dispElmId;
 
-  // nothing to move
-  if (dropIdx == dragIdx) {
-    return;
-  }
+  const dropTab = props.tab;
 
-  const dragElm = dispElements.value[dragIdx];
   const dropElm = dispElements.value[dropIdx];
-  const dragElmPos = +dragElm.position;
   const dropElmPos = +dropElm.position;
 
-  if (Math.abs(dropIdx - dragIdx) == 1) {
-    // switch following items
-    dragElm.position = dropElmPos;
-    dropElm.position = dragElmPos;
-  } else {
-    dragElm.position = elementPrevPos(dropIdx);
+  const dragElm = project.value.getElement(dragId);
+  const dragElmPos = +dragElm.position;
+
+  if (dropTab == dragTab) {
+    // same tab
+    if (dropIdx == dragIdx) {
+      // nothing to move
+      return;
+    }
+
+    if (Math.abs(dropIdx - dragIdx) == 1) {
+      // switch following items
+      dragElm.position = dropElmPos;
+      dropElm.position = dragElmPos;
+      saveElmList();
+      return;
+    }
   }
+
+  dragElm.position = elementPrevPos(dropIdx);
+  dragElm.tab = dropTab;
   saveElmList();
 }
 
@@ -76,7 +93,7 @@ onUpdated(function () {
 });
 
 function elementPrevPos(elmIdx) {
-  if(dispElements.value.length == 0){
+  if (dispElements.value.length == 0) {
     return 1;
   }
   const elm = dispElements.value[elmIdx];
@@ -91,8 +108,8 @@ function elementPrevPos(elmIdx) {
 function elementNextPos(elmIdx) {
   const elm = dispElements.value[elmIdx];
   const elmPos = +elm.position;
-  var nextElmPos = elmPos+2;
-  if (elmIdx < dispElements.value.length-1) {
+  var nextElmPos = elmPos + 2;
+  if (elmIdx < dispElements.value.length - 1) {
     nextElmPos = +dispElements.value[elmIdx + 1].position;
   }
   return (nextElmPos - elmPos) / 2 + elmPos;
@@ -105,7 +122,10 @@ function saveElmList() {
       position: idx + 1,
     };
   });
-  prjMethods.storeElementList(elmList);
+  project.value.storeElementList({
+    elements: elmList,
+    tab: props.tab,
+  });
 }
 
 function closeElement(elm) {
@@ -114,7 +134,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  elmMethods.openNewElement(elementPrevPos(0));
+  project.value.openNewElement(props.tab,elementPrevPos(0));
 }
 defineExpose({ openNewElement });
 </script>

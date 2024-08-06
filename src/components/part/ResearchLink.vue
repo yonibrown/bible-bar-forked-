@@ -1,14 +1,12 @@
 <template>
   <base-scrollable>
     <div class="links">
-      <table class="in_body">
+      <table>
         <link-category
           v-for="cat in categories"
           :key="cat.id"
           :category="cat"
-          @update-category="
-            (data) => lnkMethods.updateCategory(link, cat, data)
-          "
+          @update-category="(data) => link.updateCategory(cat, data)"
         ></link-category>
       </table>
     </div>
@@ -19,11 +17,11 @@
 import LinkCategory from "../link/LinkCategory.vue";
 import { computed, inject } from "vue";
 
+const project = inject("project");
 const research = inject("research");
-const lnkMethods = inject("lnkMethods");
 
 const link = computed(function () {
-  return lnkMethods.getLink({ res: research.value.id });
+  return project.value.getLink({ res: research.value.id });
 });
 
 const categories = computed(function () {

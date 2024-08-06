@@ -1,14 +1,11 @@
 <template>
   <form @submit.prevent="submitValue" class="menu" v-if="editing">
-    <input
-      type="text"
-      id="editable"
-      :name="name"
-      ref="input"
-      v-model.trim="currentValue"
-      @focusout="inputFocusout"
-      @keydown="inputKeydown"
-    />
+    <sequence-key
+      :initialValue="initialKey"
+      @changeValue="updateDiv"
+      defaultValue="min"
+      ref="fromRef"
+    ></sequence-key>
     <button>שמור</button>
   </form>
   <span
@@ -22,7 +19,9 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch, computed, inject } from "vue";
+import SequenceKey from "../sequence/SequenceKey.vue";
+import { biResearch } from "../../store/biResearch.js";
 
 const props = defineProps([
   "initialValue",
@@ -31,20 +30,26 @@ const props = defineProps([
   "disabled",
   "placeholder",
   "blankable",
+  "initPosition",
 ]);
 const emit = defineEmits(["submitValue"]);
 
+const seqIndex = inject("seqIndex");
+
+var changedAttr = {};
+const hasChanges = ref(false);
+
 const editing = ref(false);
-const currentValue = ref(props.initialValue);
+const initialKey = ref(null);
 
 const title = computed(function () {
-  if (noTitle.value) {
+  if (props.initialValue == "" && !props.disabled) {
     return props.placeholder;
   }
   return props.initialValue;
 });
 const noTitle = computed(function () {
-  return (!props.initialValue || props.initialValue == "") && !props.disabled;
+  return props.initialValue == "";
 });
 
 const input = ref(null);
@@ -56,16 +61,15 @@ watch(input, function (newVal) {
 });
 
 function submitValue() {
-  if (currentValue.value == "" && !props.blankable) {
-    currentValue.value = props.getDefault();
-  }
-
   leaveEdit();
-  emit("submitValue", currentValue.value);
+  emit("submitValue", changedAttr);
 }
 
-function startEdit() {
+async function startEdit() {
   if (!props.disabled) {
+    initialKey.value = await biResearch.loadKey(seqIndex.value, {
+      position: props.initPosition,
+    });
     editing.value = true;
   }
 }
@@ -84,6 +88,18 @@ function inputKeydown(evt) {
   if (evt.keyCode == 27) {
     leaveEdit();
   }
+}
+
+function updateDiv(newVal) {
+  hasChanges.value = true;
+  changedAttr['div'] = newVal;
+
+  // if ((attr = "from_div")) {
+  //   if (getSeqDiv("to") < newVal) {
+  //     toRef.value.updateKey(fromRef.value.getKey());
+  //     changedAttr["to_div"] = newVal;
+  //   }
+  // }
 }
 </script>
 

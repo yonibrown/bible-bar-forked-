@@ -1,12 +1,12 @@
 <template>
-  <div
+  <span
     :draggable="dragAllowed"
     @dragstart="startDrag($event)"
     @mousedown="startMouse($event)"
     @mouseup="onMouseup"
   >
     <slot> </slot>
-  </div>
+  </span>
 </template>
 
 <script setup>

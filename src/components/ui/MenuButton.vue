@@ -9,6 +9,10 @@ const props = defineProps(["type"]);
 
 const faClass = computed(function () {
   switch (props.type) {
+    case "clipboard":
+      return "fa-copy";
+    case "download":
+      return "fa-download";
     case "add":
       return "fa-plus";
     case "reload":

@@ -16,9 +16,9 @@
         {{ typ.name }}
       </option>
     </select>
-    <select v-if="displayResearchList" v-model="selectedObject">
+    <select v-if="displayObjectList" v-model="selectedObject">
       <option value="choose">בחר</option>
-      <option v-for="res in researches" :value="res.id">{{ res.name }}</option>
+      <option v-for="obj in objects" :value="obj.id">{{ obj.name }}</option>
     </select>
     <input
       type="submit"
@@ -53,6 +53,11 @@ const typeList = [
     openList: true,
   },
   {
+    id: "link",
+    name: "הדגשות",
+    openList: true,
+  },
+  {
     id: "note",
     name: "הערות",
     openList: false,
@@ -63,7 +68,7 @@ watch(action, function () {
   type.value = "choose";
 });
 
-const displayResearchList = computed(function () {
+const displayObjectList = computed(function () {
   return action.value == "open" && type.value != "choose";
 });
 
@@ -78,6 +83,16 @@ const displaySubmitElement = computed(function () {
 });
 
 const researches = inject("researches");
+const links = inject("links");
+const objects = computed(function () {
+  if (type.value == "parts") {
+    return researches.value;
+  }
+  if (type.value == "link") {
+    return links.value;
+  }
+  return [];
+});
 
 const createElement = inject("createElement");
 function submitElement() {
@@ -88,7 +103,21 @@ function submitElement() {
     return;
   }
   if (action.value == "open") {
-    console.log('not yet implemented');
+    if (type.value == "parts") {
+      createElement({
+        type: type.value,
+        res: selectedObject.value,
+      });
+      return;
+    }
+    if (type.value == "link") {
+      createElement({
+        type: type.value,
+        link: selectedObject.value,
+      });
+      return;
+    }
+    console.log("not yet implemented");
     return;
   }
 }

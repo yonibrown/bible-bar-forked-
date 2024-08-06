@@ -13,9 +13,10 @@
 <script setup>
 import SeqKeyLevel from "./SeqKeyLevel.vue";
 import { ref, inject, computed, watch } from "vue";
+import { biResearch } from "../../store/biResearch.js";
+
 const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
-const resMethods = inject("resMethods");
 
 const defaultDiv = props.defaultValue == "min" ? "0" : "-1";
 const lastKeyIdx = props.initialValue.length - 1;
@@ -48,10 +49,9 @@ function updateKey(key) {
 }
 
 async function loadKey() {
-  keyLevels.value = await resMethods.loadIndexDivisions(
-    seqIndex.value,
-    selectedKey
-  );
+  keyLevels.value = await biResearch.loadIndexDivisions(seqIndex.value, {
+    key: selectedKey,
+  });
 }
 
 async function changeKeyLevel(lvlIdx, div) {

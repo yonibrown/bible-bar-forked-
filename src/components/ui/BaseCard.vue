@@ -11,9 +11,11 @@
 </template>
 
 <script setup>
-import { ref, provide } from "vue";
+import { ref, provide, onMounted } from "vue";
 
-const props = defineProps(["shadow"]);
+const props = defineProps(["shadow", "initialYAdd"]);
+const emit = defineEmits(["resize"]);
+
 const cardRef = ref();
 const handleRef = ref();
 
@@ -23,6 +25,19 @@ provide("yAddition", yAddition);
 
 var startY, startHeight, startAddition;
 var initialHeight = null;
+
+onMounted(function () {
+  if (props.initialYAdd && resizable.value) {
+    yAddition.value = props.initialYAdd;
+
+    startHeight = getCardHeight();
+    if (!initialHeight) {
+      initialHeight = startHeight;
+    }
+
+    cardRef.value.style.minheight = startHeight + yAddition.value + "px";
+  }
+});
 
 function startResize(evt) {
   startY = evt.clientY;
@@ -36,6 +51,7 @@ function startResize(evt) {
   document.documentElement.addEventListener("mouseup", stopDrag, false);
 }
 
+var resizeTimeout = null;
 function doDrag(evt) {
   var gap = evt.clientY - startY;
 
@@ -46,6 +62,11 @@ function doDrag(evt) {
     yAddition.value = startAddition + gap;
     cardRef.value.style.minheight = startHeight + gap + "px";
   }
+
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function () {
+    emit("resize", yAddition.value);
+  }, 1000);
 }
 
 function stopDrag() {
@@ -56,7 +77,7 @@ function stopDrag() {
 function getCardHeight() {
   return parseInt(
     document.defaultView.getComputedStyle(cardRef.value).height,
-    10,
+    10
   );
 }
 
@@ -75,7 +96,7 @@ provide("activateResizable", activateResizable);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
   padding: 1rem;
   margin: 2rem auto;
-  max-width: 85%;
+  max-width: 90%;
   position: relative;
   background-color: #f5f7fa;
 }
