@@ -107,9 +107,9 @@ async function submitChanges() {
   }
 
   if (!props.enableWholeText) {
-    if (toDiv - fromDiv > 100) {
-      alert("לא ניתן להציג יותר מ-100 פסוקים");
-      // changedAttr['to_div'] = fromDiv + 100;
+    if (toDiv - fromDiv > 1000) {
+      alert("לא ניתן להציג יותר מ-1000 פסוקים");
+      // changedAttr['to_div'] = fromDiv + 1000;
       return;
     }
   }

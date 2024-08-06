@@ -41,6 +41,7 @@ export class biElement {
 
   get name() {
     if (this._obj.name.trim() == "") {
+      console.log('name 1 - biElement.name');
       return this.defaultName;
     }
     return this._obj.name;
@@ -220,6 +221,7 @@ class biElmNew extends biElement {
 
 class biElmText extends biElement {
   get defaultName() {
+    console.log('name 2 - biElmText.defaultName');
     return biElement.seqTitle(this.attr.from_key);
   }
 
