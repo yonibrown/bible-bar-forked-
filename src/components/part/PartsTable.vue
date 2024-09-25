@@ -1,16 +1,24 @@
 <template>
-  <spec-table
-    :enableSelection="displayOptions"
-    :tableFields="tableFields"
-    :sortField="sortAttr.sort"
-    @changeSortField="changeSortField"
-    :ascending="sortAttr.ordering == 'ASC'"
-    @reverseTable="reverseTable"
-    :lines="sortedParts"
-    lineComponent="parts-line"
-    ref="tableRef"
+  <base-droppable
+    :drop="addToTable"
+    :dragStruct="['linkId', 'resId']"
+    :dragEnter="enterTable"
+    :dragLeave="leaveTable"
   >
-  </spec-table>
+    <spec-table
+      :enableSelection="displayOptions"
+      :tableFields="tableFields"
+      :sortField="sortAttr.sort"
+      @changeSortField="changeSortField"
+      :ascending="sortAttr.ordering == 'ASC'"
+      @reverseTable="reverseTable"
+      :lines="sortedParts"
+      lineComponent="parts-line"
+      ref="tableRef"
+      :hilightTable="hilightTable"
+    >
+    </spec-table>
+  </base-droppable>
 </template>
 
 <script setup>
@@ -146,6 +154,19 @@ async function duplicateSelected() {
 
 function removeSelected() {
   research.value.deleteParts(tableRef.value.selectedLines);
+}
+
+const hilightTable = ref(false);
+function enterTable() {
+  console.log("enterTable");
+  hilightTable.value = true;
+}
+function leaveTable() {
+  console.log("leaveTable");
+  hilightTable.value = false;
+}
+function addToTable() {
+  console.log("addToTable");
 }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });

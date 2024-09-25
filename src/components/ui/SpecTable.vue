@@ -1,6 +1,6 @@
 <template>
   <div>
-    <base-scrollable>
+    <base-scrollable :hilightDiv="hilightTable">
       <table>
         <tr class="header">
           <td v-show="enableSelection" class="fit-column"></td>
@@ -56,13 +56,14 @@ const props = defineProps([
   "lines",
   "lineComponent",
   "enableNewLine",
+  "hilightTable",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField"]);
 provide(
   "tableFields",
   computed(function () {
     return props.tableFields;
-  }),
+  })
 );
 const enableLineEdit = computed(function () {
   return props.enableSelection;
