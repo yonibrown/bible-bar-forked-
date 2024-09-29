@@ -5,6 +5,7 @@
     :tableFields="tableFields"
     :sortField="sortField"
     @changeSortField="changeSortField"
+    @resizeField="resizeField"
     :ascending="ascending"
     @reverseTable="reverseTable"
     :lines="lines"
@@ -31,21 +32,20 @@ const tableFields = computed(function () {
       name: "col1",
       title: "כותרת",
       sortable: true,
-      fit: false,
       display: true,
+      widthPct:30
     },
     {
       name: "col2",
       title: "פסוקים",
       sortable: true,
-      fit: true,
       display: true,
+      widthPct:20
     },
     {
       name: "col3",
       title: "הערות",
       sortable: false,
-      fit: false,
       display: true,
     },
   ];
@@ -55,7 +55,6 @@ const lines = [
   {
     col1: "סיפור ירושת הכס",
     col2: "א 1 – ב 10",
-    col3: "",
   },
 ];
 
@@ -66,4 +65,10 @@ function changeSortField(newField) {
 function reverseTable() {
   ascending.value = !ascending.value;
 }
+
+function resizeField(attr) {
+  console.log('resize',attr);
+  // changeAttr(attr);
+}
+
 </script>

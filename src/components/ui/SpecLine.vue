@@ -2,7 +2,6 @@
   <td
     v-for="fld in tableFields"
     v-show="fld.display"
-    :class="{ 'fit-column': fld.fit }"
     @dblclick="$emit('dblclick')"
   >
     <slot :name="fld.name"></slot>
@@ -19,10 +18,5 @@ const emit = defineEmits(["dblclick"]);
 td {
   font-size: 85%;
   padding: 0 3px;
-}
-
-.fit-column {
-  width: 1px;
-  white-space: nowrap;
 }
 </style>

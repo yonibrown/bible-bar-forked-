@@ -3,7 +3,7 @@
     <base-scrollable :hilightDiv="hilightTable">
       <table>
         <tr class="header" ref="row">
-          <td v-show="enableSelection" class="fit-column"></td>
+          <td v-show="enableSelection"></td>
           <head-td
             v-for="(fld, fldidx) in tableFields"
             ref="headCell"
@@ -181,8 +181,5 @@ table {
 
 .sortingField {
   font-weight: bold;
-}
-.fit-column {
-  width: 1px;
 }
 </style>

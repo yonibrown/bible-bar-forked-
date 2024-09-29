@@ -1,13 +1,16 @@
 <template>
-  <td v-show="fld.display" :class="{ 'fit-column': fld.fit }">
-    <div :class="{ editHeader: enableSelection && !lastField }" ref="resizer">
+  <td v-show="fld.display">
+    <div
+      :class="{ editHeader: enableSelection && !lastField, lastField }"
+      ref="resizer"
+    >
       <slot></slot>
     </div>
   </td>
 </template>
 
 <script setup>
-import { computed, inject, ref, watch,onMounted } from "vue";
+import { computed, inject, ref, watch } from "vue";
 
 const enableSelection = inject("enableSelection");
 const rowWidth = inject("rowWidth");
@@ -63,7 +66,7 @@ watch(rowWidth, function () {
   overflow: auto;
   min-width: 100%;
 }
-.fit-column {
-  width: 1px;
+.lastField {
+  width: 100vw;
 }
 </style>

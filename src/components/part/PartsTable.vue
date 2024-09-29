@@ -43,7 +43,6 @@ const tableFields = computed(function () {
       name: "col",
       title: "קטגוריה",
       sortable: true,
-      fit: false,
       display: true,
       widthPct: element.value.partsWidth(0)
     },
@@ -51,7 +50,6 @@ const tableFields = computed(function () {
       name: "src",
       title: "פסוק",
       sortable: true,
-      fit: true,
       display: partsListMode.value == "segment",
       widthPct: element.value.partsWidth(1)
     },
@@ -59,7 +57,6 @@ const tableFields = computed(function () {
       name: "text",
       title: "טקסט",
       sortable: false,
-      fit: false,
       display: partsListMode.value == "segment"
     },
   ];
