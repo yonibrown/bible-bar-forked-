@@ -41,13 +41,13 @@ export class biElement {
 
   get name() {
     if (this._obj.name.trim() == "") {
-      console.log('name 1 - biElement.name');
+      console.log("name 1 - biElement.name");
       return this.defaultName;
     }
     return this._obj.name;
   }
 
-  get numbering(){
+  get numbering() {
     return this.attr.numbering;
   }
 
@@ -122,6 +122,8 @@ export class biElement {
         return new biElmParts(rec);
       case "link":
         return new biElmLink(rec);
+      case "board":
+        return new biElmBoard(rec);
     }
   }
 
@@ -221,7 +223,7 @@ class biElmNew extends biElement {
 
 class biElmText extends biElement {
   get defaultName() {
-    console.log('name 2 - biElmText.defaultName');
+    console.log("name 2 - biElmText.defaultName");
     return biElement.seqTitle(this.attr.from_key);
   }
 
@@ -269,6 +271,12 @@ class biElmParts extends biElement {
 
   setName(newName) {
     this._research.setName(newName);
+  }
+}
+
+class biElmBoard extends biElement {
+  constructor(rec) {
+    super(rec);
   }
 }
 
