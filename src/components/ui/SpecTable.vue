@@ -9,19 +9,21 @@
             v-show="fld.display"
             :class="{ 'fit-column': fld.fit }"
           >
-            <span
-              v-if="fld.sortable"
-              @dblclick="changeSort(fld.name)"
-              :class="{ sortingField: sortField == fld.name }"
-            >
-              {{ fld.title }}
-              <i
-                v-show="sortField == fld.name"
-                class="fa"
-                :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
-              ></i>
-            </span>
-            <span v-else>{{ fld.title }}</span>
+            <head-td ref="headCell" @resize="(style) => resizeCell(fld, style)">
+              <span
+                v-if="fld.sortable"
+                @dblclick="changeSort(fld.name)"
+                :class="{ sortingField: sortField == fld.name }"
+              >
+                {{ fld.title }}
+                <i
+                  v-show="sortField == fld.name"
+                  class="fa"
+                  :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
+                ></i>
+              </span>
+              <span v-else>{{ fld.title }}</span>
+            </head-td>
           </td>
         </tr>
         <spec-line-wrapper
@@ -47,6 +49,7 @@
 
 <script setup>
 import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
+import HeadTd from "./SpecTable/HeadTd.vue";
 import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",
@@ -65,19 +68,15 @@ provide(
     return props.tableFields;
   })
 );
-const enableLineEdit = computed(function () {
+const enableSelection1 = computed(function () {
   return props.enableSelection;
 });
 
-provide("enableSelection", enableLineEdit);
+provide("enableSelection", enableSelection1);
 
 const linesRef = ref([]);
 
-const newLineArray = [
-  {
-    newLine: true,
-  },
-];
+const newLineArray = [{ newLine: true }];
 const lineList = computed(function () {
   if (props.enableNewLine && props.enableSelection) {
     return props.lines.concat(newLineArray);
@@ -132,6 +131,10 @@ watch(checkState, function (newVal) {
     }
   }
 });
+
+function resizeCell(fld, style) {
+  console.log("resize width", fld.name, style.width);
+}
 
 defineExpose({ selectedLines });
 </script>

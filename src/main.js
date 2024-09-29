@@ -22,6 +22,7 @@ import NewBox from './components/project/NewBox.vue';
 
 import PartsLine from './components/part/PartsLine.vue';
 import CollectionLine from './components/part/CollectionLine.vue';
+import BoardLine from './components/board/BoardLine.vue';
 
 const app = createApp(App)
 
@@ -44,5 +45,6 @@ app.component('new-box', NewBox);
 
 app.component('parts-line', PartsLine);
 app.component('collection-line', CollectionLine);
+app.component('board-line', BoardLine);
 
 app.mount('#app');

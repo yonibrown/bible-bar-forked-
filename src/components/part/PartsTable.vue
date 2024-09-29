@@ -1,24 +1,16 @@
 <template>
-  <base-droppable
-    :drop="addToTable"
-    :dragStruct="['dispElmId']"
-    :dragEnter="enterTable"
-    :dragLeave="leaveTable"
+  <spec-table
+    :enableSelection="displayOptions"
+    :tableFields="tableFields"
+    :sortField="sortAttr.sort"
+    @changeSortField="changeSortField"
+    :ascending="sortAttr.ordering == 'ASC'"
+    @reverseTable="reverseTable"
+    :lines="sortedParts"
+    lineComponent="parts-line"
+    ref="tableRef"
   >
-    <spec-table
-      :enableSelection="displayOptions"
-      :tableFields="tableFields"
-      :sortField="sortAttr.sort"
-      @changeSortField="changeSortField"
-      :ascending="sortAttr.ordering == 'ASC'"
-      @reverseTable="reverseTable"
-      :lines="sortedParts"
-      lineComponent="parts-line"
-      ref="tableRef"
-      :hilightTable="hilightTable"
-    >
-    </spec-table>
-  </base-droppable>
+  </spec-table>
 </template>
 
 <script setup>
@@ -157,22 +149,22 @@ function removeSelected() {
   research.value.deleteParts(tableRef.value.selectedLines);
 }
 
-const hilightTable = ref(false);
-function enterTable() {
-  console.log("enterTable");
-  hilightTable.value = true;
-}
-function leaveTable() {
-  console.log("leaveTable");
-  hilightTable.value = false;
-}
-function addToTable(data) {
-  console.log("addToTable", data, research.value);
-  research.value.newPart({
-    project_id: project.value.id,
-    element_id: data.dispElmId,
-  });
-}
+// const hilightTable = ref(false);
+// function enterTable() {
+//   console.log("enterTable");
+//   hilightTable.value = true;
+// }
+// function leaveTable() {
+//   console.log("leaveTable");
+//   hilightTable.value = false;
+// }
+// function addToTable(data) {
+//   console.log("addToTable", data, research.value);
+//   research.value.newPart({
+//     project_id: project.value.id,
+//     element_id: data.dispElmId,
+//   });
+// }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });
 </script>
