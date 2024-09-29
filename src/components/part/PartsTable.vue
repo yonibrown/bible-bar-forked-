@@ -1,7 +1,7 @@
 <template>
   <base-droppable
     :drop="addToTable"
-    :dragStruct="['linkId', 'resId']"
+    :dragStruct="['dispElmId']"
     :dragEnter="enterTable"
     :dragLeave="leaveTable"
   >
@@ -27,6 +27,7 @@ import { computed, ref, inject } from "vue";
 
 const displayOptions = inject("displayOptions");
 const partsListMode = inject("partsListMode");
+const project = inject("project");
 const elementAttr = inject("elementAttr");
 
 const research = inject("research");
@@ -165,8 +166,12 @@ function leaveTable() {
   console.log("leaveTable");
   hilightTable.value = false;
 }
-function addToTable() {
-  console.log("addToTable");
+function addToTable(data) {
+  console.log("addToTable", data, research.value);
+  research.value.newPart({
+    project_id: project.value.id,
+    element_id: data.dispElmId,
+  });
 }
 
 defineExpose({ moveSelectedToCat, duplicateSelected, removeSelected });
