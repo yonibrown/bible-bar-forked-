@@ -1,5 +1,10 @@
 <template>
-  <div class="scrollable" ref="scrollable" @scrollend="saveOffset">
+  <div
+    class="scrollable"
+    ref="scrollable"
+    @scrollend="saveOffset"
+    :class="{ 'hilight-div': hilightDiv }"
+  >
     <slot> </slot>
   </div>
 </template>
@@ -7,6 +12,7 @@
 <script setup>
 import { provide, ref, inject, watch } from "vue";
 
+const props = defineProps(["hilightDiv"]);
 const scrollable = ref(null);
 var scrollTop = 0;
 
@@ -58,5 +64,9 @@ activateResizable();
   /* margin: 15px auto; */
   margin: 0 auto 5px auto;
   width: 100%;
+}
+
+.hilight-div {
+  background-color: rgb(254, 255, 198);
 }
 </style>
