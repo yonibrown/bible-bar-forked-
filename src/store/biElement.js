@@ -272,6 +272,17 @@ class biElmParts extends biElement {
   setName(newName) {
     this._research.setName(newName);
   }
+
+  tabColsWidth(colName){
+    switch(colName){
+      case 'col':
+        return this._obj.attr.col_width;
+      case 'src':
+        return this._obj.attr.src_width;
+      default:
+        return 100 - (this._obj.attr.col_width + this._obj.attr.src_width);
+    }
+  }
 }
 
 class biElmBoard extends biElement {

@@ -19,8 +19,8 @@ import { computed, ref, inject } from "vue";
 
 const displayOptions = inject("displayOptions");
 const partsListMode = inject("partsListMode");
-const project = inject("project");
 const elementAttr = inject("elementAttr");
+const element = inject("element");
 
 const research = inject("research");
 
@@ -44,6 +44,7 @@ const tableFields = computed(function () {
       sortable: true,
       fit: false,
       display: true,
+      widthPct: element.value.tabColsWidth('col')
     },
     {
       name: "src",
@@ -51,13 +52,14 @@ const tableFields = computed(function () {
       sortable: true,
       fit: true,
       display: partsListMode.value == "segment",
+      widthPct: element.value.tabColsWidth('src')
     },
     {
       name: "text",
       title: "טקסט",
       sortable: false,
       fit: false,
-      display: partsListMode.value == "segment",
+      display: partsListMode.value == "segment"
     },
   ];
 });

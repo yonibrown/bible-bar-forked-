@@ -2,14 +2,19 @@
   <div>
     <base-scrollable :hilightDiv="hilightTable">
       <table>
-        <tr class="header">
+        <tr class="header" ref="row">
           <td v-show="enableSelection" class="fit-column"></td>
           <td
             v-for="fld in tableFields"
             v-show="fld.display"
             :class="{ 'fit-column': fld.fit }"
           >
-            <head-td ref="headCell" @resize="(style) => resizeCell(fld, style)">
+            <head-td
+              ref="headCell"
+              :widthPct="fld.widthPct"
+              :fldname="fld.name"
+              @resize="(style) => resizeCell(fld, style)"
+            >
               <span
                 v-if="fld.sortable"
                 @dblclick="changeSort(fld.name)"
@@ -50,7 +55,7 @@
 <script setup>
 import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
 import HeadTd from "./SpecTable/HeadTd.vue";
-import { computed, ref, watch, provide } from "vue";
+import { computed, ref, watch, provide, onMounted } from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
@@ -68,10 +73,24 @@ provide(
     return props.tableFields;
   })
 );
+
+const row = ref();
+const rowWidth = ref(0);
+onMounted(function () {
+  console.log(
+    "row",
+    parseInt(document.defaultView.getComputedStyle(row.value).width, 10)
+  );
+  rowWidth.value = parseInt(
+    document.defaultView.getComputedStyle(row.value).width,
+    10
+  );
+});
+provide("rowWidth", rowWidth);
+
 const enableSelection1 = computed(function () {
   return props.enableSelection;
 });
-
 provide("enableSelection", enableSelection1);
 
 const linesRef = ref([]);
