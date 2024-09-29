@@ -281,7 +281,12 @@ class biElmParts extends biElement {
 
 class biElmBoard extends biElement {
   constructor(rec) {
+    console.log(rec);
     super(rec);
+  }
+
+  get fields(){
+    return this.attr.fields;
   }
 }
 

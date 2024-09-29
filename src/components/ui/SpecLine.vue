@@ -1,10 +1,10 @@
 <template>
   <td
-    v-for="fld in tableFields"
+    v-for="(fld,fldidx) in tableFields"
     v-show="fld.display"
     @dblclick="$emit('dblclick')"
   >
-    <slot :name="fld.name"></slot>
+    <slot :name="fld.name" :idx="fldidx"></slot>
   </td>
 </template>
 

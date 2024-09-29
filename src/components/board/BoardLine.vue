@@ -1,14 +1,8 @@
 <template>
   <spec-line>
-    <template #col1>
-      <span>{{ line.col1 }}</span>
-    </template>
-    <template #col2>
-      <span>{{ line.col2 }}</span>
-    </template>
-    <template #col3>
-      <span>{{ line.col3 }}</span>
-    </template>
+    <template #text="{idx}">
+      <span>{{ line[idx] }}</span>
+    </template> 
   </spec-line>
 </template>
 

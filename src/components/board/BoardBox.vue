@@ -21,26 +21,37 @@ import SpecTable from "../ui/SpecTable.vue";
 
 import { inject, computed, ref } from "vue";
 
+const element = inject("element");
 const displayOptions = inject("displayOptions");
 
 const sortField = ref("col");
 const ascending = ref(true);
 
 const tableFields = computed(function () {
+  return element.value.fields.map(function (fld) {
+    console.log("name", "col" + fld.id);
+    return {
+      name: fld.type,
+      title: fld.title,
+      sortable: true,
+      display: true,
+      widthPct: fld.width_pct,
+    };
+  });
   return [
     {
       name: "col1",
       title: "כותרת",
       sortable: true,
       display: true,
-      widthPct:30
+      widthPct: 30,
     },
     {
       name: "col2",
       title: "פסוקים",
       sortable: true,
       display: true,
-      widthPct:20
+      widthPct: 20,
     },
     {
       name: "col3",
@@ -51,12 +62,7 @@ const tableFields = computed(function () {
   ];
 });
 
-const lines = [
-  {
-    col1: "סיפור ירושת הכס",
-    col2: "א 1 – ב 10",
-  },
-];
+const lines = [["סיפור ירושת הכס", "א 1 – ב 10"]];
 
 function changeSortField(newField) {
   sortField.value = newField;
@@ -67,8 +73,7 @@ function reverseTable() {
 }
 
 function resizeField(attr) {
-  console.log('resize',attr);
+  console.log("resize", attr);
   // changeAttr(attr);
 }
-
 </script>

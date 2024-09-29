@@ -56,7 +56,9 @@ const width = computed(function () {
 });
 
 watch(rowWidth, function () {
-  resizer.value.style.width = width.value + "px";
+  if (!props.lastField) {
+    resizer.value.style.width = width.value + "px";
+  }
 });
 </script>
 
