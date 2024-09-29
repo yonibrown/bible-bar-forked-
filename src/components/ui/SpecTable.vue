@@ -4,32 +4,27 @@
       <table>
         <tr class="header" ref="row">
           <td v-show="enableSelection" class="fit-column"></td>
-          <td
-            v-for="fld in tableFields"
-            v-show="fld.display"
-            :class="{ 'fit-column': fld.fit }"
+          <head-td
+            v-for="(fld, fldidx) in tableFields"
+            ref="headCell"
+            :fld="fld"
+            :lastField="fldidx + 1 == tableFields.length"
+            @resize="(style) => resizeCell(fldidx, style)"
           >
-            <head-td
-              ref="headCell"
-              :widthPct="fld.widthPct"
-              :fldname="fld.name"
-              @resize="(style) => resizeCell(fld, style)"
+            <span
+              v-if="fld.sortable"
+              @dblclick="changeSort(fld.name)"
+              :class="{ sortingField: sortField == fld.name }"
             >
-              <span
-                v-if="fld.sortable"
-                @dblclick="changeSort(fld.name)"
-                :class="{ sortingField: sortField == fld.name }"
-              >
-                {{ fld.title }}
-                <i
-                  v-show="sortField == fld.name"
-                  class="fa"
-                  :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
-                ></i>
-              </span>
-              <span v-else>{{ fld.title }}</span>
-            </head-td>
-          </td>
+              {{ fld.title }}
+              <i
+                v-show="sortField == fld.name"
+                class="fa"
+                :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
+              ></i>
+            </span>
+            <span v-else>{{ fld.title }}</span>
+          </head-td>
         </tr>
         <spec-line-wrapper
           ref="linesRef"
@@ -66,7 +61,7 @@ const props = defineProps([
   "enableNewLine",
   "hilightTable",
 ]);
-const emit = defineEmits(["reverseTable", "changeSortField"]);
+const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
 provide(
   "tableFields",
   computed(function () {
@@ -77,10 +72,6 @@ provide(
 const row = ref();
 const rowWidth = ref(0);
 onMounted(function () {
-  console.log(
-    "row",
-    parseInt(document.defaultView.getComputedStyle(row.value).width, 10)
-  );
   rowWidth.value = parseInt(
     document.defaultView.getComputedStyle(row.value).width,
     10
@@ -151,8 +142,15 @@ watch(checkState, function (newVal) {
   }
 });
 
-function resizeCell(fld, style) {
-  console.log("resize width", fld.name, style.width);
+var resizeTimeout = null;
+var resizeData = {};
+function resizeCell(fieldIndex, style) {
+  resizeData = { fieldIndex, width: style.width };
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function () {
+    emit("resizeField", resizeData);
+    // console.log("resize width", resizeData);
+  }, 1000);
 }
 
 defineExpose({ selectedLines });

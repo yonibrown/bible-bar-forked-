@@ -1,27 +1,36 @@
 <template>
-  <div
-    :class="{ editHeader: enableSelection && widthPct }"
-    ref="cell"
-    :style="{ width: width + 'px' }"
-  >
-    <slot></slot>
-  </div>
+  <td v-show="fld.display" :class="{ 'fit-column': fld.fit }">
+    <div :class="{ editHeader: enableSelection && !lastField }" ref="resizer">
+      <slot></slot>
+    </div>
+  </td>
 </template>
 
 <script setup>
-import { computed, inject, ref, watch } from "vue";
+import { computed, inject, ref, watch,onMounted } from "vue";
 
 const enableSelection = inject("enableSelection");
 const rowWidth = inject("rowWidth");
 const emit = defineEmits(["resize"]);
-const props = defineProps(["widthPct"]);
+const props = defineProps(["fld", "lastField"]);
 
-const cell = ref();
+const resizer = ref();
 const observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     // check if the mutation is attributes and update the width and height data if it is.
-    if (mutation.type === "attributes" && cell.value.style.width != "") {
-      emit("resize", { width: cell.value.style.width });
+    if (mutation.type === "attributes" && resizer.value.style.width != "") {
+      //   emit("resize", { width: resizer.value.style.width });
+      emit("resize", {
+        width: Math.min(
+          (parseInt(
+            document.defaultView.getComputedStyle(resizer.value).width,
+            10
+          ) /
+            rowWidth.value) *
+            100,
+          100
+        ),
+      });
     }
   });
 });
@@ -29,7 +38,7 @@ const observer = new MutationObserver(function (mutations) {
 watch(enableSelection, function (newVal) {
   if (newVal) {
     // observe element's specified mutations
-    observer.observe(cell.value, { attributes: true });
+    observer.observe(resizer.value, { attributes: true });
   } else {
     observer.disconnect();
   }
@@ -37,10 +46,14 @@ watch(enableSelection, function (newVal) {
 
 const width = computed(function () {
   if (rowWidth.value) {
-    return (props.widthPct * rowWidth.value) / 100;
+    return (props.fld.widthPct * rowWidth.value) / 100;
   } else {
     return 1;
   }
+});
+
+watch(rowWidth, function () {
+  resizer.value.style.width = width.value + "px";
 });
 </script>
 
@@ -49,5 +62,8 @@ const width = computed(function () {
   resize: horizontal;
   overflow: auto;
   min-width: 100%;
+}
+.fit-column {
+  width: 1px;
 }
 </style>

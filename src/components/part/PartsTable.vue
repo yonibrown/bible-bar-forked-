@@ -4,6 +4,7 @@
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
     @changeSortField="changeSortField"
+    @resizeField="resizeField"
     :ascending="sortAttr.ordering == 'ASC'"
     @reverseTable="reverseTable"
     :lines="sortedParts"
@@ -44,7 +45,7 @@ const tableFields = computed(function () {
       sortable: true,
       fit: false,
       display: true,
-      widthPct: element.value.tabColsWidth('col')
+      widthPct: element.value.partsWidth(0)
     },
     {
       name: "src",
@@ -52,7 +53,7 @@ const tableFields = computed(function () {
       sortable: true,
       fit: true,
       display: partsListMode.value == "segment",
-      widthPct: element.value.tabColsWidth('src')
+      widthPct: element.value.partsWidth(1)
     },
     {
       name: "text",
@@ -82,6 +83,11 @@ function changeSortField(newField) {
   //     return a.sort_key[newField] > b.sort_key[newField] ? 1 : -1;
   //   });
   changeAttr(sortAttr.value);
+}
+
+function resizeField(attr) {
+  console.log('resize',attr);
+  changeAttr(attr);
 }
 
 // load data

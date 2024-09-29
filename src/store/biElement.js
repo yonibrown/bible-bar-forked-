@@ -259,6 +259,7 @@ class biElmParts extends biElement {
   constructor(rec) {
     super(rec);
     this._research = biProject.main.getResearch(this.attr.res);
+    this._partsWidth = [this.attr.col_width,this.attr.src_width];
   }
 
   get defaultName() {
@@ -273,15 +274,8 @@ class biElmParts extends biElement {
     this._research.setName(newName);
   }
 
-  tabColsWidth(colName){
-    switch(colName){
-      case 'col':
-        return this._obj.attr.col_width;
-      case 'src':
-        return this._obj.attr.src_width;
-      default:
-        return 100 - (this._obj.attr.col_width + this._obj.attr.src_width);
-    }
+  partsWidth(idx){
+    return this._partsWidth[idx];
   }
 }
 
