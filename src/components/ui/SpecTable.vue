@@ -2,12 +2,14 @@
   <div>
     <base-scrollable :hilightDiv="hilightTable">
       <table>
-        <tr class="header">
-          <td v-show="enableSelection" class="fit-column"></td>
-          <td
-            v-for="fld in tableFields"
-            v-show="fld.display"
-            :class="{ 'fit-column': fld.fit }"
+        <tr class="header" ref="row">
+          <td v-show="enableSelection"></td>
+          <head-td
+            v-for="(fld, fldidx) in tableFields"
+            ref="headCell"
+            :fld="fld"
+            :lastField="fldidx + 1 == tableFields.length"
+            @resize="(style) => resizeCell(fldidx, style)"
           >
             <span
               v-if="fld.sortable"
@@ -22,7 +24,7 @@
               ></i>
             </span>
             <span v-else>{{ fld.title }}</span>
-          </td>
+          </head-td>
         </tr>
         <spec-line-wrapper
           ref="linesRef"
@@ -47,7 +49,8 @@
 
 <script setup>
 import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
-import { computed, ref, watch, provide } from "vue";
+import HeadTd from "./SpecTable/HeadTd.vue";
+import { computed, ref, watch, provide, onMounted } from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
@@ -58,26 +61,32 @@ const props = defineProps([
   "enableNewLine",
   "hilightTable",
 ]);
-const emit = defineEmits(["reverseTable", "changeSortField"]);
+const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
 provide(
   "tableFields",
   computed(function () {
     return props.tableFields;
   })
 );
-const enableLineEdit = computed(function () {
+
+const row = ref();
+const rowWidth = ref(0);
+onMounted(function () {
+  rowWidth.value = parseInt(
+    document.defaultView.getComputedStyle(row.value).width,
+    10
+  );
+});
+provide("rowWidth", rowWidth);
+
+const enableSelection1 = computed(function () {
   return props.enableSelection;
 });
-
-provide("enableSelection", enableLineEdit);
+provide("enableSelection", enableSelection1);
 
 const linesRef = ref([]);
 
-const newLineArray = [
-  {
-    newLine: true,
-  },
-];
+const newLineArray = [{ newLine: true }];
 const lineList = computed(function () {
   if (props.enableNewLine && props.enableSelection) {
     return props.lines.concat(newLineArray);
@@ -133,6 +142,17 @@ watch(checkState, function (newVal) {
   }
 });
 
+var resizeTimeout = null;
+var resizeData = {};
+function resizeCell(fieldIndex, style) {
+  resizeData = { fieldIndex, width: style.width };
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function () {
+    emit("resizeField", resizeData);
+    // console.log("resize width", resizeData);
+  }, 1000);
+}
+
 defineExpose({ selectedLines });
 </script>
 
@@ -161,8 +181,5 @@ table {
 
 .sortingField {
   font-weight: bold;
-}
-.fit-column {
-  width: 1px;
 }
 </style>

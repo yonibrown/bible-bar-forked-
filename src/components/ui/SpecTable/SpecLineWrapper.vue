@@ -1,6 +1,6 @@
 <template>
   <tr class="table-line">
-    <td v-show="enableSelection" class="fit-column">
+    <td v-show="enableSelection">
       <input type="checkbox" v-model="checked" v-if="!line.newLine" />
     </td>
     <component :is="lineComponent" ref="linesRef" :line="line"></component>
@@ -47,8 +47,8 @@ td {
   font-size: 85%;
 }
 
-.fit-column {
+/* .fit-column {
   width: 1px;
   white-space: nowrap;
-}
+} */
 </style>

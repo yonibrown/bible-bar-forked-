@@ -30,7 +30,7 @@ import VerseRange from "../sequence/VerseRange.vue";
 import TextRange from "../ui/TextRange.vue";
 import { inject, computed } from "vue";
 
-const props = defineProps(["line", "field"]);
+const props = defineProps(["line"]);
 const enableSelection = inject("enableSelection");
 
 const researchObjId = inject("researchObjId");

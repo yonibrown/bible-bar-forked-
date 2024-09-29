@@ -17,10 +17,12 @@ import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
 import TextBox from './components/text/TextBox.vue';
 import PartsBox from './components/part/PartsBox.vue';
+import BoardBox from './components/board/BoardBox.vue';
 import NewBox from './components/project/NewBox.vue';
 
 import PartsLine from './components/part/PartsLine.vue';
 import CollectionLine from './components/part/CollectionLine.vue';
+import BoardLine from './components/board/BoardLine.vue';
 
 const app = createApp(App)
 
@@ -38,9 +40,11 @@ app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);
 app.component('text-box', TextBox);
 app.component('parts-box', PartsBox);
+app.component('board-box', BoardBox);
 app.component('new-box', NewBox);
 
 app.component('parts-line', PartsLine);
 app.component('collection-line', CollectionLine);
+app.component('board-line', BoardLine);
 
 app.mount('#app');
