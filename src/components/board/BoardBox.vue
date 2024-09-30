@@ -1,5 +1,9 @@
 <template>
   <div>Board</div>
+  <div v-show="displayOptions">
+    <!-- <links-menu title="סינון"></links-menu> -->
+    <board-menu></board-menu>
+  </div>
   <spec-table
     :enableSelection="displayOptions"
     :tableFields="tableFields"
@@ -18,6 +22,7 @@
 
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
+import BoardMenu from "./BoardMenu.vue";
 
 import { inject, computed, ref } from "vue";
 

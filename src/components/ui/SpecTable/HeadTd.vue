@@ -71,4 +71,11 @@ watch(rowWidth, function () {
 .lastField {
   width: 100vw;
 }
+td {
+  padding: 2px 5px 5px 2px;
+  /* border-bottom: 2px solid #e9e9e9; */
+  font-size: 71%;
+  /* cursor: pointer; */
+}
+
 </style>

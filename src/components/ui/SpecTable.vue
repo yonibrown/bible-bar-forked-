@@ -158,22 +158,19 @@ defineExpose({ selectedLines });
 
 <style scoped>
 .header {
-  background-color: #ebebeb;
+  background-color: #e4e4e4;
   user-select: none;
 }
 
 .header td {
-  background-color: #ebebeb;
-  padding: 2px 0 5px 0;
+  background-color: #e4e4e4;
   /* border-bottom: 2px solid #e9e9e9; */
-  font-size: 70%;
   position: sticky;
   top: 0;
-  /* cursor: pointer; */
 }
 
 table {
-  background-color: #e9e9e9;
+  background-color: #e4e4e4;
   text-align: justify;
   width: 100%;
   /* max-width: 85%; */

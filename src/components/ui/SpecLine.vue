@@ -16,7 +16,7 @@ const emit = defineEmits(["dblclick"]);
 
 <style scoped>
 td {
-  font-size: 85%;
-  padding: 0 3px;
+  font-size: 87%;
+  padding: 7px;
 }
 </style>
