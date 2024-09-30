@@ -1,42 +1,40 @@
 <template>
   <tr class="header" ref="row">
     <td v-show="enableSelection"></td>
-    <head-td
-      v-for="(fld, fldidx) in tableFields"
-      ref="headCell"
-      :fld="fld"
-      :lastField="fldidx + 1 == tableFields.length"
-      @resize="(style) => resizeCell(fldidx, style)"
-    >
-      <span
-        v-if="fld.sortable"
-        @dblclick="changeSort(fld.name)"
-        :class="{ sortingField: sortField == fld.name }"
+    <td v-show="fld.display" v-for="(fld, fldidx) in tableFields">
+      <column-resizer
+        ref="headCell"
+        :fld="fld"
+        :lastField="fldidx + 1 == tableFields.length"
+        @resize="(style) => resizeCell(fldidx, style)"
       >
-        {{ fld.title }}
-        <i
-          v-show="sortField == fld.name"
-          class="fa"
-          :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
-        ></i>
-      </span>
-      <span v-else>{{ fld.title }}</span>
-    </head-td>
+        <span
+          v-if="fld.sortable"
+          @dblclick="changeSort(fld.name)"
+          :class="{ sortingField: sortField == fld.name }"
+        >
+          {{ fld.title }}
+          <i
+            v-show="sortField == fld.name"
+            class="fa"
+            :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
+          ></i>
+        </span>
+        <span v-else>{{ fld.title }}</span>
+      </column-resizer>
+    </td>
   </tr>
 </template>
 
 <script setup>
-import HeadTd from "./HeadTd.vue";
-import { computed, ref, watch, provide, inject ,onMounted} from "vue";
+import ColumnResizer from "./ColumnResizer.vue";
+import { ref, provide, inject, onMounted } from "vue";
 
 const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
-const props = defineProps([
-  "sortField",
-  "ascending",
-]);
+const props = defineProps(["sortField", "ascending"]);
 
-const enableSelection = inject('enableSelection');
-const tableFields = inject('tableFields');
+const enableSelection = inject("enableSelection");
+const tableFields = inject("tableFields");
 
 var resizeTimeout = null;
 var resizeData = {};
@@ -66,9 +64,6 @@ onMounted(function () {
   );
 });
 provide("rowWidth", rowWidth);
-
-
-
 </script>
 
 <style scoped>
@@ -86,5 +81,11 @@ provide("rowWidth", rowWidth);
 
 .sortingField {
   font-weight: bold;
+}
+td {
+  padding: 2px 5px 5px 2px;
+  /* border-bottom: 2px solid #e9e9e9; */
+  font-size: 71%;
+  /* cursor: pointer; */
 }
 </style>
