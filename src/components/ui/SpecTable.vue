@@ -62,10 +62,18 @@ const props = defineProps([
   "hilightTable",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
+
 provide(
   "tableFields",
   computed(function () {
     return props.tableFields;
+  })
+);
+
+provide(
+  "enableSelection",
+  computed(function () {
+    return props.enableSelection;
   })
 );
 
@@ -78,11 +86,6 @@ onMounted(function () {
   );
 });
 provide("rowWidth", rowWidth);
-
-const enableSelection1 = computed(function () {
-  return props.enableSelection;
-});
-provide("enableSelection", enableSelection1);
 
 const linesRef = ref([]);
 
