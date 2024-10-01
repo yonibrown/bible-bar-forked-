@@ -40,21 +40,21 @@ const parts = computed(function () {
 const tableFields = computed(function () {
   return [
     {
-      name: "col",
+      type: "col",
       title: "קטגוריה",
       sortable: true,
       display: true,
       widthPct: element.value.partsWidth(0)
     },
     {
-      name: "src",
+      type: "src",
       title: "פסוק",
       sortable: true,
       display: partsListMode.value == "segment",
       widthPct: element.value.partsWidth(1)
     },
     {
-      name: "text",
+      type: "text",
       title: "טקסט",
       sortable: false,
       display: partsListMode.value == "segment"

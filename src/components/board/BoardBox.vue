@@ -17,7 +17,7 @@
     ref="tableRef"
     :hilightTable="false"
     :reorderFields="true"
-    @reorderFields="setFieldPosition"
+    @reorderFields="reorderFields"
   >
   </spec-table>
 </template>
@@ -25,6 +25,7 @@
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
 import BoardMenu from "./BoardMenu.vue";
+import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
 
@@ -34,23 +35,50 @@ const displayOptions = inject("displayOptions");
 const sortField = ref("col");
 const ascending = ref(true);
 
-const tableFields = computed(function () {
+const boardFields = computed(function () {
   return element.value.fields
     .sort(function (a, b) {
       return a.position - b.position;
-    })
+    });
+});
+
+const tableFields = computed(function () {
+  return boardFields.value
     .map(function (fld) {
       return {
-        name: fld.type,
+        id: fld.id,
+        type: fld.type,
         title: fld.title,
         sortable: true,
         display: true,
-        widthPct: fld.width_pct,
+        widthPct: fld.width_pct
       };
     });
 });
 
 const lines = [["סיפור ירושת הכס", "א 1 – ב 10"]];
+
+const ordFields = new ordering({
+  getSize: function () {
+    return boardFields.value.length;
+  },
+  getPosition: function (idx) {
+    return +boardFields.value[idx].position;
+  },
+  setPosition: function (parms) {
+    let act = [];
+    parms.forEach(function ({ idx, newVal }) {
+      act.push({ elm: boardFields.value[idx], newVal });
+    });
+    act.forEach(function ({ elm, newVal }) {
+      elm.position = newVal;
+    });
+  },
+  setTab: function (idx, newVal) {
+    boardFields.value[idx].tab = newVal;
+  },
+  saveElmList: saveFields,
+});
 
 function changeSortField(newField) {
   sortField.value = newField;
@@ -65,9 +93,21 @@ function resizeField(attr) {
   // changeAttr(attr);
 }
 
-function setFieldPosition(attr) {
-  console.log("setFieldPosition", attr);
-  element.value.setFieldPosition(attr)
+function reorderFields(attr) {
+  console.log("reorderFields", attr);
+  // element.value.setFieldPosition({ id: 0, newPos: 3 });
   // changeAttr(attr);
+  ordFields.move(
+    {
+      idx: attr.sourceIdx,
+    },
+    {
+      idx: attr.targetIdx,
+    }
+  );
+}
+
+function saveFields() {
+  console.log("saveFields");
 }
 </script>

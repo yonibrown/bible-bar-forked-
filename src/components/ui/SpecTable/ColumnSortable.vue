@@ -10,16 +10,18 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { inject } from "vue";
 const props = defineProps(["fldidx"]);
-const tableEmit = inject('tableEmit');
+const tableEmit = inject("tableEmit");
 
-const dragStruct = ["dispElmId", "dispElmIdx", "dispElmTab"];
-function dragData(idx) {
-//   console.log("dragData");
+const dragStruct = ["fieldIdx"];
+function dragData(fieldIdx) {
+  return { fieldIdx };
 }
 function moveElement(dragData, dropIdx) {
-  tableEmit("reorderFields", { id: 0, newPos: 3 });
-  console.log("moveElement");
+  tableEmit("reorderFields", {
+    sourceIdx: +dragData.fieldIdx,
+    targetIdx: dropIdx,
+  });
 }
 </script>

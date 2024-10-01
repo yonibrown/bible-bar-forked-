@@ -1,7 +1,7 @@
 <template>
   <spec-line>
-    <template #text="{idx}">
-      <span>{{ line[idx] }}</span>
+    <template #text="{id}">
+      <span>{{ line[id] }}</span>
     </template> 
   </spec-line>
 </template>
@@ -10,6 +10,10 @@
 import SpecLine from "../ui/SpecLine.vue";
 
 const props = defineProps(["line"]);
+
+// function getField(id){
+
+// }
 </script>
 
 <style scoped>

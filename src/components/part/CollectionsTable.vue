@@ -21,13 +21,13 @@ const tableRef = ref([]);
 // table properties
 const tableFields = [
   {
-    name: "name",
+    type: "name",
     title: "קטגוריה",
     sortable: false,
     display: true
   },
   {
-    name: "description",
+    type: "description",
     title: "הערות",
     sortable: false,
     display: true

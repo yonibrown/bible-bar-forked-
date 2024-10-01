@@ -10,14 +10,14 @@
     <element-box
       :element="elm"
       @closeElement="closeElement(elm)"
-      :nextPos="posElements.nextPos(dispElmIdx)"
+      :nextPos="ordElements.nextPos(dispElmIdx)"
     ></element-box>
   </sortable-cell>
 </template>
 
 <script setup>
 import ElementBox from "./ElementBox.vue";
-import { positioning } from "../../general.js";
+import { ordering } from "../../general.js";
 import { provide, computed, ref, onUpdated, inject } from "vue";
 
 const props = defineProps(["elements", "tab"]);
@@ -33,11 +33,27 @@ const dispElements = computed(function () {
     });
 });
 
-const posElements = new positioning({
-  elements: dispElements,
+const ordElements = new ordering({
+  getSize: function () {
+    return dispElements.value.length;
+  },
+  getPosition: function (idx) {
+    return +dispElements.value[idx].position;
+  },
+  setPosition: function (parms) {
+    let act = [];
+    parms.forEach(function ({ idx, newVal }) {
+      act.push({ elm: dispElements.value[idx], newVal });
+    });
+    act.forEach(function ({ elm, newVal }) {
+      elm.position = newVal;
+    });
+  },
+  setTab: function (idx, newVal) {
+    dispElements.value[idx].tab = newVal;
+  },
   saveElmList,
 });
-console.log("posElements", posElements._attr);
 
 const dragStruct = ["dispElmId", "dispElmIdx", "dispElmTab"];
 function dragData(dispElmIdx) {
@@ -59,7 +75,7 @@ function dragData(dispElmIdx) {
 }
 
 function moveElement(dragData, dropIdx) {
-  posElements.move(
+  ordElements.move(
     {
       tab: +dragData.dispElmTab,
       idx: +dragData.dispElmIdx,
@@ -96,7 +112,7 @@ function closeElement(elm) {
 }
 
 function openNewElement() {
-  project.value.openNewElement(props.tab, posElements.prevPos(0));
+  project.value.openNewElement(props.tab, ordElements.prevPos(0));
 }
 defineExpose({ openNewElement });
 </script>
