@@ -36,27 +36,30 @@ const sortField = ref("col");
 const ascending = ref(true);
 
 const boardFields = computed(function () {
-  return element.value.fields
-    .sort(function (a, b) {
-      return a.position - b.position;
-    });
+  return element.value.fields.sort(function (a, b) {
+    return a.position - b.position;
+  });
 });
 
 const tableFields = computed(function () {
-  return boardFields.value
-    .map(function (fld) {
-      return {
-        id: fld.id,
-        type: fld.type,
-        title: fld.title,
-        sortable: true,
-        display: true,
-        widthPct: fld.width_pct
-      };
-    });
+  return boardFields.value.map(function (fld) {
+    return {
+      id: fld.id,
+      type: fld.type,
+      title: fld.title,
+      sortable: true,
+      display: true,
+      widthPct: fld.width_pct,
+    };
+  });
 });
 
-const lines = [["סיפור ירושת הכס", "א 1 – ב 10"]];
+const lines = [
+  [
+    { id: 0, val: "סיפור ירושת הכס" },
+    { id: 1, val: "א 1 – ב 10" },
+  ],
+];
 
 const ordFields = new ordering({
   getSize: function () {
