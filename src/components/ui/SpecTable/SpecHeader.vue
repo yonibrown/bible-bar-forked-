@@ -12,6 +12,7 @@
         <column-sort :fld="fld">
           {{ fld.title }}
         </column-sort>
+        <span class="menu-buttons">w</span>
       </column-resizer>
     </td>
   </tr>
@@ -52,5 +53,9 @@ td {
   /* border-bottom: 2px solid #e9e9e9; */
   font-size: 71%;
   /* cursor: pointer; */
+}
+
+.menu-buttons {
+  float: left;
 }
 </style>

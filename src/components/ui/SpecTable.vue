@@ -27,7 +27,7 @@
 <script setup>
 import SpecHeader from "./SpecTable/SpecHeader.vue";
 import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
-import { computed, ref, watch, provide, onMounted } from "vue";
+import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
