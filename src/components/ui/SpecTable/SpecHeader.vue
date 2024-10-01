@@ -2,12 +2,7 @@
   <tr ref="row">
     <td v-show="enableSelection"></td>
     <td v-show="fld.display" v-for="(fld, fldidx) in tableFields">
-      <sortable-cell
-        :idx="fldidx"
-        :dragData="dragData"
-        :moveElement="moveElement"
-        :dragStruct="dragStruct"
-      >
+      <column-sortable :fldidx="fldidx">
         <column-resizer
           ref="headCell"
           :fld="fld"
@@ -15,9 +10,11 @@
           :lastField="fldidx + 1 == tableFields.length"
           @resize="(style) => resizeCell(fldidx, style)"
         >
-          <column-sort :fld="fld">
-            {{ fld.title }}
-          </column-sort>
+          <column-sortable-head>
+            <column-sort :fld="fld">
+              {{ fld.title }}
+            </column-sort>
+          </column-sortable-head>
           <span class="menu-buttons" v-show="enableSelection">
             <menu-button
               type="moveright"
@@ -30,12 +27,14 @@
             ></menu-button>
           </span>
         </column-resizer>
-      </sortable-cell>
+      </column-sortable>
     </td>
   </tr>
 </template>
 
 <script setup>
+import ColumnSortable from "./ColumnSortable.vue";
+import ColumnSortableHead from "./ColumnSortableHead.vue";
 import ColumnResizer from "./ColumnResizer.vue";
 import ColumnSort from "./ColumnSort.vue";
 import { ref, provide, inject, onMounted } from "vue";
@@ -56,15 +55,6 @@ onMounted(function () {
   );
 });
 provide("rowWidth", rowWidth);
-
-const dragStruct = ["dispElmId", "dispElmIdx", "dispElmTab"];
-function dragData(idx){
-  console.log('dragData');
-}
-function moveElement(dragData, dropIdx) {
-  console.log('moveElement');
-}
-
 </script>
 
 <style scoped>
