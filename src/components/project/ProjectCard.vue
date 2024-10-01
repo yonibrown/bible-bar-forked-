@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-import MenuButton from "../ui/MenuButton.vue";
 const props = defineProps(["openNewElement","copyToClipboard"]);
 import { inject,ref } from "vue";
 

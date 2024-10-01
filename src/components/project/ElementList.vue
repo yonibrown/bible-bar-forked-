@@ -17,7 +17,6 @@
 
 <script setup>
 import ElementBox from "./ElementBox.vue";
-import SortableCell from "../ui/SortableCell.vue";
 import { provide, computed, ref, onUpdated, inject } from "vue";
 
 const props = defineProps(["elements", "tab"]);

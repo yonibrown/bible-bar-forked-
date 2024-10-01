@@ -1,6 +1,7 @@
 <template>
   <base-card :shadow="true" :initialYAdd="elementYAdd" @resize="resizeElement">
-    <div class="draggable-head">
+  <draggable-head>
+    <div class="head">
       <base-editable
         :initialValue="elementName"
         @submitValue="submitName"
@@ -18,12 +19,12 @@
         <menu-button type="close" @click="closeElement"></menu-button>
       </span>
     </div>
+  </draggable-head>
     <component :is="element.type + '-box'" ref="boxRef"></component>
   </base-card>
 </template>
 
 <script setup>
-import MenuButton from "../ui/MenuButton.vue";
 import { provide, computed, inject, ref } from "vue";
 
 const props = defineProps(["element", "nextPos"]);
@@ -166,8 +167,8 @@ button {
   font-size: 1.17em;
 }
 
-.draggable-head {
-  margin: 0em 0em 1em 0em;
+.head{
   cursor: grab;
+  margin: 0em 0em 1em 0em;
 }
 </style>

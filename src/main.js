@@ -12,6 +12,9 @@ import BaseScrollable from './components/ui/BaseScrollable.vue';
 import BaseDroppable from './components/ui/BaseDroppable.vue';
 import BaseDraggable from './components/ui/BaseDraggable.vue';
 import BaseMenu from './components/ui/BaseMenu.vue';
+import MenuButton from './components/ui/MenuButton.vue';
+import SortableCell from './components/ui/SortableCell.vue';
+import DraggableHead from './components/ui/DraggableHead.vue';
 
 import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
@@ -35,6 +38,9 @@ app.component('base-scrollable', BaseScrollable);
 app.component('base-droppable', BaseDroppable);
 app.component('base-draggable', BaseDraggable);
 app.component('base-menu', BaseMenu);
+app.component('menu-button', MenuButton);
+app.component('sortable-cell', SortableCell);
+app.component('draggable-head', DraggableHead);
 
 app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);

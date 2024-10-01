@@ -16,6 +16,7 @@
     lineComponent="board-line"
     ref="tableRef"
     :hilightTable="false"
+    :reorderFields="true"
   >
   </spec-table>
 </template>
@@ -43,28 +44,6 @@ const tableFields = computed(function () {
       widthPct: fld.width_pct,
     };
   });
-  return [
-    {
-      name: "col1",
-      title: "כותרת",
-      sortable: true,
-      display: true,
-      widthPct: 30,
-    },
-    {
-      name: "col2",
-      title: "פסוקים",
-      sortable: true,
-      display: true,
-      widthPct: 20,
-    },
-    {
-      name: "col3",
-      title: "הערות",
-      sortable: false,
-      display: true,
-    },
-  ];
 });
 
 const lines = [["סיפור ירושת הכס", "א 1 – ב 10"]];

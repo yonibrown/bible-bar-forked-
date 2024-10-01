@@ -25,6 +25,10 @@ const faClass = computed(function () {
       return "fa-pencil";
     case "addtab":
       return "fa-columns";
+    case "moveleft":
+      return "fa-arrow-left";
+    case "moveright":
+      return "fa-arrow-right";
     default:
       return null;
   }

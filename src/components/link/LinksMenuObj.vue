@@ -10,7 +10,6 @@
 </template>
 
 <script setup>
-import MenuButton from "../ui/MenuButton.vue";
 import { computed, inject } from "vue";
 const props = defineProps(["link"]);
 const element = inject("element");

@@ -2,18 +2,35 @@
   <tr ref="row">
     <td v-show="enableSelection"></td>
     <td v-show="fld.display" v-for="(fld, fldidx) in tableFields">
-      <column-resizer
-        ref="headCell"
-        :fld="fld"
-        :fldidx="fldidx"
-        :lastField="fldidx + 1 == tableFields.length"
-        @resize="(style) => resizeCell(fldidx, style)"
+      <sortable-cell
+        :idx="fldidx"
+        :dragData="dragData"
+        :moveElement="moveElement"
+        :dragStruct="dragStruct"
       >
-        <column-sort :fld="fld">
-          {{ fld.title }}
-        </column-sort>
-        <span class="menu-buttons">w</span>
-      </column-resizer>
+        <column-resizer
+          ref="headCell"
+          :fld="fld"
+          :fldidx="fldidx"
+          :lastField="fldidx + 1 == tableFields.length"
+          @resize="(style) => resizeCell(fldidx, style)"
+        >
+          <column-sort :fld="fld">
+            {{ fld.title }}
+          </column-sort>
+          <span class="menu-buttons" v-show="enableSelection">
+            <menu-button
+              type="moveright"
+              v-show="tableProps.reorderFields"
+              @click="moveRight"
+            ></menu-button>
+            <menu-button
+              type="moveleft"
+              v-show="tableProps.reorderFields"
+            ></menu-button>
+          </span>
+        </column-resizer>
+      </sortable-cell>
     </td>
   </tr>
 </template>
@@ -25,6 +42,9 @@ import { ref, provide, inject, onMounted } from "vue";
 
 const enableSelection = inject("enableSelection");
 const tableFields = inject("tableFields");
+const tableProps = inject("tableProps");
+
+function moveRight() {}
 
 // store row width
 const row = ref();
@@ -36,6 +56,15 @@ onMounted(function () {
   );
 });
 provide("rowWidth", rowWidth);
+
+const dragStruct = ["dispElmId", "dispElmIdx", "dispElmTab"];
+function dragData(idx){
+  console.log('dragData');
+}
+function moveElement(dragData, dropIdx) {
+  console.log('moveElement');
+}
+
 </script>
 
 <style scoped>
@@ -56,6 +85,6 @@ td {
 }
 
 .menu-buttons {
-  float: left;
+  padding-right: 2px;
 }
 </style>
