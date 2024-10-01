@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ lastFieldWrapper:  lastField }">
+  <div :class="{ lastFieldWrapper: lastField }">
     <div
       :class="{ resizerActive: enableSelection && !lastField }"
       ref="resizer"
@@ -22,24 +22,21 @@ const observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     // check if the mutation is attributes and update the width and height data if it is.
     if (mutation.type === "attributes" && resizer.value.style.width != "") {
-      resizeCell({
-        width: Math.min(
-          (parseInt(
-            document.defaultView.getComputedStyle(resizer.value).width,
-            10
-          ) /
-            rowWidth.value) *
-            100,
-          100
-        ),
-      });
+      let resizerWidth = parseInt(
+        document.defaultView.getComputedStyle(resizer.value).width,
+        10
+      );
+
+      let resizerWidthPct = (resizerWidth / rowWidth.value) * 100;
+
+      resizeField({ width: Math.min(resizerWidthPct, 100) });
     }
   });
 });
 
 var resizeTimeout = null;
 var resizeData = {};
-function resizeCell(style) {
+function resizeField(style) {
   resizeData = { fieldIndex: props.fldidx, width: style.width };
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(function () {
