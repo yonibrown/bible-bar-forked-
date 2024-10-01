@@ -2,13 +2,7 @@
   <div>
     <base-scrollable :hilightDiv="hilightTable">
       <table>
-        <spec-header
-        :sortField="sortField"
-        :ascending="ascending"
-        @reverseTable="$emit('reverseTable')"
-        @changeSortField="$emit('changeSortField')"
-        @resizeField="$emit('resizeField')"
-        ></spec-header>
+        <spec-header></spec-header>
         <spec-line-wrapper
           v-for="line in lineList"
           ref="linesRef"
@@ -45,6 +39,9 @@ const props = defineProps([
   "hilightTable",
 ]);
 const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
+
+provide("tableProps",props);
+provide("tableEmit",emit);
 
 provide(
   "tableFields",

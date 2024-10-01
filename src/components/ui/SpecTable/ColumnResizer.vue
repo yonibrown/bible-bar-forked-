@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{ editHeader: enableSelection && !lastField, lastField }"
+    :class="{ resizeActive: enableSelection && !lastField, lastField }"
     ref="resizer"
   >
     <slot></slot>
@@ -11,17 +11,16 @@
 import { computed, inject, ref, watch } from "vue";
 
 const enableSelection = inject("enableSelection");
+const tableEmit = inject('tableEmit');
 const rowWidth = inject("rowWidth");
-const emit = defineEmits(["resize"]);
-const props = defineProps(["fld", "lastField"]);
+const props = defineProps(["fld", "fldidx","lastField"]);
 
 const resizer = ref();
 const observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     // check if the mutation is attributes and update the width and height data if it is.
     if (mutation.type === "attributes" && resizer.value.style.width != "") {
-      //   emit("resize", { width: resizer.value.style.width });
-      emit("resize", {
+      resizeCell( {
         width: Math.min(
           (parseInt(
             document.defaultView.getComputedStyle(resizer.value).width,
@@ -35,6 +34,16 @@ const observer = new MutationObserver(function (mutations) {
     }
   });
 });
+
+var resizeTimeout = null;
+var resizeData = {};
+function resizeCell(style) {
+  resizeData = { fieldIndex:props.fldidx, width: style.width };
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(function () {
+    tableEmit("resizeField", resizeData);
+  }, 1000);
+}
 
 watch(enableSelection, function (newVal) {
   if (newVal) {
@@ -61,7 +70,7 @@ watch(rowWidth, function () {
 </script>
 
 <style scoped>
-.editHeader {
+.resizeActive {
   resize: horizontal;
   overflow: auto;
   min-width: 100%;
