@@ -257,7 +257,7 @@ class biElmParts extends biElement {
   constructor(rec) {
     super(rec);
     this._research = biProject.main.getResearch(this.attr.res);
-    this._partsWidth = [this.attr.col_width,this.attr.src_width];
+    this._partsWidth = [this.attr.col_width, this.attr.src_width];
   }
 
   get defaultName() {
@@ -272,7 +272,7 @@ class biElmParts extends biElement {
     this._research.setName(newName);
   }
 
-  partsWidth(idx){
+  partsWidth(idx) {
     return this._partsWidth[idx];
   }
 }
@@ -282,16 +282,27 @@ class biElmBoard extends biElement {
     super(rec);
   }
 
-  get fields(){
+  get fields() {
     return this.attr.fields;
   }
 
-  setFieldPosition(attr){
-    let fld = this.fields.find(function(fld1){
+  setFieldPosition(attr) {
+    let fld = this.fields.find(function (fld1) {
       return fld1.id == attr.id;
     });
 
     fld.position = attr.newPos;
+  }
+
+  async setField(attr) {
+    const data = {
+      type: "element",
+      oper: "set_field",
+      id: this.dbId,
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
   }
 }
 

@@ -58,6 +58,7 @@ const lines = [
   [
     { id: 0, val: "סיפור ירושת הכס" },
     { id: 1, val: "א 1 – ב 10" },
+    { id: 2, val: "" },
   ],
 ];
 
@@ -71,16 +72,17 @@ const ordFields = new ordering({
   setPosition: function (parms) {
     let act = [];
     parms.forEach(function ({ idx, newVal }) {
-      act.push({ elm: boardFields.value[idx], newVal });
+      act.push({ fld: boardFields.value[idx], newVal });
     });
-    act.forEach(function ({ elm, newVal }) {
-      elm.position = newVal;
+    act.forEach(function ({ fld, newVal }) {
+      fld.position = newVal;
+      element.value.setField({ field_id: fld.id, position: newVal });
     });
   },
   setTab: function (idx, newVal) {
     boardFields.value[idx].tab = newVal;
   },
-  saveElmList: saveFields,
+  saveElmList: function(){},
 });
 
 function changeSortField(newField) {
@@ -92,14 +94,10 @@ function reverseTable() {
 }
 
 function resizeField(attr) {
-  console.log("resize", attr);
-  // changeAttr(attr);
+  element.value.setField(attr);
 }
 
 function reorderFields(attr) {
-  console.log("reorderFields", attr);
-  // element.value.setFieldPosition({ id: 0, newPos: 3 });
-  // changeAttr(attr);
   ordFields.move(
     {
       idx: attr.sourceIdx,
@@ -108,9 +106,5 @@ function reorderFields(attr) {
       idx: attr.targetIdx,
     }
   );
-}
-
-function saveFields() {
-  console.log("saveFields");
 }
 </script>

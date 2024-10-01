@@ -40,24 +40,27 @@ const parts = computed(function () {
 const tableFields = computed(function () {
   return [
     {
+      id: 0,
       type: "col",
       title: "קטגוריה",
       sortable: true,
       display: true,
-      widthPct: element.value.partsWidth(0)
+      widthPct: element.value.partsWidth(0),
     },
     {
+      id: 1,
       type: "src",
       title: "פסוק",
       sortable: true,
       display: partsListMode.value == "segment",
-      widthPct: element.value.partsWidth(1)
+      widthPct: element.value.partsWidth(1),
     },
     {
+      id: 2,
       type: "text",
       title: "טקסט",
       sortable: false,
-      display: partsListMode.value == "segment"
+      display: partsListMode.value == "segment",
     },
   ];
 });

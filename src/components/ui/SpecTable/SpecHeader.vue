@@ -5,8 +5,8 @@
       <column-sortable :fldidx="fldidx">
         <column-resizer
           ref="headCell"
+          :key="fld.id"
           :fld="fld"
-          :fldidx="fldidx"
           :lastField="fldidx + 1 == tableFields.length"
           @resize="(style) => resizeCell(fldidx, style)"
         >

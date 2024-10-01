@@ -10,12 +10,12 @@
 </template>
 
 <script setup>
-import { computed, inject, ref, watch } from "vue";
+import { computed, inject, onMounted, ref, watch } from "vue";
 
 const enableSelection = inject("enableSelection");
 const tableEmit = inject("tableEmit");
 const rowWidth = inject("rowWidth");
-const props = defineProps(["fld", "fldidx", "lastField"]);
+const props = defineProps(["fld",  "lastField"]);
 
 const resizer = ref();
 const observer = new MutationObserver(function (mutations) {
@@ -37,7 +37,7 @@ const observer = new MutationObserver(function (mutations) {
 var resizeTimeout = null;
 var resizeData = {};
 function resizeField(style) {
-  resizeData = { fieldIndex: props.fldidx, width: style.width };
+  resizeData = { field_id: props.fld.id, width_pct: style.width };
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(function () {
     tableEmit("resizeField", resizeData);
@@ -61,11 +61,14 @@ const width = computed(function () {
   }
 });
 
-watch(rowWidth, function () {
+function setSize(){
   if (!props.lastField) {
     resizer.value.style.width = width.value + "px";
   }
-});
+}
+
+watch(rowWidth, setSize);
+onMounted(setSize);
 </script>
 
 <style scoped>

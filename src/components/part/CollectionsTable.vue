@@ -21,21 +21,23 @@ const tableRef = ref([]);
 // table properties
 const tableFields = [
   {
+    id: 0,
     type: "name",
     title: "קטגוריה",
     sortable: false,
-    display: true
+    display: true,
   },
   {
+    id: 1,
     type: "description",
     title: "הערות",
     sortable: false,
-    display: true
+    display: true,
   },
 ];
 
 function removeSelected() {
-  research.value.deleteCollections( tableRef.value.selectedLines);
+  research.value.deleteCollections(tableRef.value.selectedLines);
 }
 
 defineExpose({ removeSelected });
