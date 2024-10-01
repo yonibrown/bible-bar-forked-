@@ -83,7 +83,6 @@ function changeSortField(newField) {
 }
 
 function resizeField(attr) {
-  console.log('resize',attr);
   changeAttr(attr);
 }
 

@@ -41,7 +41,6 @@ export class biElement {
 
   get name() {
     if (this._obj.name.trim() == "") {
-      console.log("name 1 - biElement.name");
       return this.defaultName;
     }
     return this._obj.name;
@@ -223,7 +222,6 @@ class biElmNew extends biElement {
 
 class biElmText extends biElement {
   get defaultName() {
-    console.log("name 2 - biElmText.defaultName");
     return biElement.seqTitle(this.attr.from_key);
   }
 
@@ -281,12 +279,19 @@ class biElmParts extends biElement {
 
 class biElmBoard extends biElement {
   constructor(rec) {
-    console.log(rec);
     super(rec);
   }
 
   get fields(){
     return this.attr.fields;
+  }
+
+  setFieldPosition(attr){
+    let fld = this.fields.find(function(fld1){
+      return fld1.id == attr.id;
+    });
+
+    fld.position = attr.newPos;
   }
 }
 

@@ -57,7 +57,6 @@ watch(input, function (newVal) {
 
 function submitValue() {
   if (currentValue.value == "" && !props.blankable) {
-    console.log('name 5 - BaseEditable.submitValue');
     currentValue.value = props.getDefault();
   }
 

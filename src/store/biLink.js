@@ -125,7 +125,6 @@ export class biLink {
       id: this.dbId,
       prop: { type: "research", data: res },
     };
-    console.log("addResearch", data);
     const obj = await sendToServer(data);
     this.reload();
   }

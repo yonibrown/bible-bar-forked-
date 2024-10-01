@@ -37,12 +37,17 @@ const props = defineProps([
   "lineComponent",
   "enableNewLine",
   "hilightTable",
-  "reorderFields"
+  "reorderFields",
 ]);
-const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
+const emit = defineEmits([
+  "reverseTable",
+  "changeSortField",
+  "resizeField",
+  "reorderFields",
+]);
 
-provide("tableProps",props);
-provide("tableEmit",emit);
+provide("tableProps", props);
+provide("tableEmit", emit);
 
 provide(
   "tableFields",

@@ -17,6 +17,7 @@
     ref="tableRef"
     :hilightTable="false"
     :reorderFields="true"
+    @reorderFields="setFieldPosition"
   >
   </spec-table>
 </template>
@@ -34,16 +35,19 @@ const sortField = ref("col");
 const ascending = ref(true);
 
 const tableFields = computed(function () {
-  return element.value.fields.map(function (fld) {
-    console.log("name", "col" + fld.id);
-    return {
-      name: fld.type,
-      title: fld.title,
-      sortable: true,
-      display: true,
-      widthPct: fld.width_pct,
-    };
-  });
+  return element.value.fields
+    .sort(function (a, b) {
+      return a.position - b.position;
+    })
+    .map(function (fld) {
+      return {
+        name: fld.type,
+        title: fld.title,
+        sortable: true,
+        display: true,
+        widthPct: fld.width_pct,
+      };
+    });
 });
 
 const lines = [["סיפור ירושת הכס", "א 1 – ב 10"]];
@@ -58,6 +62,12 @@ function reverseTable() {
 
 function resizeField(attr) {
   console.log("resize", attr);
+  // changeAttr(attr);
+}
+
+function setFieldPosition(attr) {
+  console.log("setFieldPosition", attr);
+  element.value.setFieldPosition(attr)
   // changeAttr(attr);
 }
 </script>

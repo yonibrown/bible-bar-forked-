@@ -45,12 +45,10 @@ provide("element", elementObj);
 
 // element name
 function defaultName() {
-  console.log('name 4 - ElementBox.defaultName');
   return props.element.defaultName;
 }
 
 const elementName = computed(function () {
-  console.log('name 3 - ElementBox.elementName');
   return props.element.name;
 });
 
