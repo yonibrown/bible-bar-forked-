@@ -102,7 +102,7 @@ const editMode = inject("editMode");
   border-color: #c9d6e8; */
   /* box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26); */
   /* padding: 1rem; */
-  margin: 20px auto;
+  margin: 30px 20px auto;
   max-width: 97%;
   position: relative;
   /* background-color: #f5f7fa; */

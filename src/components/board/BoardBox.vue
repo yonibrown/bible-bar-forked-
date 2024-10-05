@@ -48,13 +48,16 @@ const tableFields = computed(function () {
   });
 });
 
-const lines = [
-  [
-    { id: 0, val: "סיפור ירושת הכס" },
-    { id: 1, val: "א 1 – ב 10" },
-    { id: 2, val: "" },
-  ],
-];
+const lines = computed(function () {
+  return element.value.lines.map(function (line) {
+    return boardFields.value.map(function (fld) {
+      let fldCont = line.content.find(function (fldCont) {
+        return fldCont.id == fld.id;
+      });
+      return { id: fld.id, val: fldCont ? fldCont.text : '' };
+    });
+  });
+});
 
 const ordFields = new ordering({
   getSize: function () {
@@ -76,7 +79,7 @@ const ordFields = new ordering({
   setTab: function (idx, newVal) {
     boardFields.value[idx].tab = newVal;
   },
-  saveElmList: function(){},
+  saveElmList: function () {},
 });
 
 function changeSortField(newField) {

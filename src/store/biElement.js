@@ -286,6 +286,10 @@ class biElmBoard extends biElement {
     return this.attr.fields;
   }
 
+  get lines() {
+    return this.attr.lines;
+  }
+
   setFieldPosition(attr) {
     let fld = this.fields.find(function (fld1) {
       return fld1.id == attr.id;
