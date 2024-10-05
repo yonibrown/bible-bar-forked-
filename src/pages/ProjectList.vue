@@ -8,7 +8,13 @@
             <th>שם</th>
             <th>תאור</th>
           </tr>
-          <tr class="row" v-for="prj in projects" @dblclick="openProject(prj)">
+          <tr
+            class="row"
+            :class="{ chosen: prj.id == chosenProjId }"
+            v-for="prj in projects"
+            @click="chooseProj(prj.id)"
+            @dblclick="openProject(prj.id)"
+          >
             <td>{{ prj.id }}</td>
             <td>{{ prj.name }}</td>
             <td>{{ prj.desc }}</td>
@@ -26,7 +32,7 @@
             </td>
           </tr>
         </table>
-        <base-button>פתח</base-button>
+        <base-button @click="openProject(chosenProjId)">פתח</base-button>
       </base-card>
     </section>
   </div>
@@ -49,8 +55,13 @@ const displaySubmitNewProj = computed(function () {
   return newName.value.trim() != "";
 });
 
-function openProject(prj) {
-  router.push({ path: `/project/${prj.id}` });
+function openProject(prjId) {
+  router.push({ path: `/project/${prjId}` });
+}
+
+const chosenProjId = ref(-1);
+function chooseProj(prjId) {
+  chosenProjId.value = prjId;
 }
 
 async function newProject() {
@@ -78,6 +89,10 @@ td {
 
 tr.row {
   cursor: pointer;
+}
+
+tr.chosen {
+  background-color: #cad8ee;
 }
 
 tr.row:hover {
