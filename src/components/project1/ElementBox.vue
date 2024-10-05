@@ -1,35 +1,35 @@
 <template>
-  <base-card :shadow="true" :initialYAdd="elementYAdd" @resize="resizeElement">
-  <draggable-head>
-    <div class="head">
-      <base-editable
-        :initialValue="elementName"
-        @submitValue="submitName"
-        name="elementName"
-        :getDefault="defaultName"
-      ></base-editable>
-      <span class="menu-buttons">
-        <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
-        <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
-        <menu-button
-          v-if="editModeButton"
-          type="edit"
-          @click="toggleMenu"
-        ></menu-button>
-        <menu-button type="close" @click="closeElement"></menu-button>
-      </span>
-    </div>
-  </draggable-head>
+  <notebook-cell
+    :initialYAdd="elementYAdd"
+    @resize="resizeElement"
+  >
+    <draggable-head>
+      <div class="head" :draggable="editMode">
+        <base-editable
+          :initialValue="elementName"
+          @submitValue="submitName"
+          name="elementName"
+          :getDefault="defaultName"
+        ></base-editable>
+        <span class="menu-buttons">
+          <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+          <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
+          <menu-button type="close" @click="closeElement"></menu-button>
+        </span>
+      </div>
+    </draggable-head>
     <component :is="element.type + '-box'" ref="boxRef"></component>
-  </base-card>
+  </notebook-cell>
 </template>
 
 <script setup>
+import NotebookCell from "../ui/NotebookCell.vue";
 import { provide, computed, inject, ref } from "vue";
 
 const props = defineProps(["element", "nextPos"]);
 const emit = defineEmits(["closeElement"]);
 const project = inject("project");
+const editMode = inject("editMode");
 
 const elementAttr = computed(function () {
   return props.element.attr;
@@ -58,18 +58,6 @@ function submitName(newName) {
 
 const elementYAdd = computed(function () {
   return props.element.yAddition;
-});
-
-// display menu
-const editMode = ref(false);
-provide("editMode", editMode);
-
-function toggleMenu() {
-  editMode.value = !editMode.value;
-}
-
-const editModeButton = computed(function () {
-  return props.element.type != "new";
 });
 
 // close element button
@@ -144,6 +132,7 @@ function copyToClipboard() {
 function resizeElement(yAddition) {
   changeAttr({ y_addition: yAddition });
 }
+
 </script>
 
 <style scoped>
@@ -165,8 +154,10 @@ button {
   font-size: 1.17em;
 }
 
-.head{
-  cursor: grab;
+.head {
   margin: 0em 0em 1em 0em;
+}
+.head[draggable=true] {
+  cursor: grab;
 }
 </style>

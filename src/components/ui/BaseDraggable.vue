@@ -10,13 +10,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { provide, ref, inject } from "vue";
 const props = defineProps(["data"]);
 
 const dragAllowed = ref(false);
+const editMode = inject("editMode");
 
 function startMouse(evt) {
-  if (evt.target.closest(".draggable-head")) {
+  if (evt.target.closest(".draggable-head") && editMode.value) {
     dragAllowed.value = true;
   }
 }
@@ -37,4 +38,17 @@ function startDrag(evt) {
     evt.dataTransfer.setData(field, props.data[field]);
   }
 }
+
+const hoverHead = ref(false);
+provide("hoverDraggableHead", hoverHead);
+
+function enterHead() {
+  hoverHead.value = true;
+}
+provide("enterDraggableHead", enterHead);
+
+function leaveHead() {
+  hoverHead.value = false;
+}
+provide("leaveDraggableHead", leaveHead);
 </script>

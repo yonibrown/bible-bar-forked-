@@ -1,6 +1,6 @@
 <template>
   <spec-table
-    :enableSelection="displayOptions"
+    :enableSelection="editMode"
     :tableFields="tableFields"
     :lines="research.collections"
     lineComponent="collection-line"
@@ -14,7 +14,7 @@
 import SpecTable from "../ui/SpecTable.vue";
 import { inject, ref } from "vue";
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 const research = inject("research");
 const tableRef = ref([]);
 

@@ -1,7 +1,7 @@
 <template>
-  <div v-show="displayOptions">
+  <div v-show="editMode">
     <sequence-menu
-      v-show="displayOptions"
+      v-show="editMode"
       :displayScale="false"
       :enableWholeText="false"
     ></sequence-menu>
@@ -41,7 +41,7 @@ import { inject, ref, computed, provide } from "vue";
 import { writeToClipboard } from "../../general.js";
 import ContextMenu from 'primevue/contextmenu';
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 const element = inject("element");
 const elementAttr = inject("elementAttr");
 const project = inject("project");

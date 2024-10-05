@@ -1,11 +1,6 @@
 <template>
-  <div>Board</div>
-  <div v-show="displayOptions">
-    <!-- <links-menu title="סינון"></links-menu> -->
-    <board-menu></board-menu>
-  </div>
   <spec-table
-    :enableSelection="displayOptions"
+    :enableSelection="editMode"
     :tableFields="tableFields"
     :sortField="sortField"
     @changeSortField="changeSortField"
@@ -24,13 +19,12 @@
 
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
-import BoardMenu from "./BoardMenu.vue";
 import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
 
 const element = inject("element");
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 
 const sortField = ref("col");
 const ascending = ref(true);

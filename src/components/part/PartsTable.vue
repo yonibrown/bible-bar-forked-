@@ -1,6 +1,6 @@
 <template>
   <spec-table
-    :enableSelection="displayOptions"
+    :enableSelection="editMode"
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
     @changeSortField="changeSortField"
@@ -18,7 +18,7 @@
 import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 const partsListMode = inject("partsListMode");
 const elementAttr = inject("elementAttr");
 const element = inject("element");

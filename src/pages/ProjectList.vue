@@ -10,10 +10,10 @@
           </tr>
           <tr
             class="row"
-            :class="{ chosen: prj.id == chosenProjId }"
+            :class="{ chosen: prj.id == chosenProj.id }"
             v-for="prj in projects"
-            @click="chooseProj(prj.id)"
-            @dblclick="openProject(prj.id)"
+            @click="chooseProj(prj)"
+            @dblclick="openProject(prj)"
           >
             <td>{{ prj.id }}</td>
             <td>{{ prj.name }}</td>
@@ -32,7 +32,7 @@
             </td>
           </tr>
         </table>
-        <base-button @click="openProject(chosenProjId)">פתח</base-button>
+        <base-button @click="openProject(chosenProj)">פתח</base-button>
       </base-card>
     </section>
   </div>
@@ -55,13 +55,17 @@ const displaySubmitNewProj = computed(function () {
   return newName.value.trim() != "";
 });
 
-function openProject(prjId) {
-  router.push({ path: `/project/${prjId}` });
+function openProject(prj) {
+  if (prj.display_version == 1){
+    router.push({ path: `/project1/${prj.id}` });
+    return;
+  }
+  router.push({ path: `/project/${prj.id}` });
 }
 
-const chosenProjId = ref(-1);
-function chooseProj(prjId) {
-  chosenProjId.value = prjId;
+const chosenProj = ref({});
+function chooseProj(prj) {
+  chosenProj.value = prj;
 }
 
 async function newProject() {
