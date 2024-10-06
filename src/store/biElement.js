@@ -277,9 +277,29 @@ class biElmParts extends biElement {
   }
 }
 
+class biElmLink extends biElement {
+  constructor(rec) {
+    super(rec);
+    this._link = biProject.main.getLink({ id: this.attr.link_id });
+  }
+
+  get defaultName() {
+    return this._link.name;
+  }
+
+  get name() {
+    return this.defaultName;
+  }
+
+  setName(newName) {
+    this._link.setName(newName);
+  }
+}
+
 class biElmBoard extends biElement {
   constructor(rec) {
     super(rec);
+    this._lines = this.initLines(rec.attr.lines);
   }
 
   get fields() {
@@ -287,7 +307,13 @@ class biElmBoard extends biElement {
   }
 
   get lines() {
-    return this.attr.lines;
+    return this._lines;
+  }
+
+  initLines(list) {
+    return list.map((rec) => {
+      return new biBoardLine(rec, this);
+    });
   }
 
   // setFieldPosition(attr) {
@@ -308,11 +334,52 @@ class biElmBoard extends biElement {
 
     const obj = await sendToServer(data);
   }
+}
 
-  async setContent(attr) {
+class biBoardLine {
+  constructor(rec, board) {
+    this._id = rec.id;
+    this._board = board;
+    this._content = this.initContent(rec.content);
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  get proj() {
+    return this._board.proj;
+  }
+
+  get elm() {
+    return this._board.id;
+  }
+
+  get dbId() {
+    return {
+      proj: this.proj,
+      elm: this.elm,
+      line: this.id,
+    };
+  }
+
+  content(fldId) {
+    return this._content.find(function (fld) {
+      return fld.id == fldId;
+    });
+  }
+
+  initContent(list) {
+    return list.map((rec) => {
+      return new biBoardContent(rec, this);
+    });
+  }
+
+  async addContent(attr) {
+    this._content.push(new biBoardContent(attr, this));
     const data = {
-      type: "element",
-      oper: "set_content",
+      type: "brd_line",
+      oper: "new_content",
       id: this.dbId,
       prop: attr,
     };
@@ -321,21 +388,54 @@ class biElmBoard extends biElement {
   }
 }
 
-class biElmLink extends biElement {
-  constructor(rec) {
-    super(rec);
-    this._link = biProject.main.getLink({ id: this.attr.link_id });
+class biBoardContent {
+  constructor(rec, line) {
+    this._id = rec.field;
+    this._text = rec.text;
+    this._line = line;
+
   }
 
-  get defaultName() {
-    return this._link.name;
+  get id() {
+    return this._id;
   }
 
-  get name() {
-    return this.defaultName;
+  get proj() {
+    return this._line.proj;
   }
 
-  setName(newName) {
-    this._link.setName(newName);
+  get elm() {
+    return this._line.elm;
+  }
+
+  get lineId() {
+    return this._line.id;
+  }
+
+  get text(){
+    return this._text;
+  }
+
+  get dbId() {
+    return {
+      proj: this.proj,
+      elm: this.elm,
+      line: this.lineId,
+      field: this.id,
+    };
+  }
+
+  async changeAttr(attr) {
+    if (typeof attr.text != 'undefined'){
+      this._text = attr.text;
+    }
+    const data = {
+      type: "brd_content",
+      oper: "set",
+      id: this.dbId,
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
   }
 }
