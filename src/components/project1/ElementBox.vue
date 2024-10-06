@@ -14,7 +14,7 @@
         <span class="menu-buttons">
           <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
           <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
-          <menu-button type="close" @click="closeElement"></menu-button>
+          <menu-button v-show="editMode" type="close" @click="closeElement"></menu-button>
         </span>
       </div>
     </draggable-head>

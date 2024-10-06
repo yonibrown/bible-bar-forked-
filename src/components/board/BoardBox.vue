@@ -49,7 +49,9 @@ const tableFields = computed(function () {
 });
 
 const lines = computed(function () {
+  return element.value.lines;
   return element.value.lines.map(function (line) {
+    // return {}
     return boardFields.value.map(function (fld) {
       let fldCont = line.content.find(function (fldCont) {
         return fldCont.id == fld.id;

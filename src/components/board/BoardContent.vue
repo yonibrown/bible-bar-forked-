@@ -17,13 +17,17 @@ const element = inject("element");
 const editMode = inject("editMode");
 
 function getValue() {
-  return props.line.find(function (fld) {
+  const fld = props.line.content.find(function (fld) {
     return fld.id == props.fldId;
-  }).val;
+  });
+  if (fld) {
+    return fld.text;
+  }
+  return "";
 }
 
 function submitValue(newVal) {
-  console.log("submit value");
+  console.log("submit value", props.line);
   element.value.setContent({
     line_id: props.line.id,
     field_id: props.fldId,
