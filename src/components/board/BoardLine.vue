@@ -1,22 +1,16 @@
 <template>
   <spec-line>
-    <template #text="{id}">
-      <span>{{ getValue(id) }}</span>
-    </template> 
+    <template #text="{ id }">
+      <board-content :line="line" :fldId="id"></board-content>
+    </template>
   </spec-line>
 </template>
 
 <script setup>
 import SpecLine from "../ui/SpecLine.vue";
+import BoardContent from "./BoardContent.vue";
 
 const props = defineProps(["line"]);
-
-function getValue(id){
-  return props.line.find(function(fld){
-    return fld.id == id;
-  }).val;
-}
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
