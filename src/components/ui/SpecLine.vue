@@ -1,10 +1,10 @@
 <template>
   <td
-    v-for="(fld,fldidx) in tableFields"
+    v-for="fld in tableFields"
     v-show="fld.display"
     @dblclick="$emit('dblclick')"
   >
-    <slot :name="fld.name" :idx="fldidx"></slot>
+    <slot :name="fld.type" :id="fld.id"></slot>
   </td>
 </template>
 
@@ -16,7 +16,7 @@ const emit = defineEmits(["dblclick"]);
 
 <style scoped>
 td {
-  font-size: 85%;
-  padding: 0 3px;
+  font-size: 87%;
+  padding: 7px;
 }
 </style>

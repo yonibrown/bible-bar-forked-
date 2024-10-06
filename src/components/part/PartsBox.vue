@@ -1,5 +1,5 @@
 <template>
-  <div v-show="displayOptions">
+  <div v-show="editMode">
     <!-- <links-menu title="סינון"></links-menu> -->
     <parts-menu
       @updateData="updateData"
@@ -36,7 +36,7 @@ import { writeToClipboard } from "../../general.js";
 
 import { ref, inject, provide, computed } from "vue";
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 
 const elementAttr = inject("elementAttr");
 const changeAttr = inject("changeAttr");

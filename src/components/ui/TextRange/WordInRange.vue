@@ -1,7 +1,9 @@
 <template>
   <span>
     <base-draggable :data="{ wordDivider: 'from' }" v-show="displayFromDivider">
-      <span class="divider draggable-head">|</span>
+      <draggable-head>
+        <span class="divider">|</span>
+      </draggable-head>
     </base-draggable>
     <base-droppable
       :drop="setDividerOnWord"
@@ -12,7 +14,9 @@
       <span class="bible-text" :class="wordClass">{{ word }}</span>
     </base-droppable>
     <base-draggable :data="{ wordDivider: 'to' }" v-show="displayToDivider">
-      <span class="divider draggable-head">|</span>
+      <draggable-head>
+        <span class="divider">|</span>
+      </draggable-head>
     </base-draggable>
   </span>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <spec-table
-    :enableSelection="displayOptions"
+    :enableSelection="editMode"
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
     @changeSortField="changeSortField"
@@ -18,7 +18,7 @@
 import SpecTable from "../ui/SpecTable.vue";
 import { computed, ref, inject } from "vue";
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 const partsListMode = inject("partsListMode");
 const elementAttr = inject("elementAttr");
 const element = inject("element");
@@ -40,24 +40,27 @@ const parts = computed(function () {
 const tableFields = computed(function () {
   return [
     {
-      name: "col",
+      id: 0,
+      type: "col",
       title: "קטגוריה",
       sortable: true,
       display: true,
-      widthPct: element.value.partsWidth(0)
+      widthPct: element.value.partsWidth(0),
     },
     {
-      name: "src",
+      id: 1,
+      type: "src",
       title: "פסוק",
       sortable: true,
       display: partsListMode.value == "segment",
-      widthPct: element.value.partsWidth(1)
+      widthPct: element.value.partsWidth(1),
     },
     {
-      name: "text",
+      id: 2,
+      type: "text",
       title: "טקסט",
       sortable: false,
-      display: partsListMode.value == "segment"
+      display: partsListMode.value == "segment",
     },
   ];
 });
@@ -83,7 +86,6 @@ function changeSortField(newField) {
 }
 
 function resizeField(attr) {
-  console.log('resize',attr);
   changeAttr(attr);
 }
 

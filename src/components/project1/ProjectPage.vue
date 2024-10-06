@@ -4,6 +4,7 @@
       <project-card
         :openNewElement="openNewElement"
         :copyToClipboard="copyToClipboard"
+        :toggleEditMode="toggleEditMode"
       >
       </project-card>
       <div class="tab-box">
@@ -18,9 +19,6 @@
             ref="listRef"
           ></element-list>
         </div>
-        <!-- <div class="tab">
-          <element-list :elements="elements" ref="listRef"></element-list>
-        </div> -->
       </div>
     </section>
   </div>
@@ -33,20 +31,20 @@ import { ref, provide, computed } from "vue";
 import { biProject } from "../../store/biProject.js";
 
 const props = defineProps(["id"]);
-const editMode = ref(true);
-provide("editMode", editMode);
 
 const projectLoaded = ref(false);
 const project = ref(new biProject(props.id));
 provide("project", project);
 
+const editMode = ref(false);
+function toggleEditMode() {
+  editMode.value = !editMode.value;
+}
+provide("editMode", editMode);
+
 const tabs = computed(function () {
   return project.value.tabs;
 });
-
-// const tabWidth = computed(function () {
-//   return (100/project.value.tabs.length)+'%';
-// });
 
 const elements = computed(function () {
   return project.value.elements;
@@ -89,6 +87,7 @@ function copyToClipboard() {}
 }
 
 .tab {
+  background-color: #ffffff;
   border: solid 1px #b4b4b4;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.26);
   overflow-y: scroll;

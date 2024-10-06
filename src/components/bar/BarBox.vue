@@ -1,7 +1,7 @@
 <template>
-  <div v-show="displayOptions">
+  <div v-show="editMode">
     <sequence-menu
-      v-show="displayOptions"
+      v-show="editMode"
       :displayScale="true"
       :enableWholeText="true"
     ></sequence-menu>
@@ -48,7 +48,7 @@ import BarLinkPoints from "./BarLinkPoints.vue";
 import { writeToClipboard } from "../../general.js";
 import { inject, computed, provide, ref } from "vue";
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 const element = inject("element");
 const links = inject("links");
 

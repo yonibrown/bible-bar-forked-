@@ -2,33 +2,10 @@
   <div>
     <base-scrollable :hilightDiv="hilightTable">
       <table>
-        <tr class="header" ref="row">
-          <td v-show="enableSelection"></td>
-          <head-td
-            v-for="(fld, fldidx) in tableFields"
-            ref="headCell"
-            :fld="fld"
-            :lastField="fldidx + 1 == tableFields.length"
-            @resize="(style) => resizeCell(fldidx, style)"
-          >
-            <span
-              v-if="fld.sortable"
-              @dblclick="changeSort(fld.name)"
-              :class="{ sortingField: sortField == fld.name }"
-            >
-              {{ fld.title }}
-              <i
-                v-show="sortField == fld.name"
-                class="fa"
-                :class="ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
-              ></i>
-            </span>
-            <span v-else>{{ fld.title }}</span>
-          </head-td>
-        </tr>
+        <spec-header></spec-header>
         <spec-line-wrapper
-          ref="linesRef"
           v-for="line in lineList"
+          ref="linesRef"
           :line="line"
           :key="line.id"
           :lineComponent="lineComponent"
@@ -48,9 +25,9 @@
 </template>
 
 <script setup>
+import SpecHeader from "./SpecTable/SpecHeader.vue";
 import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
-import HeadTd from "./SpecTable/HeadTd.vue";
-import { computed, ref, watch, provide, onMounted } from "vue";
+import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",
   "tableFields",
@@ -60,8 +37,18 @@ const props = defineProps([
   "lineComponent",
   "enableNewLine",
   "hilightTable",
+  "reorderFields",
 ]);
-const emit = defineEmits(["reverseTable", "changeSortField", "resizeField"]);
+const emit = defineEmits([
+  "reverseTable",
+  "changeSortField",
+  "resizeField",
+  "reorderFields",
+]);
+
+provide("tableProps", props);
+provide("tableEmit", emit);
+
 provide(
   "tableFields",
   computed(function () {
@@ -69,20 +56,12 @@ provide(
   })
 );
 
-const row = ref();
-const rowWidth = ref(0);
-onMounted(function () {
-  rowWidth.value = parseInt(
-    document.defaultView.getComputedStyle(row.value).width,
-    10
-  );
-});
-provide("rowWidth", rowWidth);
-
-const enableSelection1 = computed(function () {
-  return props.enableSelection;
-});
-provide("enableSelection", enableSelection1);
+provide(
+  "enableSelection",
+  computed(function () {
+    return props.enableSelection;
+  })
+);
 
 const linesRef = ref([]);
 
@@ -95,14 +74,6 @@ const lineList = computed(function () {
 });
 
 const inactiveLines = props.enableNewLine ? 1 : 0;
-
-function changeSort(newField) {
-  if (props.sortField == newField) {
-    emit("reverseTable");
-  } else {
-    emit("changeSortField", newField);
-  }
-}
 
 const checkAllRef = ref(false);
 
@@ -128,6 +99,7 @@ const checkState = computed(function () {
   }
   return "partial";
 });
+
 watch(checkState, function (newVal) {
   if (newVal == "all") {
     checkAllRef.value = true;
@@ -142,44 +114,14 @@ watch(checkState, function (newVal) {
   }
 });
 
-var resizeTimeout = null;
-var resizeData = {};
-function resizeCell(fieldIndex, style) {
-  resizeData = { fieldIndex, width: style.width };
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(function () {
-    emit("resizeField", resizeData);
-    // console.log("resize width", resizeData);
-  }, 1000);
-}
-
 defineExpose({ selectedLines });
 </script>
 
 <style scoped>
-.header {
-  background-color: #ebebeb;
-  user-select: none;
-}
-
-.header td {
-  background-color: #ebebeb;
-  padding: 2px 0 5px 0;
-  /* border-bottom: 2px solid #e9e9e9; */
-  font-size: 70%;
-  position: sticky;
-  top: 0;
-  /* cursor: pointer; */
-}
-
 table {
-  background-color: #e9e9e9;
+  background-color: #e4e4e4;
   text-align: justify;
   width: 100%;
   /* max-width: 85%; */
-}
-
-.sortingField {
-  font-weight: bold;
 }
 </style>

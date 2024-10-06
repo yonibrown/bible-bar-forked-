@@ -1,7 +1,6 @@
 <template>
-  <div>Board</div>
   <spec-table
-    :enableSelection="displayOptions"
+    :enableSelection="editMode"
     :tableFields="tableFields"
     :sortField="sortField"
     @changeSortField="changeSortField"
@@ -12,57 +11,76 @@
     lineComponent="board-line"
     ref="tableRef"
     :hilightTable="false"
+    :reorderFields="true"
+    @reorderFields="reorderFields"
   >
   </spec-table>
 </template>
 
 <script setup>
 import SpecTable from "../ui/SpecTable.vue";
+import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
 
 const element = inject("element");
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 
 const sortField = ref("col");
 const ascending = ref(true);
 
+const boardFields = computed(function () {
+  return element.value.fields.sort(function (a, b) {
+    return a.position - b.position;
+  });
+});
+
 const tableFields = computed(function () {
-  return element.value.fields.map(function (fld) {
-    console.log("name", "col" + fld.id);
+  return boardFields.value.map(function (fld) {
     return {
-      name: fld.type,
+      id: fld.id,
+      type: fld.type,
       title: fld.title,
       sortable: true,
       display: true,
       widthPct: fld.width_pct,
     };
   });
-  return [
-    {
-      name: "col1",
-      title: "כותרת",
-      sortable: true,
-      display: true,
-      widthPct: 30,
-    },
-    {
-      name: "col2",
-      title: "פסוקים",
-      sortable: true,
-      display: true,
-      widthPct: 20,
-    },
-    {
-      name: "col3",
-      title: "הערות",
-      sortable: false,
-      display: true,
-    },
-  ];
 });
 
-const lines = [["סיפור ירושת הכס", "א 1 – ב 10"]];
+const lines = computed(function () {
+  return element.value.lines.map(function (line) {
+    return boardFields.value.map(function (fld) {
+      let fldCont = line.content.find(function (fldCont) {
+        return fldCont.id == fld.id;
+      });
+      return { id: fld.id, val: fldCont ? fldCont.text : '' };
+    });
+  });
+});
+
+const ordFields = new ordering({
+  getSize: function () {
+    return boardFields.value.length;
+  },
+  getPosition: function (idx) {
+    return +boardFields.value[idx].position;
+  },
+  setPosition: function (parms) {
+    let act = [];
+    parms.forEach(function ({ idx, newVal }) {
+      act.push({ fld: boardFields.value[idx], newVal });
+    });
+    act.forEach(function ({ fld, newVal }) {
+      fld.position = newVal;
+      element.value.setField({ field_id: fld.id, position: newVal });
+    });
+  },
+  setTab: function (idx, newVal) {
+    boardFields.value[idx].tab = newVal;
+  },
+  saveElmList: function () {},
+});
 
 function changeSortField(newField) {
   sortField.value = newField;
@@ -73,7 +91,17 @@ function reverseTable() {
 }
 
 function resizeField(attr) {
-  console.log("resize", attr);
-  // changeAttr(attr);
+  element.value.setField(attr);
+}
+
+function reorderFields(attr) {
+  ordFields.move(
+    {
+      idx: attr.sourceIdx,
+    },
+    {
+      idx: attr.targetIdx,
+    }
+  );
 }
 </script>

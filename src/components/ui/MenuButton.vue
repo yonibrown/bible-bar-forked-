@@ -1,11 +1,11 @@
 <template>
-  <div class="fa" :class="faClass"></div>
+  <div class="fa" :class="faClass" :chosen="chosen"></div>
 </template>
 
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["type"]);
+const props = defineProps(["type","chosen"]);
 
 const faClass = computed(function () {
   switch (props.type) {
@@ -25,6 +25,10 @@ const faClass = computed(function () {
       return "fa-pencil";
     case "addtab":
       return "fa-columns";
+    case "moveleft":
+      return "fa-arrow-left";
+    case "moveright":
+      return "fa-arrow-right";
     default:
       return null;
   }
@@ -40,7 +44,7 @@ div {
   padding: 4px;
   position: relative;
 }
-div:hover {
+div:hover,div[chosen='true'] {
   color: black;
   background-color: rgb(223, 228, 235);
 }

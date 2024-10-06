@@ -1,6 +1,6 @@
 <template>
   <spec-table
-    :enableSelection="displayOptions"
+    :enableSelection="editMode"
     :tableFields="tableFields"
     :lines="research.collections"
     lineComponent="collection-line"
@@ -14,28 +14,30 @@
 import SpecTable from "../ui/SpecTable.vue";
 import { inject, ref } from "vue";
 
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 const research = inject("research");
 const tableRef = ref([]);
 
 // table properties
 const tableFields = [
   {
-    name: "name",
+    id: 0,
+    type: "name",
     title: "קטגוריה",
     sortable: false,
-    display: true
+    display: true,
   },
   {
-    name: "description",
+    id: 1,
+    type: "description",
     title: "הערות",
     sortable: false,
-    display: true
+    display: true,
   },
 ];
 
 function removeSelected() {
-  research.value.deleteCollections( tableRef.value.selectedLines);
+  research.value.deleteCollections(tableRef.value.selectedLines);
 }
 
 defineExpose({ removeSelected });

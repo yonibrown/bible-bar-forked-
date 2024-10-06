@@ -1,7 +1,7 @@
 <template>
   <spec-line>
-    <template #text="{idx}">
-      <span>{{ line[idx] }}</span>
+    <template #text="{id}">
+      <span>{{ getValue(id) }}</span>
     </template> 
   </spec-line>
 </template>
@@ -10,6 +10,12 @@
 import SpecLine from "../ui/SpecLine.vue";
 
 const props = defineProps(["line"]);
+
+function getValue(id){
+  return props.line.find(function(fld){
+    return fld.id == id;
+  }).val;
+}
 </script>
 
 <style scoped>

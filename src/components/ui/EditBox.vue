@@ -1,12 +1,12 @@
 <template>
   <base-droppable
-    v-if="displayOptions"
+    v-if="editMode"
     :drop="drop"
     :dragStruct="dragStruct"
     :dragEnter="enterLinksMenu"
     :dragLeave="leaveLinksMenu"
   >
-    <div :class="{ 'edit-table': displayOptions, 'edit-hilight': hilightMenu }">
+    <div :class="{ 'edit-table': editMode, 'edit-hilight': hilightMenu }">
       <slot></slot>
     </div>
   </base-droppable>
@@ -17,7 +17,7 @@
 
 <script setup>
 import { ref, inject } from "vue";
-const displayOptions = inject("displayOptions");
+const editMode = inject("editMode");
 
 const props = defineProps(["drop", "dragStruct"]);
 

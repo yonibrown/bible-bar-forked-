@@ -100,7 +100,7 @@ function setDivider(idx, wordDivider) {
 provide("setDivider", setDivider);
 
 function hilightWord(idx) {
-  // console.log("hilightWord", idx);
+  console.log("hilightWord", idx);
 }
 provide("hilightWord", hilightWord);
 </script>
