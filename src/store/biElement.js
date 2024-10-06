@@ -290,18 +290,29 @@ class biElmBoard extends biElement {
     return this.attr.lines;
   }
 
-  setFieldPosition(attr) {
-    let fld = this.fields.find(function (fld1) {
-      return fld1.id == attr.id;
-    });
+  // setFieldPosition(attr) {
+  //   let fld = this.fields.find(function (fld1) {
+  //     return fld1.id == attr.id;
+  //   });
 
-    fld.position = attr.newPos;
-  }
+  //   fld.position = attr.newPos;
+  // }
 
   async setField(attr) {
     const data = {
       type: "element",
       oper: "set_field",
+      id: this.dbId,
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+  }
+
+  async setContent(attr) {
+    const data = {
+      type: "element",
+      oper: "set_content",
       id: this.dbId,
       prop: attr,
     };
