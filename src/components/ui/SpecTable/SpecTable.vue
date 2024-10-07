@@ -25,8 +25,8 @@
 </template>
 
 <script setup>
-import SpecHeader from "./SpecTable/SpecHeader.vue";
-import SpecLineWrapper from "./SpecTable/SpecLineWrapper.vue";
+import SpecHeader from "./internal/SpecHeader.vue";
+import SpecLineWrapper from "./internal/SpecLineWrapper.vue";
 import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",

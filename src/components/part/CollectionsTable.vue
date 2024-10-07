@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-import SpecTable from "../ui/SpecTable.vue";
 import { inject, ref } from "vue";
 
 const editMode = inject("editMode");

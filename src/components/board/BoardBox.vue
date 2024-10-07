@@ -18,7 +18,6 @@
 </template>
 
 <script setup>
-import SpecTable from "../ui/SpecTable.vue";
 import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
