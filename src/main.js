@@ -9,12 +9,12 @@ import 'primevue/resources/themes/aura-light-green/theme.css';
 import BaseCard from './components/ui/BaseCard.vue';
 import BaseEditable from './components/ui/BaseEditable.vue';
 import BaseScrollable from './components/ui/BaseScrollable.vue';
-import BaseDroppable from './components/ui/BaseDroppable.vue';
-import BaseDraggable from './components/ui/BaseDraggable.vue';
+import BaseDroppable from './components/ui/DragDrop/BaseDroppable.vue';
+import BaseDraggable from './components/ui/DragDrop/BaseDraggable.vue';
 import BaseMenu from './components/ui/BaseMenu.vue';
 import MenuButton from './components/ui/MenuButton.vue';
-import SortableCell from './components/ui/SortableCell.vue';
-import DraggableHead from './components/ui/DraggableHead.vue';
+import SortableCell from './components/ui/DragDrop/SortableCell.vue';
+import DraggableHead from './components/ui/DragDrop/DraggableHead.vue';
 import SpecTable from './components/ui/SpecTable/SpecTable.vue';
 import SpecLine from './components/ui/SpecTable/SpecLine.vue';
 
