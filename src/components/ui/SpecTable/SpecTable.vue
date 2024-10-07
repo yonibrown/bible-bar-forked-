@@ -1,15 +1,18 @@
 <template>
   <div>
     <base-scrollable :hilightDiv="hilightTable">
-      <table>
+      <table ref="table">
         <spec-header></spec-header>
         <spec-line-wrapper
-          v-for="line in lineList"
+          v-for="(line, idx) in lineList"
           ref="linesRef"
           :line="line"
           :key="line.id"
           :lineComponent="lineComponent"
           :checkAll="checkAllRef"
+          @click="chooseLine(idx)"
+          @mouseover="enterTr(idx)"
+          @mouseleave="leaveTr(idx)"
         ></spec-line-wrapper>
       </table>
     </base-scrollable>
@@ -21,12 +24,17 @@
       />
       <span>בחר הכל</span>
     </span>
+    <row-menu
+      :offset="chosenTrOffset"
+      v-show="enableSelection && chosenTrOffset > 0"
+    ></row-menu>
   </div>
 </template>
 
 <script setup>
 import SpecHeader from "./internal/SpecHeader.vue";
 import SpecLineWrapper from "./internal/SpecLineWrapper.vue";
+import RowMenu from "./internal/RowMenu.vue";
 import { computed, ref, watch, provide } from "vue";
 const props = defineProps([
   "enableSelection",
@@ -64,6 +72,7 @@ provide(
 );
 
 const linesRef = ref([]);
+const table = ref();
 
 const newLineArray = [{ newLine: true }];
 const lineList = computed(function () {
@@ -113,6 +122,22 @@ watch(checkState, function (newVal) {
     }
   }
 });
+
+function chooseLine(idx) {
+  console.log("chooseLine", idx);
+}
+
+const hoverTr = ref(false);
+const chosenTrOffset = ref(-1);
+function enterTr(idx) {
+  hoverTr.value = true;
+  chosenTrOffset.value =
+    linesRef.value[idx].tr.offsetTop + table.value.offsetTop;
+}
+function leaveTr(idx) {
+  hoverTr.value = false;
+  chosenTrOffset.value = -1;
+}
 
 defineExpose({ selectedLines });
 </script>

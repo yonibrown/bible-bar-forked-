@@ -1,10 +1,9 @@
 <template>
-  <tr class="table-line" @mouseover="enterTr" @mouseleave="leaveTr" ref="row">
+  <tr class="table-line" ref="row">
     <td v-show="enableSelection">
       <input type="checkbox" v-model="checked" v-if="!line.newLine" />
     </td>
     <component :is="lineComponent" ref="linesRef" :line="line"></component>
-    <div class="menu">תפריט שורה</div>
   </tr>
 </template>
 
@@ -34,18 +33,10 @@ const lineId = computed(function () {
   return props.line.id;
 });
 
-const hoverTr = ref(false);
-function enterTr() {
-  hoverTr.value = true;
-  console.log("offsetTop", row.value.offsetTop);
-}
-function leaveTr() {
-  hoverTr.value = false;
-}
-
 defineExpose({
   id: lineId,
   checked,
+  tr: row,
 });
 </script>
 
@@ -62,13 +53,4 @@ td {
   width: 1px;
   white-space: nowrap;
 } */
-
-.menu {
-  position: absolute;
-  z-index: 1;
-  /* bottom: 125%; */
-  left: 50%;
-  margin-left: -60px;
-  border: solid;
-}
 </style>
