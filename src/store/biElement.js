@@ -368,6 +368,10 @@ class biBoardLine {
     };
   }
 
+  sortKey(fldId) {
+    return this.content(fldId);
+  }
+
   content(fldId) {
     return this._content.find(function (fld) {
       return fld.id == fldId;
