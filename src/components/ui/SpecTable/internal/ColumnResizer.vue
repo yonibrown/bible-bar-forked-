@@ -15,21 +15,37 @@ import { computed, inject, onMounted, ref, watch } from "vue";
 const enableSelection = inject("enableSelection");
 const tableEmit = inject("tableEmit");
 const rowWidth = inject("rowWidth");
-const props = defineProps(["fld",  "lastField"]);
+const props = defineProps(["fld", "lastField"]);
+
+var initialWidth = -1;
+var structChanged = false;
+var structRatio = 1;
 
 const resizer = ref();
 const observer = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     // check if the mutation is attributes and update the width and height data if it is.
     if (mutation.type === "attributes" && resizer.value.style.width != "") {
-      let resizerWidth = parseInt(
-        document.defaultView.getComputedStyle(resizer.value).width,
-        10
+      let resizerWidth = parseFloat(
+        document.defaultView.getComputedStyle(resizer.value).width
       );
 
-      let resizerWidthPct = (resizerWidth / rowWidth.value) * 100;
-
-      resizeField({ width: Math.min(resizerWidthPct, 100) });
+      if (structChanged){
+        structRatio = initialWidth/resizerWidth;
+        console.log('structRatio',structRatio);
+        initialWidth = resizerWidth;
+        structChanged = false;
+      } else {
+        let resizerWidthPct = (resizerWidth * structRatio / rowWidth.value) * 100;
+        resizeField({ width: Math.min(resizerWidthPct, 100) });
+      }
+      console.log(
+        "change size",
+        resizerWidth,resizerWidth*structRatio,
+        (resizerWidth*structRatio / rowWidth.value) * 100,
+        initialWidth,initialWidth*structRatio,
+        (initialWidth*structRatio / rowWidth.value) * 100
+      );
     }
   });
 });
@@ -46,6 +62,8 @@ function resizeField(style) {
 
 watch(enableSelection, function (newVal) {
   if (newVal) {
+    console.log("observe");
+    structChanged = true;
     // observe element's specified mutations
     observer.observe(resizer.value, { attributes: true });
   } else {
@@ -61,9 +79,11 @@ const width = computed(function () {
   }
 });
 
-function setSize(){
+function setSize() {
   if (!props.lastField) {
     resizer.value.style.width = width.value + "px";
+    initialWidth = width.value;
+    console.log("initialWidth", initialWidth);
   }
 }
 
