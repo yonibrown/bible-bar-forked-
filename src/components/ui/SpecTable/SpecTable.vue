@@ -24,7 +24,8 @@
     </span>
     <row-menu
       :offset="chosenTrOffset"
-      v-show="enableSelection && chosenTrOffset > 0"
+      v-show="enableSelection && chosenTrIdx >= 0"
+      @openNewLine="openNewLine"
     ></row-menu>
   </div>
 </template>
@@ -122,12 +123,19 @@ watch(checkState, function (newVal) {
 });
 
 const chosenTrOffset = ref(-1);
+const chosenTrIdx = ref(-1);
 function enterTr(idx) {
   chosenTrOffset.value =
     linesRef.value[idx].tr.offsetTop + table.value.offsetTop;
+  chosenTrIdx.value = idx;
 }
 function leaveTable() {
   chosenTrOffset.value = -1;
+  chosenTrIdx.value = -1;
+}
+
+function openNewLine() {
+  console.log("open new line after" + chosenTrIdx.value);
 }
 
 defineExpose({ selectedLines });
