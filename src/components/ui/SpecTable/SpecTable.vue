@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @mouseleave="leaveTable">
     <base-scrollable :hilightDiv="hilightTable">
       <table ref="table">
         <spec-header></spec-header>
@@ -10,9 +10,7 @@
           :key="line.id"
           :lineComponent="lineComponent"
           :checkAll="checkAllRef"
-          @click="chooseLine(idx)"
           @mouseover="enterTr(idx)"
-          @mouseleave="leaveTr(idx)"
         ></spec-line-wrapper>
       </table>
     </base-scrollable>
@@ -123,19 +121,12 @@ watch(checkState, function (newVal) {
   }
 });
 
-function chooseLine(idx) {
-  console.log("chooseLine", idx);
-}
-
-const hoverTr = ref(false);
 const chosenTrOffset = ref(-1);
 function enterTr(idx) {
-  hoverTr.value = true;
   chosenTrOffset.value =
     linesRef.value[idx].tr.offsetTop + table.value.offsetTop;
 }
-function leaveTr(idx) {
-  hoverTr.value = false;
+function leaveTable() {
   chosenTrOffset.value = -1;
 }
 
