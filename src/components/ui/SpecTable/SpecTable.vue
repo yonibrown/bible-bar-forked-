@@ -74,7 +74,11 @@ const linesRef = ref([]);
 const table = ref();
 
 const newLineArray = [{ newLine: true }];
+const newLine = computed(function () {
+  return [];
+});
 const lineList = computed(function () {
+  // console.log(props.lines);
   if (props.enableNewLine && props.enableSelection) {
     return props.lines.concat(newLineArray);
   }

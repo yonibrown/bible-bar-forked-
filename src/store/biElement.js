@@ -339,12 +339,17 @@ class biElmBoard extends biElement {
 class biBoardLine {
   constructor(rec, board) {
     this._id = rec.id;
+    this._position = rec.position;
     this._board = board;
     this._content = this.initContent(rec.content);
   }
 
   get id() {
     return this._id;
+  }
+
+  get position() {
+    return this._position;
   }
 
   get proj() {
@@ -393,7 +398,6 @@ class biBoardContent {
     this._id = rec.field;
     this._text = rec.text;
     this._line = line;
-
   }
 
   get id() {
@@ -412,7 +416,7 @@ class biBoardContent {
     return this._line.id;
   }
 
-  get text(){
+  get text() {
     return this._text;
   }
 
@@ -426,7 +430,7 @@ class biBoardContent {
   }
 
   async changeAttr(attr) {
-    if (typeof attr.text != 'undefined'){
+    if (typeof attr.text != "undefined") {
       this._text = attr.text;
     }
     const data = {

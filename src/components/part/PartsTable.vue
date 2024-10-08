@@ -125,6 +125,7 @@ const sortedParts = computed(function () {
     return [];
   }
   const arr = filteredParts.value.slice();
+  // console.log("sort arr", arr, sortAttr.value);
   arr.sort(function (a, b) {
     if (sortAttr.value.ordering == "ASC") {
       return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort]
