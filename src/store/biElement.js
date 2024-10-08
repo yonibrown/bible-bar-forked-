@@ -369,7 +369,7 @@ class biBoardLine {
   }
 
   sortKey(fldId) {
-    return this.content(fldId);
+    return this.content(fldId).sortKey;
   }
 
   content(fldId) {
@@ -422,6 +422,10 @@ class biBoardContent {
 
   get text() {
     return this._text;
+  }
+
+  get sortKey() {
+    return this.text;
   }
 
   get dbId() {

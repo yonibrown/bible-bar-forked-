@@ -7,7 +7,7 @@
           v-for="(line, idx) in sortedLines"
           ref="linesRef"
           :line="line"
-          :key="line.id"
+          :key="idx"
           :lineComponent="lineComponent"
           :checkAll="checkAllRef"
           @mouseover="enterTr(idx)"
@@ -73,7 +73,7 @@ provide(
 const linesRef = ref([]);
 const table = ref();
 
-const newLineArray = [{ newLine: true }];
+const newLinePosition = ref(0);
 const newLine = computed(function () {
   return [];
 });
@@ -84,9 +84,23 @@ const sortedLines = computed(function () {
   if (!lineList.value) {
     return [];
   }
+
+  // create array
   const arr = lineList.value.slice();
-  //   console.log("arr", arr);
+
+  // add new line
+  if (newLinePosition.value > 0) {
+    arr.push({ newLine: true, position: newLinePosition.value });
+  }
+
+  // sort
   arr.sort(function (a, b) {
+    // if there is no sort field
+    if (props.sortField == -1) {
+      return a.position > b.position ? 1 : -1;
+    }
+
+    // if there is an attribute 'sort_key'
     if (a.sort_key) {
       return (props.ascending &&
         a.sort_key[props.sortField] > b.sort_key[props.sortField]) ||
@@ -95,10 +109,23 @@ const sortedLines = computed(function () {
         ? 1
         : -1;
     }
+
+    // if there is a method 'sortKey'
+    if (a.sortKey) {
+      console.log("sortKey", a.sortKey(props.sortField));
+      return (props.ascending &&
+        a.sortKey(props.sortField) > b.sortKey(props.sortField)) ||
+        (!props.ascending &&
+          a.sortKey(props.sortField) < b.sortKey(props.sortField))
+        ? 1
+        : -1;
+    }
     return 1;
   });
+
+  // add constant new line in the end of the list
   if (props.enableNewLine && props.enableSelection) {
-    return arr.concat(newLineArray);
+    arr.push({ newLine: true });
   }
   return arr;
 });
@@ -157,7 +184,18 @@ function leaveTable() {
 }
 
 function openNewLine() {
-  console.log("open new line after" + chosenTrIdx.value);
+  // console.log('newLinePosition',newLinePosition.value);
+  // console.log("open new line after " + chosenTrIdx.value,sortedLines.value);
+  let afterPosition = sortedLines.value[chosenTrIdx.value].position;
+  if (chosenTrIdx.value == sortedLines.value.length - 1) {
+    newLinePosition.value = afterPosition + 1;
+  } else {
+    let gap =
+      sortedLines.value[chosenTrIdx.value + 1].position -
+      sortedLines.value[chosenTrIdx.value].position;
+    newLinePosition.value = afterPosition + 0.5 * gap;
+  }
+  // console.log('new newLinePosition',newLinePosition.value);
 }
 
 defineExpose({ selectedLines });
