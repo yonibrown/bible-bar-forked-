@@ -17,9 +17,9 @@ const tableEmit = inject("tableEmit");
 const rowWidth = inject("rowWidth");
 const props = defineProps(["fld", "lastField"]);
 
-var initialWidth = -1;
+var initialWidth = 1.0;
 var structChanged = false;
-var structRatio = 1;
+var structRatio = 1.0;
 
 const resizer = ref();
 const observer = new MutationObserver(function (mutations) {
@@ -64,9 +64,9 @@ watch(enableSelection, function (newVal) {
 
 const width = computed(function () {
   if (rowWidth.value) {
-    return (props.fld.widthPct * rowWidth.value) / 100;
+    return Math.max((props.fld.widthPct * rowWidth.value) / 100,1.0);
   } else {
-    return 1;
+    return 1.0;
   }
 });
 

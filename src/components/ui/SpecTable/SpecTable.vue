@@ -4,7 +4,7 @@
       <table ref="table">
         <spec-header></spec-header>
         <spec-line-wrapper
-          v-for="(line, idx) in lineList"
+          v-for="(line, idx) in sortedLines"
           ref="linesRef"
           :line="line"
           :key="line.id"
@@ -73,11 +73,34 @@ provide(
 const linesRef = ref([]);
 const table = ref();
 
+const newLineArray = [{ newLine: true }];
 const newLine = computed(function () {
   return [];
 });
 const lineList = computed(function () {
   return props.lines;
+});
+const sortedLines = computed(function () {
+  if (!lineList.value) {
+    return [];
+  }
+  const arr = lineList.value.slice();
+  //   console.log("arr", arr);
+  arr.sort(function (a, b) {
+    if (a.sort_key) {
+      return (props.ascending &&
+        a.sort_key[props.sortField] > b.sort_key[props.sortField]) ||
+        (!props.ascending &&
+          a.sort_key[props.sortField] < b.sort_key[props.sortField])
+        ? 1
+        : -1;
+    }
+    return 1;
+  });
+  if (props.enableNewLine && props.enableSelection) {
+    return arr.concat(newLineArray);
+  }
+  return arr;
 });
 
 const inactiveLines = props.enableNewLine ? 1 : 0;
