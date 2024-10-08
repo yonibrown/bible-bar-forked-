@@ -1,5 +1,7 @@
 <template>
-  <div class="menu" :style="{ top: offset-9+'px' }">תפריט שורה</div>
+  <div class="menu" :style="{ top: offset - 9 + 'px' }">
+    <menu-button type="add" @click="$emit('openNewLine')"></menu-button>
+  </div>
 </template>
 
 <script setup>

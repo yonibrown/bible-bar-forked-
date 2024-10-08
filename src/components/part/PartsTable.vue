@@ -1,5 +1,5 @@
 <template>
-  <spec-table
+  <sorted-table
     :enableSelection="editMode"
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
@@ -7,14 +7,15 @@
     @resizeField="resizeField"
     :ascending="sortAttr.ordering == 'ASC'"
     @reverseTable="reverseTable"
-    :lines="sortedParts"
+    :lines="filteredParts"
     lineComponent="parts-line"
     ref="tableRef"
   >
-  </spec-table>
+  </sorted-table>
 </template>
 
 <script setup>
+import SortedTable from "../ui/SpecTable/SortedTable.vue";
 import { computed, ref, inject } from "vue";
 
 const editMode = inject("editMode");
@@ -115,25 +116,6 @@ const filteringCols = computed(function () {
         arr.push(cat.col);
       }
     });
-  });
-  return arr;
-});
-
-// sort parts
-const sortedParts = computed(function () {
-  if (!filteredParts.value) {
-    return [];
-  }
-  const arr = filteredParts.value.slice();
-  arr.sort(function (a, b) {
-    if (sortAttr.value.ordering == "ASC") {
-      return a.sort_key[sortAttr.value.sort] > b.sort_key[sortAttr.value.sort]
-        ? 1
-        : -1;
-    }
-    return a.sort_key[sortAttr.value.sort] < b.sort_key[sortAttr.value.sort]
-      ? 1
-      : -1;
   });
   return arr;
 });

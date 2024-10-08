@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @mouseleave="leaveTable">
     <base-scrollable :hilightDiv="hilightTable">
       <table ref="table">
         <spec-header></spec-header>
@@ -10,9 +10,7 @@
           :key="line.id"
           :lineComponent="lineComponent"
           :checkAll="checkAllRef"
-          @click="chooseLine(idx)"
           @mouseover="enterTr(idx)"
-          @mouseleave="leaveTr(idx)"
         ></spec-line-wrapper>
       </table>
     </base-scrollable>
@@ -26,7 +24,8 @@
     </span>
     <row-menu
       :offset="chosenTrOffset"
-      v-show="enableSelection && chosenTrOffset > 0"
+      v-show="enableSelection && chosenTrIdx >= 0"
+      @openNewLine="openNewLine"
     ></row-menu>
   </div>
 </template>
@@ -75,7 +74,11 @@ const linesRef = ref([]);
 const table = ref();
 
 const newLineArray = [{ newLine: true }];
+const newLine = computed(function () {
+  return [];
+});
 const lineList = computed(function () {
+  // console.log(props.lines);
   if (props.enableNewLine && props.enableSelection) {
     return props.lines.concat(newLineArray);
   }
@@ -123,20 +126,20 @@ watch(checkState, function (newVal) {
   }
 });
 
-function chooseLine(idx) {
-  console.log("chooseLine", idx);
-}
-
-const hoverTr = ref(false);
 const chosenTrOffset = ref(-1);
+const chosenTrIdx = ref(-1);
 function enterTr(idx) {
-  hoverTr.value = true;
   chosenTrOffset.value =
     linesRef.value[idx].tr.offsetTop + table.value.offsetTop;
+  chosenTrIdx.value = idx;
 }
-function leaveTr(idx) {
-  hoverTr.value = false;
+function leaveTable() {
   chosenTrOffset.value = -1;
+  chosenTrIdx.value = -1;
+}
+
+function openNewLine() {
+  console.log("open new line after" + chosenTrIdx.value);
 }
 
 defineExpose({ selectedLines });
