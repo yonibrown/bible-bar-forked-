@@ -32,20 +32,12 @@ const observer = new MutationObserver(function (mutations) {
 
       if (structChanged){
         structRatio = initialWidth/resizerWidth;
-        console.log('structRatio',structRatio);
         initialWidth = resizerWidth;
         structChanged = false;
       } else {
         let resizerWidthPct = (resizerWidth * structRatio / rowWidth.value) * 100;
         resizeField({ width: Math.min(resizerWidthPct, 100) });
       }
-      console.log(
-        "change size",
-        resizerWidth,resizerWidth*structRatio,
-        (resizerWidth*structRatio / rowWidth.value) * 100,
-        initialWidth,initialWidth*structRatio,
-        (initialWidth*structRatio / rowWidth.value) * 100
-      );
     }
   });
 });
@@ -62,7 +54,6 @@ function resizeField(style) {
 
 watch(enableSelection, function (newVal) {
   if (newVal) {
-    console.log("observe");
     structChanged = true;
     // observe element's specified mutations
     observer.observe(resizer.value, { attributes: true });
@@ -83,7 +74,6 @@ function setSize() {
   if (!props.lastField) {
     resizer.value.style.width = width.value + "px";
     initialWidth = width.value;
-    console.log("initialWidth", initialWidth);
   }
 }
 

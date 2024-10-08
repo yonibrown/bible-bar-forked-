@@ -52,8 +52,10 @@ const sortedLines = computed(function () {
   const arr = props.lines.slice();
   //   console.log("arr", arr);
   arr.sort(function (a, b) {
-    return props.ascending &&
-      a.sort_key[props.sortField] > b.sort_key[props.sortField]
+    return (props.ascending &&
+      a.sort_key[props.sortField] > b.sort_key[props.sortField]) ||
+      (!props.ascending &&
+        a.sort_key[props.sortField] < b.sort_key[props.sortField])
       ? 1
       : -1;
   });
