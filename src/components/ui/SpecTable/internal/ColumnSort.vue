@@ -1,12 +1,12 @@
 <template>
   <span
     v-if="fld.sortable"
-    @dblclick="changeSort(fld.name)"
-    :class="{ sortingField: tableProps.sortField == fld.name }"
+    @dblclick="changeSort(fld.id)"
+    :class="{ sortingField: tableProps.sortField == fld.id }"
   >
     <slot></slot>
     <i
-      v-show="tableProps.sortField == fld.name"
+      v-show="tableProps.sortField == fld.id"
       class="fa"
       :class="tableProps.ascending ? 'fa-arrow-up' : 'fa-arrow-down'"
     ></i>
