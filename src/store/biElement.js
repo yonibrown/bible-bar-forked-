@@ -316,6 +316,10 @@ class biElmBoard extends biElement {
     });
   }
 
+  addLine(rec){
+    this._lines.push(new biBoardLine(rec, this))
+  }
+
   // setFieldPosition(attr) {
   //   let fld = this.fields.find(function (fld1) {
   //     return fld1.id == attr.id;

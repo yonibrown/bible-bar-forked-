@@ -13,6 +13,8 @@
     :hilightTable="false"
     :reorderFields="true"
     @reorderFields="reorderFields"
+    :storeLineWhenAdded="true"
+    @addLine="addLine"
   >
   </spec-table>
 </template>
@@ -95,5 +97,12 @@ function reorderFields(attr) {
       idx: attr.targetIdx,
     }
   );
+}
+
+function addLine(attr) {
+  element.value.addLine({
+    ...attr,
+    content: [],
+  });
 }
 </script>

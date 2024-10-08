@@ -45,12 +45,14 @@ const props = defineProps([
   "enableNewLine",
   "hilightTable",
   "reorderFields",
+  "storeLineWhenAdded",
 ]);
 const emit = defineEmits([
   "reverseTable",
   "changeSortField",
   "resizeField",
   "reorderFields",
+  "addLine",
 ]);
 
 provide("tableProps", props);
@@ -184,18 +186,22 @@ function leaveTable() {
 }
 
 function openNewLine() {
-  // console.log('newLinePosition',newLinePosition.value);
-  // console.log("open new line after " + chosenTrIdx.value,sortedLines.value);
   let afterPosition = sortedLines.value[chosenTrIdx.value].position;
+  let newPosition = afterPosition;
   if (chosenTrIdx.value == sortedLines.value.length - 1) {
-    newLinePosition.value = afterPosition + 1;
+    newPosition += 1;
   } else {
     let gap =
       sortedLines.value[chosenTrIdx.value + 1].position -
       sortedLines.value[chosenTrIdx.value].position;
-    newLinePosition.value = afterPosition + 0.5 * gap;
+    newPosition += 0.5 * gap;
   }
-  // console.log('new newLinePosition',newLinePosition.value);
+
+  if (props.storeLineWhenAdded) {
+    emit("addLine", { position: newPosition });
+  } else {
+    newLinePosition.value = newPosition;
+  }
 }
 
 defineExpose({ selectedLines });
