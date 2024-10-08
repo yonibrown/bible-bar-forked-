@@ -3,6 +3,9 @@
     :enableSelection="enableSelection"
     :tableFields="tableFields"
     :sortField="sortField"
+    :ascending="ascending"
+    :lines="sortedLines"
+    :lineComponent="lineComponent"
     @changeSortField="
       (x) => {
         $emit('changeSortField', x);
@@ -13,14 +16,11 @@
         $emit('resizeField', x);
       }
     "
-    :ascending="ascending"
     @reverseTable="
       (x) => {
         $emit('reverseTable', x);
       }
     "
-    :lines="sortedLines"
-    :lineComponent="lineComponent"
   >
   </spec-table>
 </template>
@@ -38,12 +38,8 @@ const props = defineProps([
   "hilightTable",
   "reorderFields",
 ]);
-const emit = defineEmits([
-  "reverseTable",
-  "changeSortField",
-  "resizeField",
-  "reorderFields",
-]);
+
+const newLineArray = [{ newLine: true }];
 
 const sortedLines = computed(function () {
   if (!props.lines) {
@@ -59,6 +55,9 @@ const sortedLines = computed(function () {
       ? 1
       : -1;
   });
+  if (props.enableNewLine && props.enableSelection) {
+    return arr.concat(newLineArray);
+  }
   return arr;
 });
 </script>
