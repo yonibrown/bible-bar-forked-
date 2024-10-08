@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import OneRange from "./TextRange/OneRange.vue";
+import OneRange from "./internal/OneRange.vue";
 import { computed, provide } from "vue";
 const props = defineProps([
   "fromPosition",

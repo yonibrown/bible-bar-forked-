@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-import SpecLine from "../ui/SpecLine.vue";
 import BoardContent from "./BoardContent.vue";
 
 const props = defineProps(["line"]);

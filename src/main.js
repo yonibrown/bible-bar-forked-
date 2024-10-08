@@ -9,12 +9,14 @@ import 'primevue/resources/themes/aura-light-green/theme.css';
 import BaseCard from './components/ui/BaseCard.vue';
 import BaseEditable from './components/ui/BaseEditable.vue';
 import BaseScrollable from './components/ui/BaseScrollable.vue';
-import BaseDroppable from './components/ui/BaseDroppable.vue';
-import BaseDraggable from './components/ui/BaseDraggable.vue';
+import BaseDroppable from './components/ui/DragDrop/BaseDroppable.vue';
+import BaseDraggable from './components/ui/DragDrop/BaseDraggable.vue';
 import BaseMenu from './components/ui/BaseMenu.vue';
 import MenuButton from './components/ui/MenuButton.vue';
-import SortableCell from './components/ui/SortableCell.vue';
-import DraggableHead from './components/ui/DraggableHead.vue';
+import SortableCell from './components/ui/DragDrop/SortableCell.vue';
+import DraggableHead from './components/ui/DragDrop/DraggableHead.vue';
+import SpecTable from './components/ui/SpecTable/SpecTable.vue';
+import SpecLine from './components/ui/SpecTable/SpecLine.vue';
 
 import LinkBox from './components/link/LinkBox.vue';
 import BarBox from './components/bar/BarBox.vue';
@@ -41,6 +43,8 @@ app.component('base-menu', BaseMenu);
 app.component('menu-button', MenuButton);
 app.component('sortable-cell', SortableCell);
 app.component('draggable-head', DraggableHead);
+app.component('spec-table', SpecTable);
+app.component('spec-line', SpecLine);
 
 app.component('link-box', LinkBox);
 app.component('bar-box', BarBox);

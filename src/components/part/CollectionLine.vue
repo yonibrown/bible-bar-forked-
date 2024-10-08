@@ -24,7 +24,6 @@
 </template>
 
 <script setup>
-import SpecLine from "../ui/SpecLine.vue";
 import { inject, computed, ref } from "vue";
 
 const props = defineProps(["line"]);

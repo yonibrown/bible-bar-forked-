@@ -25,9 +25,8 @@
 </template>
 
 <script setup>
-import SpecLine from "../ui/SpecLine.vue";
 import VerseRange from "../sequence/VerseRange.vue";
-import TextRange from "../ui/TextRange.vue";
+import TextRange from "../ui/TextRange/TextRange.vue";
 import { inject, computed } from "vue";
 
 const props = defineProps(["line"]);
