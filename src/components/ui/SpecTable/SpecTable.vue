@@ -97,7 +97,7 @@ const sortedLines = computed(function () {
   // create array
   // const arr = props.lines.slice();
   const arr = props.lines.filter(function (line) {
-    return line.position > 0;
+    return line.position > 0 || typeof line.position == 'undefined';
   });
 
   // add new line
