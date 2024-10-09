@@ -61,15 +61,12 @@ const ordFields = new ordering({
   getPosition: function (idx) {
     return +boardFields.value[idx].position;
   },
-  setPosition: function (parms) {
-    let act = [];
-    parms.forEach(function ({ idx, newVal }) {
-      act.push({ fld: boardFields.value[idx], newVal });
-    });
-    act.forEach(function ({ fld, newVal }) {
-      fld.position = newVal;
+  setItemPosition: function(item,newPosition){
+    fld.position = newVal;
       element.value.setField({ field_id: fld.id, position: newVal });
-    });
+  },
+  getItem: function(idx){
+    return boardFields.value[idx];
   },
   setTab: function (idx, newVal) {
     boardFields.value[idx].tab = newVal;

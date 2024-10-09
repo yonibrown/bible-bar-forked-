@@ -40,14 +40,11 @@ const ordElements = new ordering({
   getPosition: function (idx) {
     return +dispElements.value[idx].position;
   },
-  setPosition: function (parms) {
-    let act = [];
-    parms.forEach(function ({ idx, newVal }) {
-      act.push({ elm: dispElements.value[idx], newVal });
-    });
-    act.forEach(function ({ elm, newVal }) {
-      elm.position = newVal;
-    });
+  setItemPosition: function(item,newPosition){
+    item.position = newPosition;
+  },
+  getItem: function(idx){
+    return dispElements.value[idx];
   },
   setTab: function (idx, newVal) {
     dispElements.value[idx].tab = newVal;
