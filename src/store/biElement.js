@@ -316,8 +316,16 @@ class biElmBoard extends biElement {
     });
   }
 
-  addLine(rec){
-    this._lines.push(new biBoardLine(rec, this))
+  async addLine(attr) {
+    const data = {
+      type: "board",
+      oper: "add_line",
+      id: this.dbId,
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+    this._lines.push(new biBoardLine(obj.rec, this));
   }
 
   // setFieldPosition(attr) {
@@ -393,6 +401,22 @@ class biBoardLine {
     const data = {
       type: "brd_line",
       oper: "new_content",
+      id: this.dbId,
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+  }
+
+  delete() {
+    this._position = 0;
+    this.changeAttr({ position: 0 });
+  }
+
+  async changeAttr(attr) {
+    const data = {
+      type: "brd_line",
+      oper: "set",
       id: this.dbId,
       prop: attr,
     };

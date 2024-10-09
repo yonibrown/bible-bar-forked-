@@ -51,10 +51,13 @@ const rowWidth = ref(0);
 onMounted(function () {
   rowWidth.value = parseInt(
     document.defaultView.getComputedStyle(row.value).width,
-    10
+    10,
   );
 });
 provide("rowWidth", rowWidth);
+defineExpose({
+  tr: row,
+});
 </script>
 
 <style scoped>
