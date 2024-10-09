@@ -55,7 +55,7 @@ export class ordering {
     this._getPosition = attr.getPosition;
     this._setPosition = attr.setPosition;
     this._setTab = attr.setTab;
-    this._saveElmList = attr.saveElmList;
+    this._commitChanges = attr.commitChanges;
   }
 
   move(source, target) {
@@ -75,14 +75,14 @@ export class ordering {
           { idx: source.idx, newVal: targetElmPos },
           { idx: target.idx, newVal: sourceElmPos },
         ]);
-        this._saveElmList();
+        this._commitChanges();
         return;
       }
     }
 
     this._setPosition([{ idx: source.idx, newVal: this.prevPos(target.idx) }]);
     this._setTab(source.idx, target.tab);
-    this._saveElmList();
+    this._commitChanges();
   }
 
   prevPos(idx) {

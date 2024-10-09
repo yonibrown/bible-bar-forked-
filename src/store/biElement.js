@@ -325,7 +325,7 @@ class biElmBoard extends biElement {
     };
 
     const obj = await sendToServer(data);
-    this._lines.push(new biBoardLine(obj.rec, this));
+    this._lines.push(new biBoardLine(obj.data, this));
   }
 
   // setFieldPosition(attr) {

@@ -52,7 +52,7 @@ const ordElements = new ordering({
   setTab: function (idx, newVal) {
     dispElements.value[idx].tab = newVal;
   },
-  saveElmList,
+  commitChanges: saveElmList,
 });
 
 const dragStruct = ["dispElmId", "dispElmIdx", "dispElmTab"];

@@ -74,7 +74,19 @@ const ordFields = new ordering({
   setTab: function (idx, newVal) {
     boardFields.value[idx].tab = newVal;
   },
-  saveElmList: function () {},
+  commitChanges: function () {},
+});
+
+const ordlines = new ordering({
+  getSize: function () {
+  },
+  getPosition: function (idx) {
+  },
+  setPosition: function (parms) {
+  },
+  setTab: function (idx, newVal) {
+  },
+  commitChanges: function () {},
 });
 
 function changeSortField(newField) {
