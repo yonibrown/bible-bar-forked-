@@ -4,10 +4,10 @@
       <table ref="table">
         <spec-header></spec-header>
         <spec-line-wrapper
-          v-for="(line, idx) in lineList"
+          v-for="(line, idx) in sortedLines"
           ref="linesRef"
           :line="line"
-          :key="line.id"
+          :key="idx"
           :lineComponent="lineComponent"
           :checkAll="checkAllRef"
           @mouseover="enterTr(idx)"
@@ -45,12 +45,14 @@ const props = defineProps([
   "enableNewLine",
   "hilightTable",
   "reorderFields",
+  "storeLineWhenAdded",
 ]);
 const emit = defineEmits([
   "reverseTable",
   "changeSortField",
   "resizeField",
   "reorderFields",
+  "addLine",
 ]);
 
 provide("tableProps", props);
@@ -73,16 +75,61 @@ provide(
 const linesRef = ref([]);
 const table = ref();
 
-const newLineArray = [{ newLine: true }];
+const newLinePosition = ref(0);
 const newLine = computed(function () {
   return [];
 });
 const lineList = computed(function () {
-  // console.log(props.lines);
-  if (props.enableNewLine && props.enableSelection) {
-    return props.lines.concat(newLineArray);
-  }
   return props.lines;
+});
+const sortedLines = computed(function () {
+  if (!lineList.value) {
+    return [];
+  }
+
+  // create array
+  const arr = lineList.value.slice();
+
+  // add new line
+  if (newLinePosition.value > 0) {
+    arr.push({ newLine: true, position: newLinePosition.value });
+  }
+
+  // sort
+  arr.sort(function (a, b) {
+    // if there is no sort field
+    if (props.sortField == -1) {
+      return a.position > b.position ? 1 : -1;
+    }
+
+    // if there is an attribute 'sort_key'
+    if (a.sort_key) {
+      return (props.ascending &&
+        a.sort_key[props.sortField] > b.sort_key[props.sortField]) ||
+        (!props.ascending &&
+          a.sort_key[props.sortField] < b.sort_key[props.sortField])
+        ? 1
+        : -1;
+    }
+
+    // if there is a method 'sortKey'
+    if (a.sortKey) {
+      console.log("sortKey", a.sortKey(props.sortField));
+      return (props.ascending &&
+        a.sortKey(props.sortField) > b.sortKey(props.sortField)) ||
+        (!props.ascending &&
+          a.sortKey(props.sortField) < b.sortKey(props.sortField))
+        ? 1
+        : -1;
+    }
+    return 1;
+  });
+
+  // add constant new line in the end of the list
+  if (props.enableNewLine && props.enableSelection) {
+    arr.push({ newLine: true });
+  }
+  return arr;
 });
 
 const inactiveLines = props.enableNewLine ? 1 : 0;
@@ -139,7 +186,22 @@ function leaveTable() {
 }
 
 function openNewLine() {
-  console.log("open new line after" + chosenTrIdx.value);
+  let afterPosition = sortedLines.value[chosenTrIdx.value].position;
+  let newPosition = afterPosition;
+  if (chosenTrIdx.value == sortedLines.value.length - 1) {
+    newPosition += 1;
+  } else {
+    let gap =
+      sortedLines.value[chosenTrIdx.value + 1].position -
+      sortedLines.value[chosenTrIdx.value].position;
+    newPosition += 0.5 * gap;
+  }
+
+  if (props.storeLineWhenAdded) {
+    emit("addLine", { position: newPosition });
+  } else {
+    newLinePosition.value = newPosition;
+  }
 }
 
 defineExpose({ selectedLines });

@@ -1,5 +1,5 @@
 <template>
-  <sorted-table
+  <spec-table
     :enableSelection="editMode"
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
@@ -11,11 +11,10 @@
     lineComponent="parts-line"
     ref="tableRef"
   >
-  </sorted-table>
+  </spec-table>
 </template>
 
 <script setup>
-import SortedTable from "../ui/SpecTable/SortedTable.vue";
 import { computed, ref, inject } from "vue";
 
 const editMode = inject("editMode");
