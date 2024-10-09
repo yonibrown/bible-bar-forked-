@@ -13,6 +13,8 @@
     :hilightTable="false"
     :reorderFields="true"
     @reorderFields="reorderFields"
+    :storeLineWhenAdded="true"
+    @addLine="addLine"
   >
   </spec-table>
 </template>
@@ -25,7 +27,7 @@ import { inject, computed, ref } from "vue";
 const element = inject("element");
 const editMode = inject("editMode");
 
-const sortField = ref(0);
+const sortField = ref(-1);
 const ascending = ref(true);
 
 const boardFields = computed(function () {
@@ -95,5 +97,12 @@ function reorderFields(attr) {
       idx: attr.targetIdx,
     }
   );
+}
+
+function addLine(attr) {
+  element.value.addLine({
+    ...attr,
+    content: [],
+  });
 }
 </script>

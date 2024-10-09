@@ -316,6 +316,10 @@ class biElmBoard extends biElement {
     });
   }
 
+  addLine(rec){
+    this._lines.push(new biBoardLine(rec, this))
+  }
+
   // setFieldPosition(attr) {
   //   let fld = this.fields.find(function (fld1) {
   //     return fld1.id == attr.id;
@@ -369,7 +373,7 @@ class biBoardLine {
   }
 
   sortKey(fldId) {
-    return this.content(fldId);
+    return this.content(fldId).sortKey;
   }
 
   content(fldId) {
@@ -422,6 +426,10 @@ class biBoardContent {
 
   get text() {
     return this._text;
+  }
+
+  get sortKey() {
+    return this.text;
   }
 
   get dbId() {
