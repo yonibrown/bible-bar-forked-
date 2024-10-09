@@ -2,7 +2,7 @@
   <div @mouseleave="leaveTable">
     <base-scrollable :hilightDiv="hilightTable">
       <table ref="table">
-        <spec-header></spec-header>
+        <spec-header @mouseover="enterTr(-1)" ref="header"></spec-header>
         <spec-line-wrapper
           v-for="(line, idx) in sortedLines"
           ref="linesRef"
@@ -23,9 +23,11 @@
       <span>בחר הכל</span>
     </span>
     <row-menu
+      v-show="enableSelection && chosenTrIdx > -2"
       :offset="chosenTrOffset"
-      v-show="enableSelection && chosenTrIdx >= 0"
+      :lineIdx="chosenTrIdx"
       @openNewLine="openNewLine"
+      @deleteLine="deleteLine"
     ></row-menu>
   </div>
 </template>
@@ -62,18 +64,19 @@ provide(
   "tableFields",
   computed(function () {
     return props.tableFields;
-  })
+  }),
 );
 
 provide(
   "enableSelection",
   computed(function () {
     return props.enableSelection;
-  })
+  }),
 );
 
 const linesRef = ref([]);
 const table = ref();
+const header = ref();
 
 const newLinePosition = ref(0);
 const newLine = computed(function () {
@@ -88,7 +91,10 @@ const sortedLines = computed(function () {
   }
 
   // create array
-  const arr = lineList.value.slice();
+  // const arr = lineList.value.slice();
+  const arr = lineList.value.filter(function (line) {
+    return line.position > 0;
+  });
 
   // add new line
   if (newLinePosition.value > 0) {
@@ -174,26 +180,33 @@ watch(checkState, function (newVal) {
 });
 
 const chosenTrOffset = ref(-1);
-const chosenTrIdx = ref(-1);
+const chosenTrIdx = ref(-2);
 function enterTr(idx) {
-  chosenTrOffset.value =
-    linesRef.value[idx].tr.offsetTop + table.value.offsetTop;
+  let trRef = null;
+  if (idx == -1) {
+    trRef = header.value;
+  } else {
+    trRef = linesRef.value[idx];
+  }
+  chosenTrOffset.value = table.value.offsetTop + trRef.tr.offsetTop;
   chosenTrIdx.value = idx;
 }
 function leaveTable() {
   chosenTrOffset.value = -1;
-  chosenTrIdx.value = -1;
+  chosenTrIdx.value = -2;
 }
 
 function openNewLine() {
-  let afterPosition = sortedLines.value[chosenTrIdx.value].position;
+  let afterPosition = 0;
+  if (chosenTrIdx.value >= 0) {
+    afterPosition = sortedLines.value[chosenTrIdx.value].position;
+  }
+
   let newPosition = afterPosition;
   if (chosenTrIdx.value == sortedLines.value.length - 1) {
     newPosition += 1;
   } else {
-    let gap =
-      sortedLines.value[chosenTrIdx.value + 1].position -
-      sortedLines.value[chosenTrIdx.value].position;
+    let gap = sortedLines.value[chosenTrIdx.value + 1].position - afterPosition;
     newPosition += 0.5 * gap;
   }
 
@@ -202,6 +215,10 @@ function openNewLine() {
   } else {
     newLinePosition.value = newPosition;
   }
+}
+
+function deleteLine() {
+  emit("deleteLine", sortedLines.value[chosenTrIdx.value]);
 }
 
 defineExpose({ selectedLines });

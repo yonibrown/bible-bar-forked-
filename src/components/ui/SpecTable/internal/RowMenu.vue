@@ -1,11 +1,16 @@
 <template>
   <div class="menu" :style="{ top: offset - 9 + 'px' }">
     <menu-button type="add" @click="$emit('openNewLine')"></menu-button>
+    <menu-button
+      type="close"
+      v-show="lineIdx >= 0"
+      @click="$emit('deleteLine')"
+    ></menu-button>
   </div>
 </template>
 
 <script setup>
-const props = defineProps(["offset"]);
+const props = defineProps(["offset", "lineIdx"]);
 </script>
 
 <style scoped>

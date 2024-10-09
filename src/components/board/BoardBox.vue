@@ -15,6 +15,7 @@
     @reorderFields="reorderFields"
     :storeLineWhenAdded="true"
     @addLine="addLine"
+    @deleteLine="deleteLine"
   >
   </spec-table>
 </template>
@@ -95,7 +96,7 @@ function reorderFields(attr) {
     },
     {
       idx: attr.targetIdx,
-    }
+    },
   );
 }
 
@@ -104,5 +105,9 @@ function addLine(attr) {
     ...attr,
     content: [],
   });
+}
+
+function deleteLine(line) {
+  line.delete();
 }
 </script>
