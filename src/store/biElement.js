@@ -338,8 +338,8 @@ class biElmBoard extends biElement {
 
   async setField(attr) {
     const data = {
-      type: "element",
-      oper: "set_field",
+      type: "set_field",
+      oper: "set",
       id: this.dbId,
       prop: attr,
     };
