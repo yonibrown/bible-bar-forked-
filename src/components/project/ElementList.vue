@@ -40,10 +40,10 @@ const ordElements = new ordering({
   getPosition: function (idx) {
     return +dispElements.value[idx].position;
   },
-  setItemPosition: function(item,newPosition){
+  setPosition: function (item, newPosition) {
     item.position = newPosition;
   },
-  getItem: function(idx){
+  getItem: function (idx) {
     return dispElements.value[idx];
   },
   setTab: function (idx, newVal) {
@@ -72,16 +72,16 @@ function dragData(dispElmIdx) {
 }
 
 function moveElement(dragData, dropIdx) {
-  ordElements.move(
-    {
+  ordElements.move({
+    source: {
       tab: +dragData.dispElmTab,
       idx: +dragData.dispElmIdx,
     },
-    {
+    target: {
       tab: props.tab,
       idx: dropIdx,
-    }
-  );
+    },
+  });
 }
 
 const positionVersion = ref(0);

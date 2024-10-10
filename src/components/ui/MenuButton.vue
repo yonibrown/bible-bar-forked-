@@ -33,8 +33,10 @@ const faClass = computed(function () {
       return "fa-arrow-up";
     case "movedown":
       return "fa-arrow-down";
-    case "hold":
-      return "fa-arrows";
+    case "sortasc":
+      return "fa-arrow-up";
+    case "sortdesc":
+      return "fa-arrow-down";
     default:
       return null;
   }

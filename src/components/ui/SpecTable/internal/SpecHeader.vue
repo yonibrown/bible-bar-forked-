@@ -17,13 +17,16 @@
           </column-sortable-head>
           <span class="menu-buttons" v-show="enableSelection">
             <menu-button
-              type="moveright"
-              v-show="tableProps.reorderFields"
-              @click="moveRight"
+              type="sortasc"
+              @click="
+                tableEmit('sortLines', { fldId: fld.id, ascending: true })
+              "
             ></menu-button>
             <menu-button
-              type="moveleft"
-              v-show="tableProps.reorderFields"
+              type="sortdesc"
+              @click="
+                tableEmit('sortLines', { fldId: fld.id, ascending: false })
+              "
             ></menu-button>
           </span>
         </column-resizer>
@@ -41,9 +44,7 @@ import { ref, provide, inject, onMounted } from "vue";
 
 const enableSelection = inject("enableSelection");
 const tableFields = inject("tableFields");
-const tableProps = inject("tableProps");
-
-function moveRight() {}
+const tableEmit = inject("tableEmit");
 
 // store row width
 const row = ref();
@@ -51,7 +52,7 @@ const rowWidth = ref(0);
 onMounted(function () {
   rowWidth.value = parseInt(
     document.defaultView.getComputedStyle(row.value).width,
-    10,
+    10
   );
 });
 provide("rowWidth", rowWidth);
