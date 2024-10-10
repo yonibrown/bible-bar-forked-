@@ -56,42 +56,49 @@ export class ordering {
     this._setTab = attr.setTab;
     this._commitChanges = attr.commitChanges;
     this._getItem = attr.getItem;
-    this._setItemPosition = attr.setItemPosition;
+    this._setItemPosition = attr.setPosition;
   }
 
-  move(source, target) {
-    const sourceElmPos = this._getPosition(source.idx);
-    const targetElmPos = this._getPosition(target.idx);
+  move(attr) {
+    if (attr.steps) {
+      attr.target = {
+        idx: attr.source.idx + attr.steps,
+      };
+    }
+    const sourceElmPos = this._getPosition(attr.source.idx);
+    const targetElmPos = this._getPosition(attr.target.idx);
 
-    if (target.tab == source.tab) {
+    if (attr.target.tab == attr.source.tab) {
       // same tab
-      if (target.idx == source.idx) {
+      if (attr.target.idx == attr.source.idx) {
         // nothing to move
         return;
       }
 
-      if (Math.abs(target.idx - source.idx) == 1) {
+      if (Math.abs(attr.target.idx - attr.source.idx) == 1) {
         // switch following items
         this.setPosition([
-          { idx: source.idx, newVal: targetElmPos },
-          { idx: target.idx, newVal: sourceElmPos },
+          { idx: attr.source.idx, newVal: targetElmPos },
+          { idx: attr.target.idx, newVal: sourceElmPos },
         ]);
         this._commitChanges();
         return;
       }
     }
 
-    this.setPosition([{ idx: source.idx, newVal: this.prevPos(target.idx) }]);
-    this._setTab(source.idx, target.tab);
+    this.setPosition([
+      { idx: attr.source.idx, newVal: this.prevPos(attr.target.idx) },
+    ]);
+    this._setTab(attr.source.idx, attr.target.tab);
     this._commitChanges();
   }
 
   setPosition(parms) {
     let act = [];
-    parms.forEach(function ({ idx, newVal }) {
+    parms.forEach(({ idx, newVal }) => {
       act.push({ item: this._getItem(idx), newVal });
     });
-    act.forEach(function ({ item, newVal }) {
+    act.forEach(({ item, newVal }) => {
       this._setItemPosition(item, newVal);
     });
   }

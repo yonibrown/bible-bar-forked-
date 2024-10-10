@@ -16,6 +16,7 @@
     :storeLineWhenAdded="true"
     @addLine="addLine"
     @deleteLine="deleteLine"
+    @reorderLines="reorderLines"
   >
   </spec-table>
 </template>
@@ -45,7 +46,7 @@ const tableFields = computed(function () {
       title: fld.title,
       sortable: true,
       display: true,
-      widthPct: fld.width_pct,
+      widthPct: fld.widthPct,
     };
   });
 });
@@ -61,28 +62,13 @@ const ordFields = new ordering({
   getPosition: function (idx) {
     return +boardFields.value[idx].position;
   },
-  setItemPosition: function(item,newPosition){
-    fld.position = newVal;
-      element.value.setField({ field_id: fld.id, position: newVal });
+  setPosition: function (fld, newPosition) {
+    fld.setPosition(newPosition);
   },
-  getItem: function(idx){
+  getItem: function (idx) {
     return boardFields.value[idx];
   },
-  setTab: function (idx, newVal) {
-    boardFields.value[idx].tab = newVal;
-  },
-  commitChanges: function () {},
-});
-
-const ordlines = new ordering({
-  getSize: function () {
-  },
-  getPosition: function (idx) {
-  },
-  setPosition: function (parms) {
-  },
-  setTab: function (idx, newVal) {
-  },
+  setTab: function (idx, newVal) {},
   commitChanges: function () {},
 });
 
@@ -99,14 +85,42 @@ function resizeField(attr) {
 }
 
 function reorderFields(attr) {
-  ordFields.move(
-    {
+  ordFields.move({
+    source: {
       idx: attr.sourceIdx,
     },
-    {
+    target: {
       idx: attr.targetIdx,
     },
-  );
+  });
+}
+
+const ordLines = new ordering({
+  getSize: function () {
+    return lines.value.length;
+  },
+  getPosition: function (idx) {
+    return +lines.value[idx].position;
+  },
+  setPosition: function (line, newPosition) {
+    line.setPosition(newPosition);
+  },
+  getItem: function (idx) {
+    return lines.value[idx];
+  },
+  setTab: function (idx, newVal) {},
+  commitChanges: function () {},
+});
+
+function reorderLines(attr) {
+  if (attr.steps) {
+    ordLines.move({
+      source: {
+        idx: attr.sourceIdx,
+      },
+      steps: attr.steps,
+    });
+  }
 }
 
 function addLine(attr) {

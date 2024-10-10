@@ -300,14 +300,21 @@ class biElmBoard extends biElement {
   constructor(rec) {
     super(rec);
     this._lines = this.initLines(rec.attr.lines);
+    this._fields = this.initFields(rec.attr.fields);
   }
 
   get fields() {
-    return this.attr.fields;
+    return this._fields;
   }
 
   get lines() {
     return this._lines;
+  }
+
+  initFields(list) {
+    return list.map((rec) => {
+      return new biBoardField(rec, this);
+    });
   }
 
   initLines(list) {
@@ -327,18 +334,67 @@ class biElmBoard extends biElement {
     const obj = await sendToServer(data);
     this._lines.push(new biBoardLine(obj.data, this));
   }
+}
 
-  // setFieldPosition(attr) {
-  //   let fld = this.fields.find(function (fld1) {
-  //     return fld1.id == attr.id;
-  //   });
+class biBoardField {
+  constructor(rec, board) {
+    this._id = rec.id;
+    this._position = rec.position;
+    this._board = board;
+    this._title = rec.title;
+    this._type = rec.type;
+    this._text = rec.text;
+    this._widthPct = rec.width_pct;
+  }
 
-  //   fld.position = attr.newPos;
-  // }
+  get id() {
+    return this._id;
+  }
 
-  async setField(attr) {
+  get position() {
+    return this._position;
+  }
+
+  get title() {
+    return this._title;
+  }
+
+  get type() {
+    return this._type;
+  }
+
+  get text() {
+    return this._text;
+  }
+
+  get widthPct() {
+    return this._widthPct;
+  }
+
+  get proj() {
+    return this._board.proj;
+  }
+
+  get elm() {
+    return this._board.id;
+  }
+
+  get dbId() {
+    return {
+      proj: this.proj,
+      elm: this.elm,
+      field: this.id,
+    };
+  }
+
+  setPosition(position) {
+    this._position = position;
+    this.changeAttr({ position });
+  }
+
+  async changeAttr(attr) {
     const data = {
-      type: "set_field",
+      type: "brd_field",
       oper: "set",
       id: this.dbId,
       prop: attr,
@@ -409,8 +465,12 @@ class biBoardLine {
   }
 
   delete() {
-    this._position = 0;
-    this.changeAttr({ position: 0 });
+    this.setPosition(0);
+  }
+
+  setPosition(position) {
+    this._position = position;
+    this.changeAttr({ position });
   }
 
   async changeAttr(attr) {

@@ -58,6 +58,7 @@ const emit = defineEmits([
   "reorderFields",
   "addLine",
   "deleteLine",
+  "reorderLines",
 ]);
 
 provide("tableProps", props);
@@ -97,7 +98,7 @@ const sortedLines = computed(function () {
   // create array
   // const arr = props.lines.slice();
   const arr = props.lines.filter(function (line) {
-    return line.position > 0 || typeof line.position == 'undefined';
+    return line.position > 0 || typeof line.position == "undefined";
   });
 
   // add new line
@@ -200,16 +201,16 @@ function leaveTable() {
   focusTrIdx.value = -2;
 }
 
-const focusLine = computed(function(){
+const focusLine = computed(function () {
   return sortedLines.value[focusTrIdx.value];
 });
-const focusNextLine = computed(function(){
+const focusNextLine = computed(function () {
   return sortedLines.value[focusTrIdx.value + 1];
 });
-const focusPosition = computed(function(){
+const focusPosition = computed(function () {
   return focusLine.value.position;
 });
-const focusNextPosition = computed(function(){
+const focusNextPosition = computed(function () {
   return focusNextLine.value.position;
 });
 
@@ -238,9 +239,9 @@ function deleteLine() {
   emit("deleteLine", focusLine.value);
 }
 
-function moveLine(steps){
-  console.log('moveLine',steps,focusLine.value);
-
+function moveLine(steps) {
+  emit("reorderLines", { sourceIdx: focusTrIdx.value, steps });
+  console.log("moveLine", steps, focusLine.value);
 }
 
 defineExpose({ selectedLines });
