@@ -59,6 +59,7 @@ const emit = defineEmits([
   "addLine",
   "deleteLine",
   "reorderLines",
+  "sortLines",
 ]);
 
 provide("tableProps", props);
@@ -125,7 +126,6 @@ const sortedLines = computed(function () {
 
     // if there is a method 'sortKey'
     if (a.sortKey) {
-      console.log("sortKey", a.sortKey(props.sortField));
       return (props.ascending &&
         a.sortKey(props.sortField) > b.sortKey(props.sortField)) ||
         (!props.ascending &&

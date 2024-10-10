@@ -334,6 +334,29 @@ class biElmBoard extends biElement {
     const obj = await sendToServer(data);
     this._lines.push(new biBoardLine(obj.data, this));
   }
+
+  sortLines(attr) {
+    // filter out deleted lines
+    const arr = this._lines.filter(function (line) {
+      return line.position > 0;
+    });
+
+    //sort
+    arr.sort(function (a, b) {
+      return (attr.ascending &&
+        a.sortKey(attr.fldId) > b.sortKey(attr.fldId)) ||
+        (!attr.ascending && a.sortKey(attr.fldId) < b.sortKey(attr.fldId))
+        ? 1
+        : -1;
+    });
+
+    arr.forEach((line, idx) => {
+      line.setPosition(idx + 1);
+    });
+
+    // save filtered array (optional)
+    this._lines = arr;
+  }
 }
 
 class biBoardField {
@@ -437,7 +460,11 @@ class biBoardLine {
   }
 
   sortKey(fldId) {
-    return this.content(fldId).sortKey;
+    const cnt = this.content(fldId);
+    if (cnt) {
+      return cnt.sortKey;
+    }
+    return "";
   }
 
   content(fldId) {

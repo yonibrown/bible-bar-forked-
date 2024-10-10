@@ -17,6 +17,7 @@
     @addLine="addLine"
     @deleteLine="deleteLine"
     @reorderLines="reorderLines"
+    @sortLines="sortLines"
   >
   </spec-table>
 </template>
@@ -138,5 +139,10 @@ function addLine(attr) {
 
 function deleteLine(line) {
   line.delete();
+}
+
+function sortLines(attr) {
+  console.log("sort", attr);
+  element.value.sortLines(attr);
 }
 </script>
