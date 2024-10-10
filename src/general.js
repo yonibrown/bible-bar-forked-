@@ -65,8 +65,8 @@ export class ordering {
         idx: attr.source.idx + attr.steps,
       };
     }
-    const sourceElmPos = this._getPosition(attr.source.idx);
-    const targetElmPos = this._getPosition(attr.target.idx);
+    const sourceItemPos = this._getPosition(attr.source.idx);
+    const targetItemPos = this._getPosition(attr.target.idx);
 
     if (attr.target.tab == attr.source.tab) {
       // same tab
@@ -78,8 +78,8 @@ export class ordering {
       if (Math.abs(attr.target.idx - attr.source.idx) == 1) {
         // switch following items
         this.setPosition([
-          { idx: attr.source.idx, newVal: targetElmPos },
-          { idx: attr.target.idx, newVal: sourceElmPos },
+          { idx: attr.source.idx, newVal: targetItemPos },
+          { idx: attr.target.idx, newVal: sourceItemPos },
         ]);
         this._commitChanges();
         return;
@@ -107,20 +107,23 @@ export class ordering {
     if (this._getSize() == 0) {
       return 1;
     }
-    const elmPos = this._getPosition(idx);
-    var prevElmPos = 0;
-    if (idx > 0) {
-      prevElmPos = this._getPosition(idx - 1);
+    if (idx == this._getSize()) {
+      return this.nextPos(idx - 1);
     }
-    return (elmPos - prevElmPos) / 2 + prevElmPos;
+    const itemPos = this._getPosition(idx);
+    var prevItemPos = 0;
+    if (idx > 0) {
+      prevItemPos = this._getPosition(idx - 1);
+    }
+    return (itemPos - prevItemPos) / 2 + prevItemPos;
   }
 
   nextPos(idx) {
-    const elmPos = this._getPosition(idx);
-    var nextElmPos = elmPos + 2;
+    const itemPos = this._getPosition(idx);
+    var nextItemPos = itemPos + 2;
     if (idx < this._getSize() - 1) {
-      nextElmPos = this._getPosition(idx + 1);
+      nextItemPos = this._getPosition(idx + 1);
     }
-    return (nextElmPos - elmPos) / 2 + elmPos;
+    return (nextItemPos - itemPos) / 2 + itemPos;
   }
 }

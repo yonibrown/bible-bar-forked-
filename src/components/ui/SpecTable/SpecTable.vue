@@ -204,34 +204,35 @@ function leaveTable() {
 const focusLine = computed(function () {
   return sortedLines.value[focusTrIdx.value];
 });
-const focusNextLine = computed(function () {
-  return sortedLines.value[focusTrIdx.value + 1];
-});
-const focusPosition = computed(function () {
-  return focusLine.value.position;
-});
-const focusNextPosition = computed(function () {
-  return focusNextLine.value.position;
-});
+// const focusNextLine = computed(function () {
+//   return sortedLines.value[focusTrIdx.value + 1];
+// });
+// const focusPosition = computed(function () {
+//   return focusLine.value.position;
+// });
+// const focusNextPosition = computed(function () {
+//   return focusNextLine.value.position;
+// });
 
 function openNewLine() {
-  let afterPosition = 0;
-  if (focusTrIdx.value >= 0) {
-    afterPosition = focusPosition.value;
-  }
-
-  let newPosition = afterPosition;
-  if (focusTrIdx.value == sortedLines.value.length - 1) {
-    newPosition += 1;
-  } else {
-    let gap = focusNextPosition.value - afterPosition;
-    newPosition += 0.5 * gap;
-  }
-
   if (props.storeLineWhenAdded) {
-    emit("addLine", { position: newPosition });
-  } else {
-    newLinePosition.value = newPosition;
+    emit("addLine", { idx: focusTrIdx.value + 1 });
+    // emit("addLine", { position: newPosition });
+    // } else {
+    //   let afterPosition = 0;
+    //   if (focusTrIdx.value >= 0) {
+    //     afterPosition = focusPosition.value;
+    //   }
+
+    //   let newPosition = afterPosition;
+    //   if (focusTrIdx.value == sortedLines.value.length - 1) {
+    //     newPosition += 1;
+    //   } else {
+    //     let gap = focusNextPosition.value - afterPosition;
+    //     newPosition += 0.5 * gap;
+    //   }
+
+    //   newLinePosition.value = newPosition;
   }
 }
 
@@ -241,7 +242,6 @@ function deleteLine() {
 
 function moveLine(steps) {
   emit("reorderLines", { sourceIdx: focusTrIdx.value, steps });
-  console.log("moveLine", steps, focusLine.value);
 }
 
 defineExpose({ selectedLines });

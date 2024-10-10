@@ -52,6 +52,8 @@ const tableFields = computed(function () {
 });
 
 const lines = computed(function () {
+  console.log(element.value.lines);
+
   return element.value.lines;
 });
 
@@ -125,9 +127,13 @@ function reorderLines(attr) {
 
 function addLine(attr) {
   element.value.addLine({
-    ...attr,
+    position: ordLines.prevPos(attr.idx),
     content: [],
   });
+  // element.value.addLine({
+  //   ...attr,
+  //   content: [],
+  // });
 }
 
 function deleteLine(line) {
