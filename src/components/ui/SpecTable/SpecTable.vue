@@ -58,6 +58,8 @@ const emit = defineEmits([
   "reorderFields",
   "addLine",
   "deleteLine",
+  "reorderLines",
+  "sortLines",
 ]);
 
 provide("tableProps", props);
@@ -97,7 +99,7 @@ const sortedLines = computed(function () {
   // create array
   // const arr = props.lines.slice();
   const arr = props.lines.filter(function (line) {
-    return line.position > 0 || typeof line.position == 'undefined';
+    return line.position > 0 || typeof line.position == "undefined";
   });
 
   // add new line
@@ -124,7 +126,6 @@ const sortedLines = computed(function () {
 
     // if there is a method 'sortKey'
     if (a.sortKey) {
-      console.log("sortKey", a.sortKey(props.sortField));
       return (props.ascending &&
         a.sortKey(props.sortField) > b.sortKey(props.sortField)) ||
         (!props.ascending &&
@@ -200,37 +201,38 @@ function leaveTable() {
   focusTrIdx.value = -2;
 }
 
-const focusLine = computed(function(){
+const focusLine = computed(function () {
   return sortedLines.value[focusTrIdx.value];
 });
-const focusNextLine = computed(function(){
-  return sortedLines.value[focusTrIdx.value + 1];
-});
-const focusPosition = computed(function(){
-  return focusLine.value.position;
-});
-const focusNextPosition = computed(function(){
-  return focusNextLine.value.position;
-});
+// const focusNextLine = computed(function () {
+//   return sortedLines.value[focusTrIdx.value + 1];
+// });
+// const focusPosition = computed(function () {
+//   return focusLine.value.position;
+// });
+// const focusNextPosition = computed(function () {
+//   return focusNextLine.value.position;
+// });
 
 function openNewLine() {
-  let afterPosition = 0;
-  if (focusTrIdx.value >= 0) {
-    afterPosition = focusPosition.value;
-  }
-
-  let newPosition = afterPosition;
-  if (focusTrIdx.value == sortedLines.value.length - 1) {
-    newPosition += 1;
-  } else {
-    let gap = focusNextPosition.value - afterPosition;
-    newPosition += 0.5 * gap;
-  }
-
   if (props.storeLineWhenAdded) {
-    emit("addLine", { position: newPosition });
-  } else {
-    newLinePosition.value = newPosition;
+    emit("addLine", { idx: focusTrIdx.value + 1 });
+    // emit("addLine", { position: newPosition });
+    // } else {
+    //   let afterPosition = 0;
+    //   if (focusTrIdx.value >= 0) {
+    //     afterPosition = focusPosition.value;
+    //   }
+
+    //   let newPosition = afterPosition;
+    //   if (focusTrIdx.value == sortedLines.value.length - 1) {
+    //     newPosition += 1;
+    //   } else {
+    //     let gap = focusNextPosition.value - afterPosition;
+    //     newPosition += 0.5 * gap;
+    //   }
+
+    //   newLinePosition.value = newPosition;
   }
 }
 
@@ -238,9 +240,8 @@ function deleteLine() {
   emit("deleteLine", focusLine.value);
 }
 
-function moveLine(steps){
-  console.log('moveLine',steps,focusLine.value);
-
+function moveLine(steps) {
+  emit("reorderLines", { sourceIdx: focusTrIdx.value, steps });
 }
 
 defineExpose({ selectedLines });

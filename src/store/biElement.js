@@ -300,14 +300,21 @@ class biElmBoard extends biElement {
   constructor(rec) {
     super(rec);
     this._lines = this.initLines(rec.attr.lines);
+    this._fields = this.initFields(rec.attr.fields);
   }
 
   get fields() {
-    return this.attr.fields;
+    return this._fields;
   }
 
   get lines() {
     return this._lines;
+  }
+
+  initFields(list) {
+    return list.map((rec) => {
+      return new biBoardField(rec, this);
+    });
   }
 
   initLines(list) {
@@ -328,17 +335,89 @@ class biElmBoard extends biElement {
     this._lines.push(new biBoardLine(obj.data, this));
   }
 
-  // setFieldPosition(attr) {
-  //   let fld = this.fields.find(function (fld1) {
-  //     return fld1.id == attr.id;
-  //   });
+  sortLines(attr) {
+    // filter out deleted lines
+    const arr = this._lines.filter(function (line) {
+      return line.position > 0;
+    });
 
-  //   fld.position = attr.newPos;
-  // }
+    //sort
+    arr.sort(function (a, b) {
+      return (attr.ascending &&
+        a.sortKey(attr.fldId) > b.sortKey(attr.fldId)) ||
+        (!attr.ascending && a.sortKey(attr.fldId) < b.sortKey(attr.fldId))
+        ? 1
+        : -1;
+    });
 
-  async setField(attr) {
+    arr.forEach((line, idx) => {
+      line.setPosition(idx + 1);
+    });
+
+    // save filtered array (optional)
+    this._lines = arr;
+  }
+}
+
+class biBoardField {
+  constructor(rec, board) {
+    this._id = rec.id;
+    this._position = rec.position;
+    this._board = board;
+    this._title = rec.title;
+    this._type = rec.type;
+    this._text = rec.text;
+    this._widthPct = rec.width_pct;
+  }
+
+  get id() {
+    return this._id;
+  }
+
+  get position() {
+    return this._position;
+  }
+
+  get title() {
+    return this._title;
+  }
+
+  get type() {
+    return this._type;
+  }
+
+  get text() {
+    return this._text;
+  }
+
+  get widthPct() {
+    return this._widthPct;
+  }
+
+  get proj() {
+    return this._board.proj;
+  }
+
+  get elm() {
+    return this._board.id;
+  }
+
+  get dbId() {
+    return {
+      proj: this.proj,
+      elm: this.elm,
+      field: this.id,
+    };
+  }
+
+  setPosition(position) {
+    this._position = position;
+    this.changeAttr({ position });
+  }
+
+  async changeAttr(attr) {
     const data = {
-      type: "set_field",
+      type: "brd_field",
       oper: "set",
       id: this.dbId,
       prop: attr,
@@ -381,7 +460,11 @@ class biBoardLine {
   }
 
   sortKey(fldId) {
-    return this.content(fldId).sortKey;
+    const cnt = this.content(fldId);
+    if (cnt) {
+      return cnt.sortKey;
+    }
+    return "";
   }
 
   content(fldId) {
@@ -409,8 +492,12 @@ class biBoardLine {
   }
 
   delete() {
-    this._position = 0;
-    this.changeAttr({ position: 0 });
+    this.setPosition(0);
+  }
+
+  setPosition(position) {
+    this._position = position;
+    this.changeAttr({ position });
   }
 
   async changeAttr(attr) {
