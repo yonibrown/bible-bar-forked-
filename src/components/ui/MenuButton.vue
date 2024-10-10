@@ -5,7 +5,7 @@
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["type","chosen"]);
+const props = defineProps(["type", "chosen"]);
 
 const faClass = computed(function () {
   switch (props.type) {
@@ -29,6 +29,12 @@ const faClass = computed(function () {
       return "fa-arrow-left";
     case "moveright":
       return "fa-arrow-right";
+    case "moveup":
+      return "fa-arrow-up";
+    case "movedown":
+      return "fa-arrow-down";
+    case "hold":
+      return "fa-arrows";
     default:
       return null;
   }
@@ -44,7 +50,8 @@ div {
   padding: 4px;
   position: relative;
 }
-div:hover,div[chosen='true'] {
+div:hover,
+div[chosen="true"] {
   color: black;
   background-color: rgb(223, 228, 235);
 }

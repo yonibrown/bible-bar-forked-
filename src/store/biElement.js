@@ -325,7 +325,7 @@ class biElmBoard extends biElement {
     };
 
     const obj = await sendToServer(data);
-    this._lines.push(new biBoardLine(obj.rec, this));
+    this._lines.push(new biBoardLine(obj.data, this));
   }
 
   // setFieldPosition(attr) {
@@ -338,8 +338,8 @@ class biElmBoard extends biElement {
 
   async setField(attr) {
     const data = {
-      type: "element",
-      oper: "set_field",
+      type: "set_field",
+      oper: "set",
       id: this.dbId,
       prop: attr,
     };

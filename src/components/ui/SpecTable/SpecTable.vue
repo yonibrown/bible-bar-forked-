@@ -23,11 +23,13 @@
       <span>בחר הכל</span>
     </span>
     <row-menu
-      v-show="enableSelection && chosenTrIdx > -2"
-      :offset="chosenTrOffset"
-      :lineIdx="chosenTrIdx"
+      v-show="enableSelection && focusTrIdx > -2"
+      :offset="focusTrOffset"
+      :lineIdx="focusTrIdx"
       @openNewLine="openNewLine"
       @deleteLine="deleteLine"
+      @moveup="moveLine(-1)"
+      @movedown="moveLine(1)"
     ></row-menu>
   </div>
 </template>
@@ -55,6 +57,7 @@ const emit = defineEmits([
   "resizeField",
   "reorderFields",
   "addLine",
+  "deleteLine",
 ]);
 
 provide("tableProps", props);
@@ -64,14 +67,21 @@ provide(
   "tableFields",
   computed(function () {
     return props.tableFields;
-  }),
+  })
 );
 
 provide(
   "enableSelection",
   computed(function () {
     return props.enableSelection;
-  }),
+  })
+);
+
+provide(
+  "linesLength",
+  computed(function () {
+    return linesRef.value.length;
+  })
 );
 
 const linesRef = ref([]);
@@ -79,21 +89,15 @@ const table = ref();
 const header = ref();
 
 const newLinePosition = ref(0);
-const newLine = computed(function () {
-  return [];
-});
-const lineList = computed(function () {
-  return props.lines;
-});
 const sortedLines = computed(function () {
-  if (!lineList.value) {
+  if (!props.lines) {
     return [];
   }
 
   // create array
-  // const arr = lineList.value.slice();
-  const arr = lineList.value.filter(function (line) {
-    return line.position > 0;
+  // const arr = props.lines.slice();
+  const arr = props.lines.filter(function (line) {
+    return line.position > 0 || typeof line.position == 'undefined';
   });
 
   // add new line
@@ -179,8 +183,8 @@ watch(checkState, function (newVal) {
   }
 });
 
-const chosenTrOffset = ref(-1);
-const chosenTrIdx = ref(-2);
+const focusTrOffset = ref(-1);
+const focusTrIdx = ref(-2);
 function enterTr(idx) {
   let trRef = null;
   if (idx == -1) {
@@ -188,25 +192,38 @@ function enterTr(idx) {
   } else {
     trRef = linesRef.value[idx];
   }
-  chosenTrOffset.value = table.value.offsetTop + trRef.tr.offsetTop;
-  chosenTrIdx.value = idx;
+  focusTrOffset.value = table.value.offsetTop + trRef.tr.offsetTop;
+  focusTrIdx.value = idx;
 }
 function leaveTable() {
-  chosenTrOffset.value = -1;
-  chosenTrIdx.value = -2;
+  focusTrOffset.value = -1;
+  focusTrIdx.value = -2;
 }
+
+const focusLine = computed(function(){
+  return sortedLines.value[focusTrIdx.value];
+});
+const focusNextLine = computed(function(){
+  return sortedLines.value[focusTrIdx.value + 1];
+});
+const focusPosition = computed(function(){
+  return focusLine.value.position;
+});
+const focusNextPosition = computed(function(){
+  return focusNextLine.value.position;
+});
 
 function openNewLine() {
   let afterPosition = 0;
-  if (chosenTrIdx.value >= 0) {
-    afterPosition = sortedLines.value[chosenTrIdx.value].position;
+  if (focusTrIdx.value >= 0) {
+    afterPosition = focusPosition.value;
   }
 
   let newPosition = afterPosition;
-  if (chosenTrIdx.value == sortedLines.value.length - 1) {
+  if (focusTrIdx.value == sortedLines.value.length - 1) {
     newPosition += 1;
   } else {
-    let gap = sortedLines.value[chosenTrIdx.value + 1].position - afterPosition;
+    let gap = focusNextPosition.value - afterPosition;
     newPosition += 0.5 * gap;
   }
 
@@ -218,7 +235,12 @@ function openNewLine() {
 }
 
 function deleteLine() {
-  emit("deleteLine", sortedLines.value[chosenTrIdx.value]);
+  emit("deleteLine", focusLine.value);
+}
+
+function moveLine(steps){
+  console.log('moveLine',steps,focusLine.value);
+
 }
 
 defineExpose({ selectedLines });

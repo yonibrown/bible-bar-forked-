@@ -53,9 +53,10 @@ export class ordering {
   constructor(attr) {
     this._getSize = attr.getSize;
     this._getPosition = attr.getPosition;
-    this._setPosition = attr.setPosition;
     this._setTab = attr.setTab;
-    this._saveElmList = attr.saveElmList;
+    this._commitChanges = attr.commitChanges;
+    this._getItem = attr.getItem;
+    this._setItemPosition = attr.setItemPosition;
   }
 
   move(source, target) {
@@ -71,18 +72,28 @@ export class ordering {
 
       if (Math.abs(target.idx - source.idx) == 1) {
         // switch following items
-        this._setPosition([
+        this.setPosition([
           { idx: source.idx, newVal: targetElmPos },
           { idx: target.idx, newVal: sourceElmPos },
         ]);
-        this._saveElmList();
+        this._commitChanges();
         return;
       }
     }
 
-    this._setPosition([{ idx: source.idx, newVal: this.prevPos(target.idx) }]);
+    this.setPosition([{ idx: source.idx, newVal: this.prevPos(target.idx) }]);
     this._setTab(source.idx, target.tab);
-    this._saveElmList();
+    this._commitChanges();
+  }
+
+  setPosition(parms) {
+    let act = [];
+    parms.forEach(function ({ idx, newVal }) {
+      act.push({ item: this._getItem(idx), newVal });
+    });
+    act.forEach(function ({ item, newVal }) {
+      this._setItemPosition(item, newVal);
+    });
   }
 
   prevPos(idx) {
