@@ -335,6 +335,18 @@ class biElmBoard extends biElement {
     this._lines.push(new biBoardLine(obj.data, this));
   }
 
+  async addField(attr) {
+    const data = {
+      type: "board",
+      oper: "add_field",
+      id: this.dbId,
+      prop: attr,
+    };
+
+    const obj = await sendToServer(data);
+    this._fields.push(new biBoardField(obj.data, this));
+  }
+
   sortLines(attr) {
     // filter out deleted lines
     const arr = this._lines.filter(function (line) {

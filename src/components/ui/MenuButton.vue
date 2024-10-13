@@ -1,11 +1,16 @@
 <template>
-  <div class="fa" :class="faClass" :chosen="chosen"></div>
+  <div
+    class="fa"
+    :class="faClass"
+    :chosen="chosen"
+    v-tooltip.top="tooltip"
+  ></div>
 </template>
 
 <script setup>
 import { computed } from "vue";
 
-const props = defineProps(["type", "chosen"]);
+const props = defineProps(["type", "chosen", "tooltip"]);
 
 const faClass = computed(function () {
   switch (props.type) {
@@ -33,8 +38,10 @@ const faClass = computed(function () {
       return "fa-arrow-up";
     case "movedown":
       return "fa-arrow-down";
-    case "sortasc":
+    case "sort-asc":
       return "fa-arrow-up";
+    case "sort-desc":
+      return "fa-arrow-down";
     case "sortdesc":
       return "fa-arrow-down";
     default:

@@ -17,16 +17,20 @@
           </column-sortable-head>
           <span class="menu-buttons" v-show="enableSelection">
             <menu-button
-              type="sortasc"
+              type="sort-asc"
               @click="
                 tableEmit('sortLines', { fldId: fld.id, ascending: true })
               "
             ></menu-button>
             <menu-button
-              type="sortdesc"
+              type="sort-desc"
               @click="
                 tableEmit('sortLines', { fldId: fld.id, ascending: false })
               "
+            ></menu-button>
+            <menu-button
+              type="add"
+              @click="tableEmit('addField', { idx: fldidx })"
             ></menu-button>
           </span>
         </column-resizer>
