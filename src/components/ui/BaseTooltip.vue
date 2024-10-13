@@ -1,7 +1,21 @@
 <template>
-  <span class="element" @mouseover="enterElement" @mouseleave="leaveElement">
+  <span
+    ref="elm"
+    class="element"
+    @mouseover="enterElement"
+    @mouseleave="leaveElement"
+  >
     <slot></slot>
-    <span class="tooltip" v-show="hoverElement">{{ text }}</span>
+    <Teleport to="body">
+      <div
+        ref="tooltip"
+        class="tooltip"
+        v-show="hoverElement"
+        :style="tooltipStyle"
+      >
+        {{ text }}
+      </div>
+    </Teleport>
   </span>
 </template>
 
@@ -10,29 +24,36 @@ import { ref } from "vue";
 
 const props = defineProps(["text"]);
 
+const elm = ref();
+const tooltip = ref();
+
+const tooltipStyle = ref();
+
 const hoverElement = ref(false);
 function enterElement() {
-  console.log("enter element");
+  const rectElm = elm.value.getBoundingClientRect();
+  const rectTlp = tooltip.value.getBoundingClientRect();
+  tooltipStyle.value = {
+    top: rectElm.y - 35 + "px",
+    left: rectElm.x + rectElm.width / 2 - rectTlp.width / 2 + "px",
+  };
   hoverElement.value = true;
 }
 function leaveElement() {
-  console.log("leave element");
-  hoverElement.value = false;
+  // hoverElement.value = false;
 }
 </script>
 
 <style scoped>
 .tooltip {
-  width: 120px;
   background-color: #555;
   color: #fff;
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
+  padding: 3px 10px;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
-  left: 50%;
+  /* width: 120px; */
   margin-left: -60px;
   opacity: 1;
   transition: opacity 0.3s;

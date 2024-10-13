@@ -60,7 +60,7 @@ var fromDiv = null;
 var toDiv = null;
 
 function updateVerse(rangeEnd, newVal) {
-  console.log(props.part);
+  // console.log(props.part);
   var updAttr = {};
   if (rangeEnd == "from" || displayOneVerse.value) {
     updAttr.src_from_div = newVal.div;

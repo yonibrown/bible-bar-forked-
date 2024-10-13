@@ -37,9 +37,9 @@ function defaultName() {
 }
 
 function addTab() {
-  console.log("project", project.value);
+  // console.log("project", project.value);
   project.value.addTab();
-  console.log("tabs", project.value._tabs);
+  // console.log("tabs", project.value._tabs);
 }
 </script>
 

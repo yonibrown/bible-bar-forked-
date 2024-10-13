@@ -18,6 +18,7 @@
     @deleteLine="deleteLine"
     @reorderLines="reorderLines"
     @sortLines="sortLines"
+    @addField="addField"
   >
   </spec-table>
 </template>
@@ -33,6 +34,8 @@ const editMode = inject("editMode");
 const sortField = ref(-1);
 const ascending = ref(true);
 
+// fields
+// --------------------------
 const boardFields = computed(function () {
   return element.value.fields.sort(function (a, b) {
     return a.position - b.position;
@@ -50,12 +53,6 @@ const tableFields = computed(function () {
       widthPct: fld.widthPct,
     };
   });
-});
-
-const lines = computed(function () {
-  console.log(element.value.lines);
-
-  return element.value.lines;
 });
 
 const ordFields = new ordering({
@@ -98,6 +95,18 @@ function reorderFields(attr) {
   });
 }
 
+function addField(attr) {
+  element.value.addField({
+    position: ordFields.prevPos(attr.idx),
+  });
+}
+
+// lines
+// -------------------
+const lines = computed(function () {
+  return element.value.lines;
+});
+
 const ordLines = new ordering({
   getSize: function () {
     return lines.value.length;
@@ -131,10 +140,6 @@ function addLine(attr) {
     position: ordLines.prevPos(attr.idx),
     content: [],
   });
-  // element.value.addLine({
-  //   ...attr,
-  //   content: [],
-  // });
 }
 
 function deleteLine(line) {
@@ -142,7 +147,6 @@ function deleteLine(line) {
 }
 
 function sortLines(attr) {
-  console.log("sort", attr);
   element.value.sortLines(attr);
 }
 </script>

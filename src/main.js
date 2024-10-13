@@ -5,6 +5,7 @@ import App from './App.vue';
 
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/aura-light-green/theme.css';
+import Tooltip from 'primevue/tooltip';
 
 import BaseCard from './components/ui/BaseCard.vue';
 import BaseEditable from './components/ui/BaseEditable.vue';
@@ -33,6 +34,8 @@ const app = createApp(App)
 
 app.use(router);
 app.use(PrimeVue);
+
+app.directive('tooltip', Tooltip);
 
 app.component('base-card', BaseCard);
 app.component('base-editable', BaseEditable);
