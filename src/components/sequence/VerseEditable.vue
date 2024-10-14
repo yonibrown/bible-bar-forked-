@@ -78,21 +78,22 @@ function leaveEdit() {
   editing.value = false;
 }
 
-function inputFocusout(evt) {
-  if (!evt.relatedTarget) {
-    leaveEdit();
-  }
-}
+// function inputFocusout(evt) {
+//   if (!evt.relatedTarget) {
+//     leaveEdit();
+//   }
+// }
 
-function inputKeydown(evt) {
-  if (evt.keyCode == 27) {
-    leaveEdit();
-  }
-}
+// function inputKeydown(evt) {
+//   if (evt.keyCode == 27) {
+//     leaveEdit();
+//   }
+// }
 
 function updateDiv(newVal) {
   hasChanges.value = true;
-  changedAttr['div'] = newVal;
+  changedAttr["div"] = newVal.id;
+  changedAttr["name"] = newVal.name;
 
   // if ((attr = "from_div")) {
   //   if (getSeqDiv("to") < newVal) {
@@ -101,6 +102,17 @@ function updateDiv(newVal) {
   //   }
   // }
 }
+
+watch(
+  computed(function () {
+    return props.disabled;
+  }),
+  function (newVal) {
+    if (newVal) {
+      editing.value = false;
+    }
+  }
+);
 </script>
 
 <style scoped>

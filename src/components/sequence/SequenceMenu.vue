@@ -13,14 +13,14 @@
       <span>מ-</span>
       <sequence-key
         :initialValue="initialFromKey"
-        @changeValue="(newVal) => updateAttr('from_div', newVal)"
+        @changeValue="(newVal) => updateAttr('from_div', newVal.id)"
         defaultValue="min"
         ref="fromRef"
       ></sequence-key>
       <span>עד</span>
       <sequence-key
         :initialValue="initialToKey"
-        @changeValue="(newVal) => updateAttr('to_div', newVal)"
+        @changeValue="(newVal) => updateAttr('to_div', newVal.id)"
         defaultValue="max"
         ref="toRef"
       ></sequence-key>

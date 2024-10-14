@@ -6,6 +6,7 @@
     <template #src>
       <verse-range
         :part="line"
+        :editable="enableSelection"
         @changeValue="(newVal) => updateRange(line, newVal)"
       ></verse-range>
     </template>

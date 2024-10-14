@@ -299,8 +299,8 @@ class biElmLink extends biElement {
 class biElmBoard extends biElement {
   constructor(rec) {
     super(rec);
-    this._lines = this.initLines(rec.attr.lines);
     this._fields = this.initFields(rec.attr.fields);
+    this._lines = this.initLines(rec.attr.lines);
   }
 
   get fields() {
@@ -320,6 +320,12 @@ class biElmBoard extends biElement {
   initLines(list) {
     return list.map((rec) => {
       return new biBoardLine(rec, this);
+    });
+  }
+
+  getField(fldId) {
+    return this._fields.find(function (fld) {
+      return fld.id == fldId;
     });
   }
 
@@ -527,8 +533,24 @@ class biBoardLine {
 class biBoardContent {
   constructor(rec, line) {
     this._id = rec.field;
+
     this._text = rec.text;
+
+    this._source = {
+      src_research: +rec.src_research,
+      src_collection: +rec.src_collection,
+      src_from_position: +rec.src_from_position,
+      src_from_word: +rec.src_from_word,
+      src_to_position: +rec.src_to_position,
+      src_to_word: +rec.src_to_word,
+      src_from_name: rec.src_from_name,
+      src_to_name: rec.src_to_name,
+    };
+
     this._line = line;
+    this._type = line._board.getField(
+      rec.field
+    ).type; /* the type cannot be changed */
   }
 
   get id() {
@@ -547,12 +569,25 @@ class biBoardContent {
     return this._line.id;
   }
 
-  get text() {
+  get val() {
+    switch (this._type) {
+      case "SourceVerse":
+        return this._source;
+        return {
+          src_from_position: 1141,
+          src_to_position: 1141,
+          src_research: 1,
+          src_collection: 1,
+          src_from_name: "בראשית לח כא",
+          src_to_name: "שמות ב יב",
+        };
+    }
+    // default (this.type == 'FreeText')
     return this._text;
   }
 
   get sortKey() {
-    return this.text;
+    return this.val;
   }
 
   get dbId() {

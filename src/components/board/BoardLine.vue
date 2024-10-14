@@ -1,13 +1,17 @@
 <template>
   <spec-line>
-    <template #text="{ id }">
-      <board-content :line="line" :fldId="id"></board-content>
+    <template #FreeText="{ id }">
+      <free-text :line="line" :fldId="id"></free-text>
+    </template>
+    <template #SourceVerse="{ id }">
+      <source-verse :line="line" :fldId="id"></source-verse>
     </template>
   </spec-line>
 </template>
 
 <script setup>
-import BoardContent from "./BoardContent.vue";
+import FreeText from "./FreeText.vue";
+import SourceVerse from "./SourceVerse.vue";
 
 const props = defineProps(["line"]);
 </script>
