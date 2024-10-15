@@ -536,16 +536,25 @@ class biBoardContent {
 
     this._text = rec.text;
 
-    this._source = {
-      src_research: +rec.src_research,
-      src_collection: +rec.src_collection,
-      src_from_position: +rec.src_from_position,
-      src_from_word: +rec.src_from_word,
-      src_to_position: +rec.src_to_position,
-      src_to_word: +rec.src_to_word,
-      src_from_name: rec.src_from_name,
-      src_to_name: rec.src_to_name,
-    };
+    this._src_research = +rec.src_research;
+    this._src_collection = +rec.src_collection;
+    this._src_from_division = +rec.src_from_division;
+    this._src_from_word = +rec.src_from_word;
+    this._src_from_name = rec.src_from_name;
+    this._src_to_division = +rec.src_to_division;
+    this._src_to_word = +rec.src_to_word;
+    this._src_to_name = rec.src_to_name;
+
+    // this._source = {
+    //   src_research: +rec.src_research,
+    //   src_collection: +rec.src_collection,
+    //   src_from_division: +rec.src_from_division,
+    //   src_from_word: +rec.src_from_word,
+    //   src_from_name: rec.src_from_name,
+    //   src_to_division: +rec.src_to_division,
+    //   src_to_word: +rec.src_to_word,
+    //   src_to_name: rec.src_to_name,
+    // };
 
     this._line = line;
     this._type = line._board.getField(
@@ -572,14 +581,15 @@ class biBoardContent {
   get val() {
     switch (this._type) {
       case "SourceVerse":
-        return this._source;
         return {
-          src_from_position: 1141,
-          src_to_position: 1141,
-          src_research: 1,
-          src_collection: 1,
-          src_from_name: "בראשית לח כא",
-          src_to_name: "שמות ב יב",
+          src_research: this._src_research,
+          src_collection: this._src_collection,
+          src_from_division: this._src_from_division,
+          src_from_word: this._src_from_word,
+          src_from_name: this._src_from_name,
+          src_to_division: this._src_to_division,
+          src_to_word: this._src_to_word,
+          src_to_name: this._src_to_name,
         };
     }
     // default (this.type == 'FreeText')
@@ -602,6 +612,24 @@ class biBoardContent {
   async changeAttr(attr) {
     if (typeof attr.text != "undefined") {
       this._text = attr.text;
+    }
+    if (typeof attr.src_from_division != "undefined") {
+      this._src_from_division = attr.src_from_division;
+    }
+    if (typeof attr.src_from_word != "undefined") {
+      this._src_from_word = attr.src_from_word;
+    }
+    if (typeof attr.src_from_name != "undefined") {
+      this._src_from_name = attr.src_from_name;
+    }
+    if (typeof attr.src_to_division != "undefined") {
+      this._src_to_division = attr.src_to_division;
+    }
+    if (typeof attr.src_to_word != "undefined") {
+      this._src_to_word = attr.src_to_word;
+    }
+    if (typeof attr.src_to_name != "undefined") {
+      this._src_to_name = attr.src_to_name;
     }
     const data = {
       type: "brd_content",

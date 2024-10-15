@@ -1,8 +1,9 @@
 <template>
   <verse-editable
-    :initial-value="fromVerse"
+    :initialValue="fromVerse"
     placeholder="בחר פסוק..."
     :initPosition="part.src_from_position"
+    :initDivision="part.src_from_division"
     :disabled="!editable"
     @submitValue="(attr) => updateVerse('from', attr)"
   ></verse-editable>
@@ -14,9 +15,10 @@
   <span v-else>
     -
     <verse-editable
-      :initial-value="toVerse"
+      :initialValue="toVerse"
       placeholder="בחר פסוק..."
       :initPosition="part.src_to_position"
+      :initDivision="part.src_to_division"
       :disabled="!editable"
       @submitValue="(attr) => updateVerse('to', attr)"
     ></verse-editable>
@@ -27,7 +29,7 @@
 import VerseEditable from "./VerseEditable.vue";
 import { computed, provide, ref } from "vue";
 
-const props = defineProps(["part","editable"]);
+const props = defineProps(["part", "editable"]);
 const emit = defineEmits(["changeValue"]);
 
 const seqIndex = computed(function () {
@@ -40,7 +42,9 @@ const seqIndex = computed(function () {
 provide("seqIndex", seqIndex);
 
 const displayOneVerse = ref(
-  props.part.src_from_position == props.part.src_to_position
+  props.part.src_from_division
+    ? props.part.src_from_division == props.part.src_to_division
+    : props.part.src_from_position == props.part.src_to_position
 );
 function displayRange() {
   displayOneVerse.value = false;
@@ -60,13 +64,13 @@ var toDiv = null;
 function updateVerse(rangeSide, newVal) {
   var updAttr = {};
   if (rangeSide == "from" || displayOneVerse.value) {
-    updAttr.src_from_div = newVal.div;
+    updAttr.src_from_division = newVal.div;
     updAttr.src_from_name = newVal.name;
     updAttr.src_from_word = 0;
     fromDiv = newVal.div;
   }
   if (rangeSide == "to" || displayOneVerse.value) {
-    updAttr.src_to_div = newVal.div;
+    updAttr.src_to_division = newVal.div;
     updAttr.src_to_name = newVal.name;
     updAttr.src_to_word = 999;
     toDiv = newVal.div;

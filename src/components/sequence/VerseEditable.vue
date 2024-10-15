@@ -31,6 +31,7 @@ const props = defineProps([
   "placeholder",
   "blankable",
   "initPosition",
+  "initDivision",
 ]);
 const emit = defineEmits(["submitValue"]);
 
@@ -67,9 +68,13 @@ function submitValue() {
 
 async function startEdit() {
   if (!props.disabled) {
-    initialKey.value = await biResearch.loadKey(seqIndex.value, {
-      position: props.initPosition,
-    });
+    let indexParm = null;
+    if (props.initDivision) {
+      indexParm = { division_id: props.initDivision };
+    } else {
+      indexParm = { position: props.initPosition };
+    }
+    initialKey.value = await biResearch.loadKey(seqIndex.value, indexParm);
     editing.value = true;
   }
 }
