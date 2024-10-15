@@ -1,7 +1,6 @@
 <template>
   <verse-range
-    v-if="fldContent"
-    :part="fldContent.val"
+    :part="part"
     :editable="editMode"
     @changeValue="(newVal) => updateRange(newVal)"
   ></verse-range>
@@ -20,7 +19,14 @@ const fldContent = computed(function () {
   }
 });
 
+const part = computed(function () {
+  if (fldContent.value) {
+    return fldContent.value.val;
+  }
+});
+
 function updateRange(newVal) {
+  console.log("updateRange", fldContent.value, newVal);
   if (fldContent.value) {
     fldContent.value.changeAttr(newVal);
   }

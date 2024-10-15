@@ -52,11 +52,20 @@ async function loadKey() {
   keyLevels.value = await biResearch.loadIndexDivisions(seqIndex.value, {
     key: selectedKey,
   });
+  console.log("keyLevels", keyLevels.value);
 }
 
 async function changeKeyLevel({ lvlIdx, div }) {
   // update div
   selectedKey[lvlIdx].division_id = div;
+
+  if (div == -1) {
+    for (let i = lvlIdx + 1; i < selectedKey.length; i++) {
+      keyLevels.value[i].divisions = [];
+    }
+    emit("changeValue", { id: div, name: '' });
+    return;
+  }
 
   // init divs in next levels
   for (let i = lvlIdx + 1; i < selectedKey.length; i++) {

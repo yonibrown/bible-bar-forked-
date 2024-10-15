@@ -4,7 +4,6 @@
       :initialValue="initialKey"
       @changeValue="updateDiv"
       defaultValue="min"
-      ref="fromRef"
     ></sequence-key>
     <button>שמור</button>
   </form>
@@ -34,6 +33,9 @@ const props = defineProps([
   "initDivision",
 ]);
 const emit = defineEmits(["submitValue"]);
+
+const defaultIndex = { res: 1, col: 1, idx: 1 };
+const defaultDivision = 972; /* Genesis,1,1 */
 
 const seqIndex = inject("seqIndex");
 
@@ -71,8 +73,10 @@ async function startEdit() {
     let indexParm = null;
     if (props.initDivision) {
       indexParm = { division_id: props.initDivision };
-    } else {
+    } else if (props.initPosition) {
       indexParm = { position: props.initPosition };
+    } else {
+      indexParm = { division_id: defaultDivision };
     }
     initialKey.value = await biResearch.loadKey(seqIndex.value, indexParm);
     editing.value = true;
@@ -83,29 +87,10 @@ function leaveEdit() {
   editing.value = false;
 }
 
-// function inputFocusout(evt) {
-//   if (!evt.relatedTarget) {
-//     leaveEdit();
-//   }
-// }
-
-// function inputKeydown(evt) {
-//   if (evt.keyCode == 27) {
-//     leaveEdit();
-//   }
-// }
-
 function updateDiv(newVal) {
   hasChanges.value = true;
   changedAttr["div"] = newVal.id;
   changedAttr["name"] = newVal.name;
-
-  // if ((attr = "from_div")) {
-  //   if (getSeqDiv("to") < newVal) {
-  //     toRef.value.updateKey(fromRef.value.getKey());
-  //     changedAttr["to_div"] = newVal;
-  //   }
-  // }
 }
 
 watch(
