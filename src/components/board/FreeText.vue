@@ -24,7 +24,7 @@ const fldContent = computed(function () {
 
 const text = computed(function () {
   if (fldContent.value) {
-    return fldContent.value.text;
+    return fldContent.value.val;
   }
   return "";
 });

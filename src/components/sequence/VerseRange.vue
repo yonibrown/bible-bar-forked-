@@ -1,13 +1,13 @@
 <template>
   <verse-editable
     :initial-value="fromVerse"
-    placeholder="פסוק"
+    placeholder="בחר פסוק..."
     :initPosition="part.src_from_position"
-    :disabled="!enableSelection"
+    :disabled="!editable"
     @submitValue="(attr) => updateVerse('from', attr)"
   ></verse-editable>
   <span v-if="displayOneVerse">
-    <button class="disp-range" v-show="enableSelection" @click="displayRange">
+    <button class="disp-range" v-show="editable" @click="displayRange">
       טווח
     </button>
   </span>
@@ -15,9 +15,9 @@
     -
     <verse-editable
       :initial-value="toVerse"
-      placeholder="פסוק"
+      placeholder="בחר פסוק..."
       :initPosition="part.src_to_position"
-      :disabled="!enableSelection"
+      :disabled="!editable"
       @submitValue="(attr) => updateVerse('to', attr)"
     ></verse-editable>
   </span>
@@ -25,12 +25,10 @@
 
 <script setup>
 import VerseEditable from "./VerseEditable.vue";
-import { inject, computed, provide, ref } from "vue";
+import { computed, provide, ref } from "vue";
 
-const props = defineProps(["part"]);
+const props = defineProps(["part","editable"]);
 const emit = defineEmits(["changeValue"]);
-
-const enableSelection = inject("enableSelection");
 
 const seqIndex = computed(function () {
   return {
@@ -59,16 +57,17 @@ const toVerse = computed(function () {
 var fromDiv = null;
 var toDiv = null;
 
-function updateVerse(rangeEnd, newVal) {
-  // console.log(props.part);
+function updateVerse(rangeSide, newVal) {
   var updAttr = {};
-  if (rangeEnd == "from" || displayOneVerse.value) {
+  if (rangeSide == "from" || displayOneVerse.value) {
     updAttr.src_from_div = newVal.div;
+    updAttr.src_from_name = newVal.name;
     updAttr.src_from_word = 0;
     fromDiv = newVal.div;
   }
-  if (rangeEnd == "to" || displayOneVerse.value) {
+  if (rangeSide == "to" || displayOneVerse.value) {
     updAttr.src_to_div = newVal.div;
+    updAttr.src_to_name = newVal.name;
     updAttr.src_to_word = 999;
     toDiv = newVal.div;
   }

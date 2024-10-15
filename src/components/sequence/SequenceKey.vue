@@ -5,7 +5,7 @@
       :key="lvlIdx"
       :keyLvl="lvl"
       :keyLvlIdx="lvlIdx"
-      :changeKeyLevel="changeKeyLevel"
+      @changeKeyLevel="changeKeyLevel"
     ></seq-key-level>
   </span>
 </template>
@@ -35,7 +35,7 @@ updateKey(initialKey.value);
 watch(initialKey, updateKey);
 
 function clear() {
-  changeKeyLevel(0, defaultDiv);
+  changeKeyLevel({ lvlIdx: 0, div: defaultDiv });
 }
 
 function updateKey(key) {
@@ -54,7 +54,7 @@ async function loadKey() {
   });
 }
 
-async function changeKeyLevel(lvlIdx, div) {
+async function changeKeyLevel({ lvlIdx, div }) {
   // update div
   selectedKey[lvlIdx].division_id = div;
 
@@ -68,17 +68,35 @@ async function changeKeyLevel(lvlIdx, div) {
     await loadKey();
   }
 
+  // update selected div
+  updateSelectedKey();
+
   // emit changes
   let selectedDiv = selectedKey[lastKeyIdx].division_id;
-  if (selectedDiv == defaultDiv) {
-    let divArr = keyLevels.value[lastKeyIdx].divisions;
-    if (selectedDiv == "0") {
-      selectedDiv = divArr[0].id;
-    } else {
-      selectedDiv = divArr[divArr.length - 1].id;
+
+  let selectedName = selectedKey
+    .map(function (lvl) {
+      return lvl.division_name;
+    })
+    .join(" ");
+
+  emit("changeValue", { id: selectedDiv, name: selectedName });
+}
+
+function updateSelectedKey() {
+  keyLevels.value.forEach(function (lvl, idx) {
+    if (selectedKey[idx].division_id == defaultDiv) {
+      if (defaultDiv == 0) {
+        selectedKey[idx].division_id = lvl.divisions[0].id;
+      } else {
+        selectedKey[idx].division_id =
+          lvl.divisions[lvl.divisions.length - 1].id;
+      }
     }
-  }
-  emit("changeValue", selectedDiv);
+    selectedKey[idx].division_name = lvl.divisions.find(function (div) {
+      return div.id == selectedKey[idx].division_id;
+    }).name;
+  });
 }
 
 function getKey() {
