@@ -2,10 +2,11 @@
   <spec-table
     :enableSelection="editMode"
     :tableFields="tableFields"
+    :randomSortAvailable="true"
     :sortField="sortField"
+    :ascending="ascending"
     @changeSortField="changeSortField"
     @resizeField="resizeField"
-    :ascending="ascending"
     @reverseTable="reverseTable"
     :lines="lines"
     lineComponent="board-line"

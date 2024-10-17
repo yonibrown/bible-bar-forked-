@@ -11,9 +11,11 @@
           @resize="(style) => resizeCell(fldidx, style)"
         >
           <column-sortable-head>
-            <column-sort :fld="fld">
-              {{ fld.title }}
-            </column-sort>
+            <column-title
+              v-if="tableProps.randomSortAvailable"
+              :fld="fld"
+            ></column-title>
+            <column-title-sort :fld="fld" v-else></column-title-sort>
           </column-sortable-head>
           <span class="menu-buttons" v-show="enableSelection">
             <menu-button
@@ -43,12 +45,14 @@
 import ColumnSortable from "./ColumnSortable.vue";
 import ColumnSortableHead from "./ColumnSortableHead.vue";
 import ColumnResizer from "./ColumnResizer.vue";
-import ColumnSort from "./ColumnSort.vue";
+import ColumnTitleSort from "./ColumnTitleSort.vue";
+import ColumnTitle from "./ColumnTitle.vue";
 import { ref, provide, inject, onMounted } from "vue";
 
 const enableSelection = inject("enableSelection");
 const tableFields = inject("tableFields");
 const tableEmit = inject("tableEmit");
+const tableProps = inject("tableProps");
 
 // store row width
 const row = ref();

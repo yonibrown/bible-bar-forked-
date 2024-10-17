@@ -44,6 +44,7 @@ const props = defineProps([
   "tableFields",
   "sortField",
   "ascending",
+  "randomSortAvailable",
   "lines",
   "lineComponent",
   "enableNewLine",
