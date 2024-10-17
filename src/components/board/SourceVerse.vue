@@ -25,18 +25,11 @@ const part = computed(function () {
   }
 });
 
-function updateRange(newVal) {
-  console.log("updateRange", fldContent.value, newVal);
+function updateRange(content) {
   if (fldContent.value) {
-    fldContent.value.changeAttr(newVal);
-  }
-}
-
-function submitText(newVal) {
-  if (fldContent.value) {
-    fldContent.value.changeAttr({ text: newVal });
+    fldContent.value.changeAttr(content);
   } else {
-    props.line.addContent({ field: props.fldId, text: newVal });
+    props.line.addContent({ field: props.fldId, content });
   }
 }
 </script>
