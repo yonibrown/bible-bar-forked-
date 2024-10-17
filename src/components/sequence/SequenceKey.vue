@@ -52,7 +52,6 @@ async function loadKey() {
   keyLevels.value = await biResearch.loadIndexDivisions(seqIndex.value, {
     key: selectedKey,
   });
-  console.log("keyLevels", keyLevels.value);
 }
 
 async function changeKeyLevel({ lvlIdx, div }) {
