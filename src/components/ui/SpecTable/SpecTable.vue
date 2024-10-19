@@ -61,6 +61,7 @@ const emit = defineEmits([
   "reorderLines",
   "sortLines",
   "changeField",
+  "changeDataType",
 ]);
 
 provide("tableProps", props);

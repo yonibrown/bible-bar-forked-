@@ -20,11 +20,14 @@
     @reorderLines="reorderLines"
     @sortLines="sortLines"
     @addField="addField"
+    @changeDataType="chooseDataType"
   >
   </spec-table>
+  <ContextMenu ref="dataTypeRef" :model="dataTypes" />
 </template>
 
 <script setup>
+import ContextMenu from 'primevue/contextmenu';
 import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
@@ -34,6 +37,7 @@ const editMode = inject("editMode");
 
 const sortField = ref(-1);
 const ascending = ref(true);
+const dataTypeRef = ref();
 
 // fields
 // --------------------------
@@ -48,6 +52,7 @@ const tableFields = computed(function () {
     return {
       id: fld.id,
       type: fld.type,
+      typeDesc: typeDesc(fld.type),
       title: fld.title,
       sortable: true,
       display: true,
@@ -55,6 +60,15 @@ const tableFields = computed(function () {
     };
   });
 });
+
+function typeDesc(type) {
+  switch (type) {
+    case "SourceVerse":
+      return "סוג עמודה: טווח פסוקים";
+    case "FreeText":
+      return "סוג עמודה: טקסט חופשי";
+  }
+}
 
 const ordFields = new ordering({
   getSize: function () {
@@ -100,6 +114,15 @@ function addField(attr) {
   element.value.addField({
     position: ordFields.prevPos(attr.idx),
   });
+}
+
+const dataTypes = ref([
+    { label: 'טקסט חופשי', icon: 'fa fa-align-right' },
+    { label: 'טווח פסוקים', icon: 'fa fa-book' }
+]);
+
+function chooseDataType(fldIdx){
+  dataTypeRef.value.show(event);
 }
 
 // lines

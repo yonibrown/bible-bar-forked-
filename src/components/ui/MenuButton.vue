@@ -3,7 +3,7 @@
     class="fa"
     :class="faClass"
     :chosen="chosen"
-    v-tooltip.top="tooltip"
+    v-tooltip.top="{ value: tooltip }"
   ></div>
 </template>
 
@@ -42,8 +42,10 @@ const faClass = computed(function () {
       return "fa-arrow-up";
     case "sort-desc":
       return "fa-arrow-down";
-    case "sortdesc":
-      return "fa-arrow-down";
+    case "SourceVerse":
+      return "fa-book";
+    case "FreeText":
+      return "fa-align-right"; /* fa-pencil  fa-quote-right fa-book fa-book-open */
     default:
       return null;
   }
