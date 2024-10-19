@@ -329,6 +329,10 @@ class biElmBoard extends biElement {
     });
   }
 
+  setField(fldId, attr) {
+    this.getField(fldId).changeAttr(attr);
+  }
+
   async addLine(attr) {
     const data = {
       type: "board",
@@ -434,6 +438,10 @@ class biBoardField {
   }
 
   async changeAttr(attr) {
+    if (typeof attr.title != "undefined") {
+      this._title = attr.title;
+    }
+
     const data = {
       type: "brd_field",
       oper: "set",

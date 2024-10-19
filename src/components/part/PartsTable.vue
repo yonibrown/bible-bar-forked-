@@ -4,7 +4,7 @@
     :tableFields="tableFields"
     :sortField="sortAttr.sort"
     @changeSortField="changeSortField"
-    @resizeField="resizeField"
+    @changeField="changeField"
     :ascending="sortAttr.ordering == 'ASC'"
     @reverseTable="reverseTable"
     :lines="filteredParts"
@@ -84,8 +84,11 @@ function changeSortField(newField) {
   changeAttr(sortAttr.value);
 }
 
-function resizeField(attr) {
-  changeAttr(attr);
+function changeField({ id, attr }) {
+  changeAttr({
+    field_id: id,
+    ...attr,
+  });
 }
 
 // load data

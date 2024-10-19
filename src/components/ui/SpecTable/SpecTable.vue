@@ -55,12 +55,12 @@ const props = defineProps([
 const emit = defineEmits([
   "reverseTable",
   "changeSortField",
-  "resizeField",
   "reorderFields",
   "addLine",
   "deleteLine",
   "reorderLines",
   "sortLines",
+  "changeField",
 ]);
 
 provide("tableProps", props);

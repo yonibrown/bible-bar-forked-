@@ -6,7 +6,7 @@
     :sortField="sortField"
     :ascending="ascending"
     @changeSortField="changeSortField"
-    @resizeField="resizeField"
+    @changeField="changeField"
     @reverseTable="reverseTable"
     :lines="lines"
     lineComponent="board-line"
@@ -81,8 +81,8 @@ function reverseTable() {
   ascending.value = !ascending.value;
 }
 
-function resizeField(attr) {
-  element.value.setField(attr);
+function changeField(attr) {
+  element.value.setField(attr.id, attr.attr);
 }
 
 function reorderFields(attr) {

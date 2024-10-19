@@ -14,8 +14,11 @@
 import { inject } from "vue";
 const props = defineProps(["fld"]);
 const enableSelection = inject("enableSelection");
+const tableEmit = inject("tableEmit");
 
-function submitTitle(title) {}
+function submitTitle(title) {
+  tableEmit("changeField", { id: props.fld.id, attr: { title } });
+}
 
 function defaultName() {
   console.log("defaultName");
