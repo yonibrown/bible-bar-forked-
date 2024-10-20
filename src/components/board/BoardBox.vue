@@ -23,11 +23,18 @@
     @changeDataType="chooseDataType"
   >
   </spec-table>
-  <ContextMenu ref="dataTypeRef" :model="dataTypes" />
+  <ContextMenu ref="dataTypeRef" :model="dataTypes">
+    <template #item="{ item }">
+      <div class="context">
+        <i class="fa" :class="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </div>
+    </template>
+  </ContextMenu>
 </template>
 
 <script setup>
-import ContextMenu from 'primevue/contextmenu';
+import ContextMenu from "primevue/contextmenu";
 import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
@@ -117,11 +124,11 @@ function addField(attr) {
 }
 
 const dataTypes = ref([
-    { label: 'טקסט חופשי', icon: 'fa fa-align-right' },
-    { label: 'טווח פסוקים', icon: 'fa fa-book' }
+  { label: "טקסט חופשי", icon: "fa fa-align-right" },
+  { label: "טווח פסוקים", icon: "fa fa-book" },
 ]);
 
-function chooseDataType(fldIdx){
+function chooseDataType(fldIdx) {
   dataTypeRef.value.show(event);
 }
 
@@ -174,3 +181,12 @@ function sortLines(attr) {
   element.value.sortLines(attr);
 }
 </script>
+
+<style scoped>
+.context {
+  padding: 8px;
+}
+.context > span {
+  margin: 10px;
+}
+</style>

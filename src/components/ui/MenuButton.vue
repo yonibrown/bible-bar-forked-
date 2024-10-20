@@ -3,7 +3,7 @@
     class="fa"
     :class="faClass"
     :chosen="chosen"
-    v-tooltip.top="{ value: tooltip }"
+    v-tooltip.top="{ value: tooltip, showDelay: 900 }"
   ></div>
 </template>
 
