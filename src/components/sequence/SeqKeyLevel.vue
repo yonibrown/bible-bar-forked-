@@ -1,5 +1,5 @@
 <template>
-  <select v-model="selected">
+  <select v-model="selected" v-show="divisions.length > 0">
     <option v-for="div in divisions" :value="div.id">
       {{ div.name }}
     </option>
@@ -16,7 +16,7 @@ const divisions = computed(function () {
   const options = [];
   if (props.keyLvlIdx == 0) {
     options.push({
-      id: -1,
+      id: -999,
       name: "בחר...",
     });
   }

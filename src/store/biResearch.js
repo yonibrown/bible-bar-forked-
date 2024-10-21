@@ -224,7 +224,22 @@ export class biResearch {
     });
   }
 
-  static async loadIndexDivisions(seqIndex, prop) {
+  /* convert position/division to index key */
+  static async getKey(seqIndex, prop) {
+    const data = {
+      type: "res_index",
+      oper: "get_key",
+      id: seqIndex,
+      prop,
+    };
+
+    const obj = await sendToServer(data);
+    console.log('get_key',data,obj.data);
+    return obj.data;
+  }
+
+  /* get divisions of every level acording to a position/division */
+  static async getDivisions(seqIndex, prop) {
     const data = {
       type: "res_index",
       oper: "get_divisions",
@@ -233,6 +248,7 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
+    console.log('get_divisions',data,obj.data);
     return obj.data;
   }
 
@@ -246,18 +262,6 @@ export class biResearch {
 
     const obj = await sendToServer(data);
 
-    return obj.data;
-  }
-
-  static async loadKey(seqIndex, prop) {
-    const data = {
-      type: "res_index",
-      oper: "get_key",
-      id: seqIndex,
-      prop,
-    };
-
-    const obj = await sendToServer(data);
     return obj.data;
   }
 }

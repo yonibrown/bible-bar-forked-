@@ -73,12 +73,14 @@ async function startEdit() {
     let indexParm = null;
     if (props.initDivision) {
       indexParm = { division_id: props.initDivision };
+      initialKey.value = await biResearch.getKey(seqIndex.value, indexParm);
     } else if (props.initPosition) {
       indexParm = { position: props.initPosition };
+      initialKey.value = await biResearch.getKey(seqIndex.value, indexParm);
     } else {
-      indexParm = { division_id: defaultDivision };
+      initialKey.value = null;
     }
-    initialKey.value = await biResearch.loadKey(seqIndex.value, indexParm);
+    console.log('start edit',initialKey.value);
     editing.value = true;
   }
 }

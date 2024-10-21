@@ -8,7 +8,7 @@
     @submitValue="(attr) => updateVerse('from', attr)"
   ></verse-editable>
   <span v-if="displayOneVerse">
-    <button class="disp-range" v-show="editable" @click="displayRange">
+    <button class="disp-range" v-show="showRangeButton" @click="displayRange">
       טווח
     </button>
   </span>
@@ -34,6 +34,11 @@ const emit = defineEmits(["changeValue"]);
 
 const defaultIndex = { res: 1, col: 1, idx: 1 };
 const defaultDivision = 972; /* Genesis,1,1 */
+
+const showRangeButton = computed(function () {
+  // return props.editable ;
+  return props.editable && fromName.value != "";
+});
 
 const fromPosition = computed(function () {
   if (props.part) {
@@ -89,7 +94,7 @@ var toDiv = null;
 
 function updateVerse(rangeSide, newVal) {
   var updAttr = {};
-  if (!props.part){
+  if (!props.part) {
     updAttr.src_index = defaultIndex;
   }
   if (rangeSide == "from" || displayOneVerse.value) {

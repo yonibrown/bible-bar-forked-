@@ -21,48 +21,62 @@ const emit = defineEmits(["changeValue"]);
 const defaultDiv = props.defaultValue == "min" ? "0" : "-1";
 const lastKeyIdx = props.initialValue.length - 1;
 
+const seqIndex = inject("seqIndex");
 const selectedKey = [];
+const keyLevels = ref([]);
 
 const initialKey = computed(function () {
   return props.initialValue;
 });
 
-const seqIndex = inject("seqIndex");
-
-const keyLevels = ref([]);
-
+// update selectedKey according to initialKey
 updateKey(initialKey.value);
-watch(initialKey, updateKey);
+
+// update selectedKey according to initialKey after change
+// watch(initialKey, updateKey);
+watch(initialKey, function (newVal) {
+  console.log("initialKey changed - update selectedKey");
+  updateKey(newVal);
+});
+
+// update selectedKey according to the parameter
+function updateKey(key) {
+  console.log("update key");
+  if (key) {
+    key.forEach((lvl, lvlIdx) => {
+      selectedKey[lvlIdx] = {
+        level: lvl.level,
+        division_id: lvl.division_id,
+      };
+    });
+  }
+  else {
+    selectedKey = [];
+  }
+  loadDivisions();
+}
 
 function clear() {
   changeKeyLevel({ lvlIdx: 0, div: defaultDiv });
 }
 
-function updateKey(key) {
-  key.forEach((lvl, lvlIdx) => {
-    selectedKey[lvlIdx] = {
-      level: lvl.level,
-      division_id: lvl.division_id,
-    };
-  });
-  loadKey();
-}
-
-async function loadKey() {
-  keyLevels.value = await biResearch.loadIndexDivisions(seqIndex.value, {
+async function loadDivisions() {
+  console.log("loadDivisions");
+  keyLevels.value = await biResearch.getDivisions(seqIndex.value, {
     key: selectedKey,
   });
 }
 
 async function changeKeyLevel({ lvlIdx, div }) {
+  console.log("changeKeyLevel", div);
   // update div
   selectedKey[lvlIdx].division_id = div;
 
-  if (div == -1) {
+  if (div == -999) {
     for (let i = lvlIdx + 1; i < selectedKey.length; i++) {
       keyLevels.value[i].divisions = [];
     }
-    emit("changeValue", { id: div, name: '' });
+    emit("changeValue", { id: div, name: "" });
     return;
   }
 
@@ -73,7 +87,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
 
   // refresh div lists
   if (lvlIdx + 1 < selectedKey.length) {
-    await loadKey();
+    await loadDivisions();
   }
 
   // update selected div

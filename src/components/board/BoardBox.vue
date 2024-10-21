@@ -122,8 +122,20 @@ function reorderFields(attr) {
 
 const fieldMenuData = computed(function () {
   const addArr = [
-    { label: "טקסט חופשי", icon: "fa fa-align-right", command: addField },
-    { label: "טווח פסוקים", icon: "fa fa-book" },
+    {
+      label: "טקסט חופשי",
+      icon: "fa fa-align-right",
+      command: () => {
+        addField("FreeText");
+      },
+    },
+    {
+      label: "טווח פסוקים",
+      icon: "fa fa-book",
+      command: () => {
+        addField("SourceVerse");
+      },
+    },
   ];
   if (
     focusFieldIdx.value >= 0 &&
@@ -145,10 +157,10 @@ function openFieldMenu(attr) {
   fieldMenuRef.value.show(event);
 }
 
-function addField() {
+function addField(fieldType) {
   element.value.addField({
     position: ordFields.nextPos(focusFieldIdx.value),
-    fieldType: "FreeText",
+    fieldType,
   });
 }
 
