@@ -19,10 +19,10 @@
     @deleteLine="deleteLine"
     @reorderLines="reorderLines"
     @sortLines="sortLines"
-    @addField="addFieldMenu"
+    @openFieldMenu="openFieldMenu"
   >
   </spec-table>
-  <ContextMenu ref="addFieldRef" :model="dataTypes">
+  <ContextMenu ref="fieldMenuRef" :model="fieldMenuData">
     <template #item="{ item }">
       <div class="context">
         <i :class="item.icon"></i>
@@ -43,14 +43,18 @@ const editMode = inject("editMode");
 
 const sortField = ref(-1);
 const ascending = ref(true);
-const addFieldRef = ref();
+const fieldMenuRef = ref();
 
 // fields
 // --------------------------
 const boardFields = computed(function () {
-  return element.value.fields.sort(function (a, b) {
-    return a.position - b.position;
-  });
+  return element.value.fields
+    .filter(function (fld) {
+      return fld.position > 0;
+    })
+    .sort(function (a, b) {
+      return a.position - b.position;
+    });
 });
 
 const tableFields = computed(function () {
@@ -116,8 +120,8 @@ function reorderFields(attr) {
   });
 }
 
-const dataTypes = computed(function () {
-  const arr = [
+const fieldMenuData = computed(function () {
+  const addArr = [
     { label: "טקסט חופשי", icon: "fa fa-align-right", command: addField },
     { label: "טווח פסוקים", icon: "fa fa-book" },
   ];
@@ -125,22 +129,31 @@ const dataTypes = computed(function () {
     focusFieldIdx.value >= 0 &&
     boardFields.value[focusFieldIdx.value].type == "SourceVerse"
   ) {
-    arr.push({ separator: true });
-    arr.push({ label: "מילים מתוך פסוק", icon: "fa fa-file-text-o" });
+    addArr.push({ separator: true });
+    addArr.push({ label: "מילים מתוך פסוק", icon: "fa fa-file-text-o" });
   }
+  const arr = [
+    { label: "מחק עמודה", icon: "fa fa-close", command: deleteField },
+    { label: "הוסף", icon: "fa fa-plus", items: addArr },
+  ];
   return arr;
 });
 
 const focusFieldIdx = ref(-1);
-function addFieldMenu(attr) {
+function openFieldMenu(attr) {
   focusFieldIdx.value = attr.idx;
-  addFieldRef.value.show(event);
+  fieldMenuRef.value.show(event);
 }
 
 function addField() {
   element.value.addField({
     position: ordFields.nextPos(focusFieldIdx.value),
+    fieldType: "FreeText",
   });
+}
+
+function deleteField() {
+  boardFields.value[focusFieldIdx.value].delete();
 }
 
 // lines

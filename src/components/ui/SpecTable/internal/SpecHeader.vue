@@ -20,7 +20,7 @@
           <span class="menu-buttons" v-show="enableSelection">
             <menu-button
               type="options"
-              @click="tableEmit('changeDataType', { idx: fldidx })"
+              @click="tableEmit('openFieldMenu', { idx: fldidx })"
             ></menu-button>
             <menu-button
               type="sort-asc"
@@ -33,10 +33,6 @@
               @click="
                 tableEmit('sortLines', { fldId: fld.id, ascending: false })
               "
-            ></menu-button>
-            <menu-button
-              type="add"
-              @click="tableEmit('addField', { idx: fldidx })"
             ></menu-button>
           </span>
         </column-resizer>

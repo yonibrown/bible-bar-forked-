@@ -437,6 +437,10 @@ class biBoardField {
     this.changeAttr({ position });
   }
 
+  delete() {
+    this.setPosition(0);
+  }
+
   async changeAttr(attr) {
     if (typeof attr.title != "undefined") {
       this._title = attr.title;
