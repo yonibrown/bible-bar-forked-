@@ -19,8 +19,7 @@
           </column-sortable-head>
           <span class="menu-buttons" v-show="enableSelection">
             <menu-button
-              :type="fld.type"
-              :tooltip="fld.typeDesc"
+              type="options"
               @click="tableEmit('changeDataType', { idx: fldidx })"
             ></menu-button>
             <menu-button

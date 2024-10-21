@@ -19,14 +19,13 @@
     @deleteLine="deleteLine"
     @reorderLines="reorderLines"
     @sortLines="sortLines"
-    @addField="addField"
-    @changeDataType="chooseDataType"
+    @addField="addFieldMenu"
   >
   </spec-table>
-  <ContextMenu ref="dataTypeRef" :model="dataTypes">
+  <ContextMenu ref="addFieldRef" :model="dataTypes">
     <template #item="{ item }">
       <div class="context">
-        <i class="fa" :class="item.icon"></i>
+        <i :class="item.icon"></i>
         <span>{{ item.label }}</span>
       </div>
     </template>
@@ -44,7 +43,7 @@ const editMode = inject("editMode");
 
 const sortField = ref(-1);
 const ascending = ref(true);
-const dataTypeRef = ref();
+const addFieldRef = ref();
 
 // fields
 // --------------------------
@@ -117,19 +116,31 @@ function reorderFields(attr) {
   });
 }
 
-function addField(attr) {
-  element.value.addField({
-    position: ordFields.prevPos(attr.idx),
-  });
+const dataTypes = computed(function () {
+  const arr = [
+    { label: "טקסט חופשי", icon: "fa fa-align-right", command: addField },
+    { label: "טווח פסוקים", icon: "fa fa-book" },
+  ];
+  if (
+    focusFieldIdx.value >= 0 &&
+    boardFields.value[focusFieldIdx.value].type == "SourceVerse"
+  ) {
+    arr.push({ separator: true });
+    arr.push({ label: "מילים מתוך פסוק", icon: "fa fa-file-text-o" });
+  }
+  return arr;
+});
+
+const focusFieldIdx = ref(-1);
+function addFieldMenu(attr) {
+  focusFieldIdx.value = attr.idx;
+  addFieldRef.value.show(event);
 }
 
-const dataTypes = ref([
-  { label: "טקסט חופשי", icon: "fa fa-align-right" },
-  { label: "טווח פסוקים", icon: "fa fa-book" },
-]);
-
-function chooseDataType(fldIdx) {
-  dataTypeRef.value.show(event);
+function addField() {
+  element.value.addField({
+    position: ordFields.nextPos(focusFieldIdx.value),
+  });
 }
 
 // lines
@@ -185,6 +196,7 @@ function sortLines(attr) {
 <style scoped>
 .context {
   padding: 8px;
+  cursor: default;
 }
 .context > span {
   margin: 10px;
