@@ -29,6 +29,7 @@ function updateRange(content) {
   if (fldContent.value) {
     fldContent.value.changeAttr(content);
   } else {
+    console.log('add content',content);
     props.line.addContent({ field: props.fldId, content });
   }
 }

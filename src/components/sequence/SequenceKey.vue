@@ -36,13 +36,12 @@ updateKey(initialKey.value);
 // update selectedKey according to initialKey after change
 // watch(initialKey, updateKey);
 watch(initialKey, function (newVal) {
-  console.log("initialKey changed - update selectedKey");
   updateKey(newVal);
 });
 
-// update selectedKey according to the parameter
+// update selectedKey according to a parameter coming from outside
+// and reload levels
 function updateKey(key) {
-  console.log("update key", key);
   if (key) {
     key.forEach((lvl, lvlIdx) => {
       selectedKey[lvlIdx] = {
@@ -51,27 +50,32 @@ function updateKey(key) {
       };
     });
   }
-  loadDivisions();
+  loadLevels();
 }
 
 function clear() {
-  console.log("clear");
   changeKeyLevel({ lvlIdx: 0, div: defaultDiv });
 }
 
-async function loadDivisions() {
-  console.log("loadDivisions", seqIndex.value, selectedKey);
+async function loadLevels() {
   levels.value = await biResearch.getDivisions(seqIndex.value, {
     key: selectedKey,
   });
-  console.log("loadDivisions levels", levels.value);
+  if (selectedKey.length == 0) {
+    levels.value.forEach((lvl, lvlIdx) => {
+      selectedKey[lvlIdx] = {
+        level: lvl.level,
+        division_id: lvl.selected_div,
+      };
+    });
+  }
 }
 
+// chage division for a level in the selected key
 async function changeKeyLevel({ lvlIdx, div }) {
-  console.log("changeKeyLevel", div);
   // handle no choise
   if (div == -999) {
-    selectedKey = [{ division_id: div }];
+    selectedKey = [];
 
     for (let i = lvlIdx + 1; i < levels.value.length; i++) {
       levels.value[i].divisions = [];
@@ -90,7 +94,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
 
   // refresh div lists
   if (lvlIdx + 1 < selectedKey.length) {
-    await loadDivisions();
+    await loadLevels();
   }
 
   // update selected div
@@ -109,7 +113,6 @@ async function changeKeyLevel({ lvlIdx, div }) {
 }
 
 function updateSelectedKey() {
-  console.log("updateSelectedKey");
   levels.value.forEach(function (lvl, idx) {
     if (selectedKey[idx].division_id == defaultDiv) {
       if (defaultDiv == 0) {
@@ -126,7 +129,6 @@ function updateSelectedKey() {
 }
 
 function getKey() {
-  console.log("getKey");
   const cloneKey = [];
   selectedKey.forEach((lvl, lvlIdx) => {
     cloneKey[lvlIdx] = { ...lvl };

@@ -76,6 +76,7 @@ function displayRange() {
 }
 
 const fromName = computed(function () {
+  console.log('fromName',props.part);
   if (props.part) {
     return props.part.src_from_name.replaceAll(",", " ");
   }

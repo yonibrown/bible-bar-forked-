@@ -463,6 +463,7 @@ class biBoardLine {
     this._position = rec.position;
     this._board = board;
     this._content = this.initContent(rec.content);
+    console.log('rec.content',rec.content);
   }
 
   get id() {
@@ -498,6 +499,7 @@ class biBoardLine {
   }
 
   content(fldId) {
+    console.log('content',this._content);
     return this._content.find(function (fld) {
       return fld.id == fldId;
     });
@@ -510,7 +512,8 @@ class biBoardLine {
   }
 
   async addContent(attr) {
-    this._content.push(new biBoardContent(attr, this));
+    this._content.push(new biBoardContent({field:attr.field,...attr.content}, this));
+    console.log('after add',this._content);
     const data = {
       type: "brd_line",
       oper: "new_content",
