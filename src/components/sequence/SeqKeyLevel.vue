@@ -25,7 +25,7 @@ const divisions = computed(function () {
 });
 
 const injectedSelectedDiv = computed(function () {
-  return props.keyLvl.selected_div.id;
+  return props.keyLvl.selected_div;
 });
 var injectedChange = false;
 
