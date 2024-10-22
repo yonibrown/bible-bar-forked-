@@ -19,10 +19,10 @@ const props = defineProps(["initialValue", "defaultValue"]);
 const emit = defineEmits(["changeValue"]);
 
 const defaultDiv = props.defaultValue == "min" ? "0" : "-1";
-const lastKeyIdx = props.initialValue.length - 1;
+// const lastKeyIdx = props.initialValue.length - 1;
 
 const seqIndex = inject("seqIndex");
-const selectedKey = [];
+var selectedKey = [];
 const keyLevels = ref([]);
 
 const initialKey = computed(function () {
@@ -41,7 +41,7 @@ watch(initialKey, function (newVal) {
 
 // update selectedKey according to the parameter
 function updateKey(key) {
-  console.log("update key");
+  console.log("update key", key);
   if (key) {
     key.forEach((lvl, lvlIdx) => {
       selectedKey[lvlIdx] = {
@@ -49,22 +49,23 @@ function updateKey(key) {
         division_id: lvl.division_id,
       };
     });
-  }
-  else {
-    selectedKey = [];
+  } else {
+    selectedKey = [{ division_id: -1 }];
   }
   loadDivisions();
 }
 
 function clear() {
+  console.log("clear");
   changeKeyLevel({ lvlIdx: 0, div: defaultDiv });
 }
 
 async function loadDivisions() {
-  console.log("loadDivisions");
+  console.log("loadDivisions", seqIndex.value, selectedKey);
   keyLevels.value = await biResearch.getDivisions(seqIndex.value, {
     key: selectedKey,
   });
+  console.log("loadDivisions keyLevels", keyLevels.value);
 }
 
 async function changeKeyLevel({ lvlIdx, div }) {
@@ -94,7 +95,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
   updateSelectedKey();
 
   // emit changes
-  let selectedDiv = selectedKey[lastKeyIdx].division_id;
+  let selectedDiv = selectedKey[selectedKey.length - 1].division_id;
 
   let selectedName = selectedKey
     .map(function (lvl) {
@@ -106,6 +107,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
 }
 
 function updateSelectedKey() {
+  console.log("updateSelectedKey");
   keyLevels.value.forEach(function (lvl, idx) {
     if (selectedKey[idx].division_id == defaultDiv) {
       if (defaultDiv == 0) {
@@ -122,6 +124,7 @@ function updateSelectedKey() {
 }
 
 function getKey() {
+  console.log("getKey");
   const cloneKey = [];
   selectedKey.forEach((lvl, lvlIdx) => {
     cloneKey[lvlIdx] = { ...lvl };
