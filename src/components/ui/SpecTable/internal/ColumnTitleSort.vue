@@ -4,7 +4,7 @@
     @dblclick="changeSort(fld.id)"
     :class="{ sortingField: tableProps.sortField == fld.id }"
   >
-    <slot></slot>
+    {{ fld.title }}
     <i
       v-show="tableProps.sortField == fld.id"
       class="fa"
@@ -12,17 +12,17 @@
     ></i>
   </span>
   <span v-else>
-    <slot></slot>
+    {{ fld.title }}
   </span>
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { inject } from "vue";
 
 const props = defineProps(["fld"]);
 
-const tableProps = inject('tableProps');
-const tableEmit = inject('tableEmit');
+const tableProps = inject("tableProps");
+const tableEmit = inject("tableEmit");
 
 function changeSort(newField) {
   if (tableProps.sortField == newField) {

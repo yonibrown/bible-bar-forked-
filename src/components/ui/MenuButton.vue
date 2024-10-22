@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="fa"
-    :class="faClass"
-    :chosen="chosen"
-    v-tooltip.top="tooltip"
-  ></div>
+  <div class="fa" :class="faClass" :chosen="chosen"></div>
+  <!-- v-tooltip.top="{ value: tooltip, showDelay: 900 }" -->
 </template>
 
 <script setup>
@@ -42,8 +38,12 @@ const faClass = computed(function () {
       return "fa-arrow-up";
     case "sort-desc":
       return "fa-arrow-down";
-    case "sortdesc":
-      return "fa-arrow-down";
+    case "SourceWord":
+      return "fa-file-text-o";
+    case "SourceVerse":
+      return "fa-book";
+    case "FreeText":
+      return "fa-align-right"; /* fa-pencil  fa-quote-right fa-book fa-book-open */
     default:
       return null;
   }

@@ -29,11 +29,12 @@ const text = computed(function () {
   return "";
 });
 
-function submitText(newVal) {
+function submitText(text) {
+  const content = { text };
   if (fldContent.value) {
-    fldContent.value.changeAttr({ text: newVal });
+    fldContent.value.changeAttr(content);
   } else {
-    props.line.addContent({ field: props.fldId, text: newVal });
+    props.line.addContent({ field: props.fldId, content });
   }
 }
 

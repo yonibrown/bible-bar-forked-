@@ -2,10 +2,11 @@
   <spec-table
     :enableSelection="editMode"
     :tableFields="tableFields"
+    :randomSortAvailable="true"
     :sortField="sortField"
-    @changeSortField="changeSortField"
-    @resizeField="resizeField"
     :ascending="ascending"
+    @changeSortField="changeSortField"
+    @changeField="changeField"
     @reverseTable="reverseTable"
     :lines="lines"
     lineComponent="board-line"
@@ -18,12 +19,21 @@
     @deleteLine="deleteLine"
     @reorderLines="reorderLines"
     @sortLines="sortLines"
-    @addField="addField"
+    @openFieldMenu="openFieldMenu"
   >
   </spec-table>
+  <ContextMenu ref="fieldMenuRef" :model="fieldMenuData">
+    <template #item="{ item }">
+      <div class="context">
+        <i :class="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </div>
+    </template>
+  </ContextMenu>
 </template>
 
 <script setup>
+import ContextMenu from "primevue/contextmenu";
 import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
@@ -33,13 +43,18 @@ const editMode = inject("editMode");
 
 const sortField = ref(-1);
 const ascending = ref(true);
+const fieldMenuRef = ref();
 
 // fields
 // --------------------------
 const boardFields = computed(function () {
-  return element.value.fields.sort(function (a, b) {
-    return a.position - b.position;
-  });
+  return element.value.fields
+    .filter(function (fld) {
+      return fld.position > 0;
+    })
+    .sort(function (a, b) {
+      return a.position - b.position;
+    });
 });
 
 const tableFields = computed(function () {
@@ -47,6 +62,7 @@ const tableFields = computed(function () {
     return {
       id: fld.id,
       type: fld.type,
+      typeDesc: typeDesc(fld.type),
       title: fld.title,
       sortable: true,
       display: true,
@@ -54,6 +70,15 @@ const tableFields = computed(function () {
     };
   });
 });
+
+function typeDesc(type) {
+  switch (type) {
+    case "SourceVerse":
+      return "סוג עמודה: טווח פסוקים";
+    case "FreeText":
+      return "סוג עמודה: טקסט חופשי";
+  }
+}
 
 const ordFields = new ordering({
   getSize: function () {
@@ -80,8 +105,8 @@ function reverseTable() {
   ascending.value = !ascending.value;
 }
 
-function resizeField(attr) {
-  element.value.setField(attr);
+function changeField(attr) {
+  element.value.setField(attr.id, attr.attr);
 }
 
 function reorderFields(attr) {
@@ -95,10 +120,52 @@ function reorderFields(attr) {
   });
 }
 
-function addField(attr) {
+const fieldMenuData = computed(function () {
+  const addArr = [
+    {
+      label: "טקסט חופשי",
+      icon: "fa fa-align-right",
+      command: () => {
+        addField("FreeText");
+      },
+    },
+    {
+      label: "טווח פסוקים",
+      icon: "fa fa-book",
+      command: () => {
+        addField("SourceVerse");
+      },
+    },
+  ];
+  if (
+    focusFieldIdx.value >= 0 &&
+    boardFields.value[focusFieldIdx.value].type == "SourceVerse"
+  ) {
+    addArr.push({ separator: true });
+    addArr.push({ label: "מילים מתוך פסוק", icon: "fa fa-file-text-o" });
+  }
+  const arr = [
+    { label: "מחק עמודה", icon: "fa fa-close", command: deleteField },
+    { label: "הוסף", icon: "fa fa-plus", items: addArr },
+  ];
+  return arr;
+});
+
+const focusFieldIdx = ref(-1);
+function openFieldMenu(attr) {
+  focusFieldIdx.value = attr.idx;
+  fieldMenuRef.value.show(event);
+}
+
+function addField(fieldType) {
   element.value.addField({
-    position: ordFields.prevPos(attr.idx),
+    position: ordFields.nextPos(focusFieldIdx.value),
+    fieldType,
   });
+}
+
+function deleteField() {
+  boardFields.value[focusFieldIdx.value].delete();
 }
 
 // lines
@@ -150,3 +217,13 @@ function sortLines(attr) {
   element.value.sortLines(attr);
 }
 </script>
+
+<style scoped>
+.context {
+  padding: 8px;
+  cursor: default;
+}
+.context > span {
+  margin: 10px;
+}
+</style>

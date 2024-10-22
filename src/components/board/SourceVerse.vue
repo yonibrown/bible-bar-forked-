@@ -1,7 +1,6 @@
 <template>
   <verse-range
-    v-if="range"
-    :part="range"
+    :part="part"
     :editable="editMode"
     @changeValue="(newVal) => updateRange(newVal)"
   ></verse-range>
@@ -9,22 +8,10 @@
 
 <script setup>
 import VerseRange from "../sequence/VerseRange.vue";
-import { computed, inject } from "vue";
+import { computed, inject, ref } from "vue";
 const props = defineProps(["line", "fldId"]);
 
 const editMode = inject("editMode");
-
-const range = computed(function () {
-  if (fldContent.value) {
-    return fldContent.value.val;
-  }
-  return "";
-});
-
-function updateRange( newVal) {
-    console.log('updateRange',range.value, newVal);
-  //   part.changeAttr(newVal);
-}
 
 const fldContent = computed(function () {
   if (!props.line.newLine) {
@@ -32,11 +19,17 @@ const fldContent = computed(function () {
   }
 });
 
-function submitText(newVal) {
+const part = computed(function () {
   if (fldContent.value) {
-    fldContent.value.changeAttr({ text: newVal });
+    return fldContent.value.val;
+  }
+});
+
+function updateRange(content) {
+  if (fldContent.value) {
+    fldContent.value.changeAttr(content);
   } else {
-    props.line.addContent({ field: props.fldId, text: newVal });
+    props.line.addContent({ field: props.fldId, content });
   }
 }
 </script>

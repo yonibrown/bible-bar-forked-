@@ -44,6 +44,7 @@ const props = defineProps([
   "tableFields",
   "sortField",
   "ascending",
+  "randomSortAvailable",
   "lines",
   "lineComponent",
   "enableNewLine",
@@ -54,12 +55,13 @@ const props = defineProps([
 const emit = defineEmits([
   "reverseTable",
   "changeSortField",
-  "resizeField",
   "reorderFields",
   "addLine",
   "deleteLine",
   "reorderLines",
   "sortLines",
+  "changeField",
+  "openFieldMenu",
 ]);
 
 provide("tableProps", props);

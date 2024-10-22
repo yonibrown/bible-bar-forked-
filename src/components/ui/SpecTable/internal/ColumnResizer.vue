@@ -30,12 +30,13 @@ const observer = new MutationObserver(function (mutations) {
         document.defaultView.getComputedStyle(resizer.value).width
       );
 
-      if (structChanged){
-        structRatio = initialWidth/resizerWidth;
+      if (structChanged) {
+        structRatio = initialWidth / resizerWidth;
         initialWidth = resizerWidth;
         structChanged = false;
       } else {
-        let resizerWidthPct = (resizerWidth * structRatio / rowWidth.value) * 100;
+        let resizerWidthPct =
+          ((resizerWidth * structRatio) / rowWidth.value) * 100;
         resizeField({ width: Math.min(resizerWidthPct, 100) });
       }
     }
@@ -45,10 +46,10 @@ const observer = new MutationObserver(function (mutations) {
 var resizeTimeout = null;
 var resizeData = {};
 function resizeField(style) {
-  resizeData = { field_id: props.fld.id, width_pct: style.width };
+  resizeData = { id: props.fld.id, attr: { width_pct: style.width } };
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(function () {
-    tableEmit("resizeField", resizeData);
+    tableEmit("changeField", resizeData);
   }, 1000);
 }
 
@@ -64,7 +65,7 @@ watch(enableSelection, function (newVal) {
 
 const width = computed(function () {
   if (rowWidth.value) {
-    return Math.max((props.fld.widthPct * rowWidth.value) / 100,1.0);
+    return Math.max((props.fld.widthPct * rowWidth.value) / 100, 1.0);
   } else {
     return 1.0;
   }
