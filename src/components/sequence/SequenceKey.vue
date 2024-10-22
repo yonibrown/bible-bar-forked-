@@ -1,7 +1,7 @@
 <template>
   <span>
     <seq-key-level
-      v-for="(lvl, lvlIdx) in keyLevels"
+      v-for="(lvl, lvlIdx) in levels"
       :key="lvlIdx"
       :keyLvl="lvl"
       :keyLvlIdx="lvlIdx"
@@ -22,8 +22,9 @@ const defaultDiv = props.defaultValue == "min" ? "0" : "-1";
 // const lastKeyIdx = props.initialValue.length - 1;
 
 const seqIndex = inject("seqIndex");
+
+const levels = ref([]);
 var selectedKey = [];
-const keyLevels = ref([]);
 
 const initialKey = computed(function () {
   return props.initialValue;
@@ -49,8 +50,6 @@ function updateKey(key) {
         division_id: lvl.division_id,
       };
     });
-  } else {
-    selectedKey = [{ division_id: -1 }];
   }
   loadDivisions();
 }
@@ -62,24 +61,27 @@ function clear() {
 
 async function loadDivisions() {
   console.log("loadDivisions", seqIndex.value, selectedKey);
-  keyLevels.value = await biResearch.getDivisions(seqIndex.value, {
+  levels.value = await biResearch.getDivisions(seqIndex.value, {
     key: selectedKey,
   });
-  console.log("loadDivisions keyLevels", keyLevels.value);
+  console.log("loadDivisions levels", levels.value);
 }
 
 async function changeKeyLevel({ lvlIdx, div }) {
   console.log("changeKeyLevel", div);
-  // update div
-  selectedKey[lvlIdx].division_id = div;
-
+  // handle no choise
   if (div == -999) {
-    for (let i = lvlIdx + 1; i < selectedKey.length; i++) {
-      keyLevels.value[i].divisions = [];
+    selectedKey = [{ division_id: div }];
+
+    for (let i = lvlIdx + 1; i < levels.value.length; i++) {
+      levels.value[i].divisions = [];
     }
     emit("changeValue", { id: div, name: "" });
     return;
   }
+
+  // update div
+  selectedKey[lvlIdx].division_id = div;
 
   // init divs in next levels
   for (let i = lvlIdx + 1; i < selectedKey.length; i++) {
@@ -108,7 +110,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
 
 function updateSelectedKey() {
   console.log("updateSelectedKey");
-  keyLevels.value.forEach(function (lvl, idx) {
+  levels.value.forEach(function (lvl, idx) {
     if (selectedKey[idx].division_id == defaultDiv) {
       if (defaultDiv == 0) {
         selectedKey[idx].division_id = lvl.divisions[0].id;
