@@ -142,7 +142,13 @@ const fieldMenuData = computed(function () {
     boardFields.value[focusFieldIdx.value].type == "SourceVerse"
   ) {
     addArr.push({ separator: true });
-    addArr.push({ label: "מילים מתוך פסוק", icon: "fa fa-file-text-o" });
+    addArr.push({
+      label: "מילים מתוך פסוק",
+      icon: "fa fa-file-text-o",
+      command: () => {
+        addField("SourceWord");
+      },
+    });
   }
   const arr = [
     { label: "מחק עמודה", icon: "fa fa-close", command: deleteField },

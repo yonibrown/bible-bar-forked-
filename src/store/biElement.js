@@ -390,6 +390,7 @@ class biBoardField {
     this._type = rec.type;
     this._text = rec.text;
     this._widthPct = rec.width_pct;
+    this._parentField = rec.parent_field;
   }
 
   get id() {
