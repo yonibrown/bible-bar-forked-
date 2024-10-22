@@ -463,7 +463,6 @@ class biBoardLine {
     this._position = rec.position;
     this._board = board;
     this._content = this.initContent(rec.content);
-    console.log('rec.content',rec.content);
   }
 
   get id() {
@@ -499,7 +498,6 @@ class biBoardLine {
   }
 
   content(fldId) {
-    console.log('content',this._content);
     return this._content.find(function (fld) {
       return fld.id == fldId;
     });
@@ -513,7 +511,6 @@ class biBoardLine {
 
   async addContent(attr) {
     this._content.push(new biBoardContent({field:attr.field,...attr.content}, this));
-    console.log('after add',this._content);
     const data = {
       type: "brd_line",
       oper: "new_content",
@@ -559,17 +556,6 @@ class biBoardContent {
     this._src_to_division = +rec.src_to_division;
     this._src_to_word = +rec.src_to_word;
     this._src_to_name = rec.src_to_name;
-
-    // this._source = {
-    //   src_research: +rec.src_research,
-    //   src_collection: +rec.src_collection,
-    //   src_from_division: +rec.src_from_division,
-    //   src_from_word: +rec.src_from_word,
-    //   src_from_name: rec.src_from_name,
-    //   src_to_division: +rec.src_to_division,
-    //   src_to_word: +rec.src_to_word,
-    //   src_to_name: rec.src_to_name,
-    // };
 
     this._line = line;
     this._type = line._board.getField(

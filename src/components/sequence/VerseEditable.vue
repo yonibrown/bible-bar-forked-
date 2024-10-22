@@ -80,7 +80,6 @@ async function startEdit() {
     } else {
       initialKey.value = null;
     }
-    console.log('start edit',initialKey.value);
     editing.value = true;
   }
 }

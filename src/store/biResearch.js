@@ -234,9 +234,21 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    console.log('get_key',data,obj.data);
     return obj.data;
   }
+
+  /* convert position to division */
+  // static async getDivision(seqIndex, prop) {
+  //   const data = {
+  //     type: "res_index",
+  //     oper: "get_division",
+  //     id: seqIndex,
+  //     prop,
+  //   };
+
+  //   const obj = await sendToServer(data);
+  //   return obj.data;
+  // }
 
   /* get divisions of every level acording to a position/division */
   static async getDivisions(seqIndex, prop) {
@@ -248,7 +260,6 @@ export class biResearch {
     };
 
     const obj = await sendToServer(data);
-    console.log('get_divisions',data,obj.data);
     return obj.data;
   }
 

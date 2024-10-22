@@ -141,15 +141,12 @@ function removeSelected() {
 
 // const hilightTable = ref(false);
 // function enterTable() {
-//   console.log("enterTable");
 //   hilightTable.value = true;
 // }
 // function leaveTable() {
-//   console.log("leaveTable");
 //   hilightTable.value = false;
 // }
 // function addToTable(data) {
-//   console.log("addToTable", data, research.value);
 //   research.value.newPart({
 //     project_id: project.value.id,
 //     element_id: data.dispElmId,
