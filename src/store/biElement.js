@@ -346,11 +346,18 @@ class biElmBoard extends biElement {
   }
 
   async addField(attr) {
+    const fieldProp = {
+      position: attr.position,
+      type: attr.fieldType,
+    };
+    if (attr.fieldType == "SourceWord"){
+      fieldProp.parent_field = attr.openingField.id;
+    }
     const data = {
       type: "board",
       oper: "add_field",
       id: this.dbId,
-      prop: attr,
+      prop: fieldProp,
     };
 
     const obj = await sendToServer(data);
@@ -499,8 +506,15 @@ class biBoardLine {
   }
 
   content(fldId) {
+    let searchFieldId = null;
+    const field = this._board.getField(fldId);
+    if (field.parentField == fldId){
+      searchFieldId = fldId;
+    } else {
+      searchFieldId = field.parentField;
+    }
     return this._content.find(function (fld) {
-      return fld.id == fldId;
+      return fld.id == searchFieldId;
     });
   }
 
@@ -511,7 +525,9 @@ class biBoardLine {
   }
 
   async addContent(attr) {
-    this._content.push(new biBoardContent({field:attr.field,...attr.content}, this));
+    this._content.push(
+      new biBoardContent({ field: attr.field, ...attr.content }, this)
+    );
     const data = {
       type: "brd_line",
       oper: "new_content",

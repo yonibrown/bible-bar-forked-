@@ -167,6 +167,7 @@ function addField(fieldType) {
   element.value.addField({
     position: ordFields.nextPos(focusFieldIdx.value),
     fieldType,
+    openingField: boardFields.value[focusFieldIdx.value],
   });
 }
 

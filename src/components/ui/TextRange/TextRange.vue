@@ -24,6 +24,8 @@ const props = defineProps([
   "disabled"
 ]);
 
+console.log('TextRange',props);
+
 const emit = defineEmits(["changeValue"]);
 
 const oneVerse = computed(function () {
