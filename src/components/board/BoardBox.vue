@@ -137,6 +137,7 @@ const fieldMenuData = computed(function () {
       },
     },
   ];
+
   if (
     focusFieldIdx.value >= 0 &&
     boardFields.value[focusFieldIdx.value].type == "SourceVerse"
@@ -150,10 +151,22 @@ const fieldMenuData = computed(function () {
       },
     });
   }
+
   const arr = [
     { label: "מחק עמודה", icon: "fa fa-close", command: deleteField },
     { label: "הוסף", icon: "fa fa-plus", items: addArr },
   ];
+
+  if (
+    focusFieldIdx.value >= 0 &&
+    boardFields.value[focusFieldIdx.value].type == "SourceWord"
+  ) {
+    arr.push({ separator: true });
+    arr.push({
+      label: "הצג פסוק שלם",
+    });
+  }
+
   return arr;
 });
 

@@ -12,12 +12,7 @@
     </template>
     <template #text>
       <text-range
-        :fromPosition="line.src_from_position"
-        :fromText="line.src_from_text"
-        :fromWord="line.src_from_word"
-        :toPosition="line.src_to_position"
-        :toText="line.src_to_text"
-        :toWord="line.src_to_word"
+        :part="line"
         :disabled="!enableSelection"
         @changeValue="(newVal) => updateRange(line, newVal)"
       ></text-range>

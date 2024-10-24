@@ -34,7 +34,7 @@ function idxInRange(idx, from, to) {
 }
 
 const dividerFromIdx = computed(function () {
-  if (props.fromWord) {
+  if (typeof props.fromWord != 'undefined') {
     return idxInRange(props.fromWord, 0, lastWord.value);
   }
   return -1;

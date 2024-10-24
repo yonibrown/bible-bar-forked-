@@ -424,6 +424,10 @@ class biBoardField {
     return this._widthPct;
   }
 
+  get parentField() {
+    return this._parentField;
+  }
+
   get proj() {
     return this._board.proj;
   }
@@ -573,7 +577,11 @@ class biBoardContent {
     this._src_to_division = +rec.src_to_division;
     this._src_to_word = +rec.src_to_word;
     this._src_to_name = rec.src_to_name;
-
+    this._src_from_position = +rec.gen_from_position;
+    this._src_to_position = +rec.gen_to_position;
+    this._src_from_text = rec.gen_from_text;
+    this._src_to_text = rec.gen_to_text;
+    
     this._line = line;
     this._type = line._board.getField(
       rec.field
@@ -608,6 +616,10 @@ class biBoardContent {
           src_to_division: this._src_to_division,
           src_to_word: this._src_to_word,
           src_to_name: this._src_to_name,
+          src_from_position: this._src_from_position,
+          src_to_position: this._src_to_position,
+          src_from_text: this._src_from_text,
+          src_to_text: this._src_to_text,
         };
     }
     // default (this.type == 'FreeText')
