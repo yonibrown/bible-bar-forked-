@@ -1,18 +1,20 @@
 <template>
-  <one-range
-    v-if="oneVerse"
-    :text="part.src_from_text"
-    :fromWord="part.src_from_word"
-    :toWord="part.src_to_word"
-  ></one-range>
-  <span v-else>
+  <span v-if="part">
     <one-range
+      v-if="oneVerse"
       :text="part.src_from_text"
       :fromWord="part.src_from_word"
+      :toWord="part.src_to_word"
     ></one-range>
-    ...
-    <one-range :text="part.src_to_text" :toWord="part.src_to_word"></one-range
-  ></span>
+    <span v-else>
+      <one-range
+        :text="part.src_from_text"
+        :fromWord="part.src_from_word"
+      ></one-range>
+      ...
+      <one-range :text="part.src_to_text" :toWord="part.src_to_word"></one-range
+    ></span>
+  </span>
 </template>
 
 <script setup>
@@ -31,10 +33,16 @@ function changeValue(newVal) {
 }
 provide("changeValue", changeValue);
 
-provide("editMode", computed(function () {
-  return props.editMode;
-}));
-provide("displayWholeVerse", computed(function () {
-  return props.displayWholeVerse;
-}));
+provide(
+  "editMode",
+  computed(function () {
+    return props.editMode;
+  })
+);
+provide(
+  "displayWholeVerse",
+  computed(function () {
+    return props.displayWholeVerse;
+  })
+);
 </script>

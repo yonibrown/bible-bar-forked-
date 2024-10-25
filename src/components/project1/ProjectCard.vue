@@ -8,6 +8,7 @@
     ></base-editable>
     <span class="menu-buttons">
       <!-- <menu-button type="reload" @click="reloadElement"></menu-button> -->
+      <menu-button type="options" @click="openOptions"></menu-button>
       <menu-button type="addtab" @click="addTab"></menu-button>
       <menu-button type="clipboard" @click="copyToClipboard"></menu-button>
       <menu-button type="add" @click="openNewElement"></menu-button>
