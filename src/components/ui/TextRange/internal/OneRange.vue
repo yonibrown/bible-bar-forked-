@@ -51,7 +51,7 @@ provide("dividerToIdx", dividerToIdx);
 
 function setDivider(idx, wordDivider) {
   var updAttr = {};
-  if (wordDivider == "from" && props.fromWord) {
+  if (wordDivider == "from" && typeof props.fromWord != 'undefined') {
     if (idx < dividerFromIdx.value) {
       updAttr.src_from_word = idx;
     } else {

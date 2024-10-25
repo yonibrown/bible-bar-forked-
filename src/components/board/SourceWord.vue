@@ -2,7 +2,7 @@
   <text-range
     :part="part"
     :disabled="!editMode"
-    @changeValue="(newVal) => updateRange(part, newVal)"
+    @changeValue="updateRange"
   ></text-range>
 </template>
 
@@ -20,16 +20,19 @@ const fldContent = computed(function () {
 });
 
 const part = computed(function () {
+  console.log('part',fldContent.value);
   if (fldContent.value) {
     return fldContent.value.val;
   }
 });
 
-// function updateRange(content) {
-//   if (fldContent.value) {
-//     fldContent.value.changeAttr(content);
-//   } else {
-//     props.line.addContent({ field: props.fldId, content });
-//   }
-// }
+function updateRange(content) {
+  if (fldContent.value) {
+    console.log('updateRange update',fldContent.value,content);
+    fldContent.value.changeAttr(content);
+  } else {
+    console.log('updateRange add',props.line,content);
+    props.line.addContent({ field: props.fldId, content });
+  }
+}
 </script>

@@ -350,7 +350,7 @@ class biElmBoard extends biElement {
       position: attr.position,
       type: attr.fieldType,
     };
-    if (attr.fieldType == "SourceWord"){
+    if (attr.fieldType == "SourceWord") {
       fieldProp.parent_field = attr.openingField.id;
     }
     const data = {
@@ -512,7 +512,7 @@ class biBoardLine {
   content(fldId) {
     let searchFieldId = null;
     const field = this._board.getField(fldId);
-    if (field.parentField == fldId){
+    if (field.parentField == fldId) {
       searchFieldId = fldId;
     } else {
       searchFieldId = field.parentField;
@@ -577,11 +577,11 @@ class biBoardContent {
     this._src_to_division = +rec.src_to_division;
     this._src_to_word = +rec.src_to_word;
     this._src_to_name = rec.src_to_name;
-    this._src_from_position = +rec.gen_from_position;
-    this._src_to_position = +rec.gen_to_position;
-    this._src_from_text = rec.gen_from_text;
-    this._src_to_text = rec.gen_to_text;
-    
+    this._gen_from_position = +rec.gen_from_position;
+    this._gen_to_position = +rec.gen_to_position;
+    this._gen_from_text = rec.gen_from_text;
+    this._gen_to_text = rec.gen_to_text;
+
     this._line = line;
     this._type = line._board.getField(
       rec.field
@@ -616,10 +616,10 @@ class biBoardContent {
           src_to_division: this._src_to_division,
           src_to_word: this._src_to_word,
           src_to_name: this._src_to_name,
-          src_from_position: this._src_from_position,
-          src_to_position: this._src_to_position,
-          src_from_text: this._src_from_text,
-          src_to_text: this._src_to_text,
+          src_from_position: this._gen_from_position,
+          src_to_position: this._gen_to_position,
+          src_from_text: this._gen_from_text,
+          src_to_text: this._gen_to_text,
         };
     }
     // default (this.type == 'FreeText')
@@ -661,6 +661,7 @@ class biBoardContent {
     if (typeof attr.src_to_name != "undefined") {
       this._src_to_name = attr.src_to_name;
     }
+
     const data = {
       type: "brd_content",
       oper: "set",
@@ -669,5 +670,11 @@ class biBoardContent {
     };
 
     const obj = await sendToServer(data);
+
+    // update generated values
+    this._gen_from_position = +obj.data.gen_from_position;
+    this._gen_to_position = +obj.data.gen_to_position;
+    this._gen_from_text = obj.data.gen_from_text;
+    this._gen_to_text = obj.data.gen_to_text;
   }
 }
