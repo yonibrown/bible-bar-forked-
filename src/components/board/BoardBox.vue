@@ -164,6 +164,7 @@ const fieldMenuData = computed(function () {
     arr.push({ separator: true });
     arr.push({
       label: "הצג פסוק שלם",
+      command: toggleDisplayWholeVerse
     });
   }
 
@@ -186,6 +187,12 @@ function addField(fieldType) {
 
 function deleteField() {
   boardFields.value[focusFieldIdx.value].delete();
+}
+
+function toggleDisplayWholeVerse(){
+  boardFields.value[focusFieldIdx.value].changeAttr({
+    display_whole_verse: !boardFields.value[focusFieldIdx.value].displayWholeVerse
+  });
 }
 
 // lines

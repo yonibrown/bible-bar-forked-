@@ -1,8 +1,9 @@
 <template>
   <text-range
     :part="part"
-    :disabled="!editMode"
+    :editMode="editMode"
     @changeValue="updateRange"
+    :displayWholeVerse="displayWholeVerse"
   ></text-range>
 </template>
 
@@ -20,18 +21,21 @@ const fldContent = computed(function () {
 });
 
 const part = computed(function () {
-  console.log('part',fldContent.value);
   if (fldContent.value) {
     return fldContent.value.val;
   }
 });
 
+const displayWholeVerse = computed(function () {
+  if (fldContent.value) {
+    return fldContent.value.displayWholeVerse;
+  }
+});
+
 function updateRange(content) {
   if (fldContent.value) {
-    console.log('updateRange update',fldContent.value,content);
     fldContent.value.changeAttr(content);
   } else {
-    console.log('updateRange add',props.line,content);
     props.line.addContent({ field: props.fldId, content });
   }
 }

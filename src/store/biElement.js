@@ -398,6 +398,7 @@ class biBoardField {
     this._text = rec.text;
     this._widthPct = rec.width_pct;
     this._parentField = rec.parent_field;
+    this._displayWholeVerse = rec.display_whole_verse;
   }
 
   get id() {
@@ -428,6 +429,15 @@ class biBoardField {
     return this._parentField;
   }
 
+  get displayWholeVerse() {
+    if (this.id == this.parentField) {
+      return this._displayWholeVerse;
+    }
+
+    const parent = this._board.getField(this.parentField);
+    return parent._displayWholeVerse;
+  }
+
   get proj() {
     return this._board.proj;
   }
@@ -456,6 +466,15 @@ class biBoardField {
   async changeAttr(attr) {
     if (typeof attr.title != "undefined") {
       this._title = attr.title;
+    }
+    if (typeof attr.display_whole_verse != "undefined") {
+      if (this.id == this.parentField) {
+        this._displayWholeVerse = attr.display_whole_verse;
+      } else {
+        const parent = this._board.getField(this.parentField);
+        parent.changeAttr(attr);
+        return;
+      }
     }
 
     const data = {
@@ -583,9 +602,7 @@ class biBoardContent {
     this._gen_to_text = rec.gen_to_text;
 
     this._line = line;
-    this._type = line._board.getField(
-      rec.field
-    ).type; /* the type cannot be changed */
+    this._field = line._board.getField(rec.field);
   }
 
   get id() {
@@ -604,8 +621,16 @@ class biBoardContent {
     return this._line.id;
   }
 
+  get type() {
+    return this._field.type;
+  }
+
+  get displayWholeVerse() {
+    return this._field.displayWholeVerse;
+  }
+
   get val() {
-    switch (this._type) {
+    switch (this.type) {
       case "SourceVerse":
         return {
           src_research: this._src_research,

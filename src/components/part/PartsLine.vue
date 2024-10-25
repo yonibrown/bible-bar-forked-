@@ -13,8 +13,9 @@
     <template #text>
       <text-range
         :part="line"
-        :disabled="!enableSelection"
+        :editMode="enableSelection"
         @changeValue="(newVal) => updateRange(line, newVal)"
+        :displayWholeVerse="true"
       ></text-range>
     </template>
   </spec-line>
