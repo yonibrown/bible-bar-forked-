@@ -22,18 +22,18 @@
     @openFieldMenu="openFieldMenu"
   >
   </spec-table>
-  <ContextMenu ref="fieldMenuRef" :model="fieldMenuData">
-    <template #item="{ item }">
-      <div class="context" :class="{ checked: item.checked }">
-        <i :class="item.icon"></i>
-        <span>{{ item.label }}</span>
-      </div>
-    </template>
-  </ContextMenu>
+  <field-menu
+    ref="fieldMenuRef"
+    :field="focusField"
+    @addField="addField"
+    @deleteField="deleteField"
+    @toggleDisplayWholeVerse="toggleDisplayWholeVerse"
+    @changeReferenceStyle="changeReferenceStyle"
+  ></field-menu>
 </template>
 
 <script setup>
-import ContextMenu from "primevue/contextmenu";
+import FieldMenu from "./FieldMenu.vue";
 import { ordering } from "../../general.js";
 
 import { inject, computed, ref } from "vue";
@@ -120,124 +120,42 @@ function reorderFields(attr) {
   });
 }
 
-const fieldMenuData = computed(function () {
-  // 'add field' options
-  const addArr = [
-    {
-      label: "טקסט חופשי",
-      icon: "fa fa-align-right",
-      command: () => {
-        addField("FreeText");
-      },
-    },
-    {
-      label: "טווח פסוקים",
-      icon: "fa fa-book",
-      command: () => {
-        addField("SourceVerse");
-      },
-    },
-  ];
+const focusFieldIdx = ref(-1);
 
-  if (
-    focusFieldIdx.value >= 0 &&
-    boardFields.value[focusFieldIdx.value].type == "SourceVerse"
-  ) {
-    addArr.push({ separator: true });
-    addArr.push({
-      label: "מילים מתוך פסוק",
-      icon: "fa fa-file-text-o",
-      command: () => {
-        addField("SourceWord");
-      },
-    });
+const focusField = computed(function () {
+  if (focusFieldIdx.value < 0) {
+    return null;
   }
-
-  // 'verse reference style' options
-  const verseRefArr = [
-    {
-      label: "מלכים א יח יב",
-      // icon:
-      //   boardFields.value[focusFieldIdx.value].referenceStyle == 0
-      //     ? "fa fa-check"
-      //     : "",
-      // checked: boardFields.value[focusFieldIdx.value].referenceStyle == 0,
-    },
-    {
-      label: 'מלכים א\' י"ח י"ב',
-      // icon:
-      //   boardFields.value[focusFieldIdx.value].referenceStyle == 1
-      //     ? "fa fa-check"
-      //     : "",
-      // checked: boardFields.value[focusFieldIdx.value].referenceStyle == 1,
-    },
-    {
-      label: 'מל"א יח 12',
-      // icon:
-      //   boardFields.value[focusFieldIdx.value].referenceStyle == 2
-      //     ? "fa fa-check"
-      //     : "",
-      // checked: boardFields.value[focusFieldIdx.value].referenceStyle == 2,
-    },
-  ];
-
-  // main options
-  const arr = [
-    { label: "מחק עמודה", icon: "fa fa-close", command: deleteField },
-    { label: "הוסף", icon: "fa fa-plus", items: addArr },
-  ];
-
-  if (
-    focusFieldIdx.value >= 0 &&
-    boardFields.value[focusFieldIdx.value].type == "SourceWord"
-  ) {
-    arr.push({ separator: true });
-    arr.push({
-      label: "הצג פסוק שלם",
-      icon: boardFields.value[focusFieldIdx.value].displayWholeVerse
-        ? ""
-        : "fa fa-check",
-      checked: !boardFields.value[focusFieldIdx.value].displayWholeVerse,
-      command: toggleDisplayWholeVerse,
-    });
-  }
-
-  if (
-    focusFieldIdx.value >= 0 &&
-    boardFields.value[focusFieldIdx.value].type == "SourceVerse"
-  ) {
-    arr.push({ separator: true });
-    arr.push({
-      label: "סגנון הפניה",
-      items: verseRefArr,
-    });
-  }
-
-  return arr;
+  return boardFields.value[focusFieldIdx.value];
 });
 
-const focusFieldIdx = ref(-1);
 function openFieldMenu(attr) {
   focusFieldIdx.value = attr.idx;
-  fieldMenuRef.value.show(event);
+  fieldMenuRef.value.show();
 }
 
 function addField(fieldType) {
+  console.log("addField", fieldType);
   element.value.addField({
     position: ordFields.nextPos(focusFieldIdx.value),
     fieldType,
-    openingField: boardFields.value[focusFieldIdx.value],
+    openingField: focusField.value,
   });
 }
 
 function deleteField() {
-  boardFields.value[focusFieldIdx.value].delete();
+  focusField.value.delete();
 }
 
 function toggleDisplayWholeVerse() {
-  boardFields.value[focusFieldIdx.value].changeAttr({
-    display_whole_verse:
-      !boardFields.value[focusFieldIdx.value].displayWholeVerse,
+  focusField.value.changeAttr({
+    display_whole_verse: !focusField.value.displayWholeVerse,
+  });
+}
+
+function changeReferenceStyle(newVal) {
+  focusField.value.changeAttr({
+    reference_style: newVal,
   });
 }
 
@@ -290,16 +208,3 @@ function sortLines(attr) {
   element.value.sortLines(attr);
 }
 </script>
-
-<style scoped>
-.context {
-  padding: 8px;
-  cursor: default;
-}
-.context > span {
-  margin: 10px;
-}
-.checked {
-  background-color: #d7e3f1;
-}
-</style>

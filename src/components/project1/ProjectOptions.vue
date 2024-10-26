@@ -26,7 +26,6 @@
 import { ref, inject } from "vue";
 
 const project = inject("project");
-console.log('project',project.value);
 
 const bookStyle = ref(0);
 const chapterStyle = ref(0);
