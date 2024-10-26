@@ -399,6 +399,7 @@ class biBoardField {
     this._widthPct = rec.width_pct;
     this._parentField = rec.parent_field;
     this._displayWholeVerse = rec.display_whole_verse;
+    this._referenceStyle = rec.reference_style;
   }
 
   get id() {
@@ -430,12 +431,11 @@ class biBoardField {
   }
 
   get displayWholeVerse() {
-    if (this.id == this.parentField) {
-      return this._displayWholeVerse;
-    }
+    return this.getParent()._displayWholeVerse;
+  }
 
-    const parent = this._board.getField(this.parentField);
-    return parent._displayWholeVerse;
+  get referenceStyle() {
+    return this.getParent()._referenceStyle;
   }
 
   get proj() {
@@ -454,6 +454,13 @@ class biBoardField {
     };
   }
 
+  getParent() {
+    if (this.id == this.parentField) {
+      return this;
+    }
+    return this._board.getField(this.parentField);
+  }
+
   setPosition(position) {
     this._position = position;
     this.changeAttr({ position });
@@ -468,13 +475,18 @@ class biBoardField {
       this._title = attr.title;
     }
     if (typeof attr.display_whole_verse != "undefined") {
-      if (this.id == this.parentField) {
-        this._displayWholeVerse = attr.display_whole_verse;
-      } else {
-        const parent = this._board.getField(this.parentField);
-        parent.changeAttr(attr);
+      if (this.id != this.parentField) {
+        this.getParent().changeAttr(attr);
         return;
       }
+      this._displayWholeVerse = attr.display_whole_verse;
+    }
+    if (typeof attr.reference_style != "undefined") {
+      if (this.id != this.parentField) {
+        this.getParent().changeAttr(attr);
+        return;
+      }
+      this._referenceStyle = attr.reference_style;
     }
 
     const data = {

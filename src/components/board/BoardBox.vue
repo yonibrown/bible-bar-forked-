@@ -24,7 +24,7 @@
   </spec-table>
   <ContextMenu ref="fieldMenuRef" :model="fieldMenuData">
     <template #item="{ item }">
-      <div class="context">
+      <div class="context" :class="{ checked: item.checked }">
         <i :class="item.icon"></i>
         <span>{{ item.label }}</span>
       </div>
@@ -121,6 +121,7 @@ function reorderFields(attr) {
 }
 
 const fieldMenuData = computed(function () {
+  // 'add field' options
   const addArr = [
     {
       label: "טקסט חופשי",
@@ -152,6 +153,35 @@ const fieldMenuData = computed(function () {
     });
   }
 
+  // 'verse reference style' options
+  const verseRefArr = [
+    {
+      label: "מלכים א יח יב",
+      // icon:
+      //   boardFields.value[focusFieldIdx.value].referenceStyle == 0
+      //     ? "fa fa-check"
+      //     : "",
+      // checked: boardFields.value[focusFieldIdx.value].referenceStyle == 0,
+    },
+    {
+      label: 'מלכים א\' י"ח י"ב',
+      // icon:
+      //   boardFields.value[focusFieldIdx.value].referenceStyle == 1
+      //     ? "fa fa-check"
+      //     : "",
+      // checked: boardFields.value[focusFieldIdx.value].referenceStyle == 1,
+    },
+    {
+      label: 'מל"א יח 12',
+      // icon:
+      //   boardFields.value[focusFieldIdx.value].referenceStyle == 2
+      //     ? "fa fa-check"
+      //     : "",
+      // checked: boardFields.value[focusFieldIdx.value].referenceStyle == 2,
+    },
+  ];
+
+  // main options
   const arr = [
     { label: "מחק עמודה", icon: "fa fa-close", command: deleteField },
     { label: "הוסף", icon: "fa fa-plus", items: addArr },
@@ -164,7 +194,22 @@ const fieldMenuData = computed(function () {
     arr.push({ separator: true });
     arr.push({
       label: "הצג פסוק שלם",
-      command: toggleDisplayWholeVerse
+      icon: boardFields.value[focusFieldIdx.value].displayWholeVerse
+        ? ""
+        : "fa fa-check",
+      checked: !boardFields.value[focusFieldIdx.value].displayWholeVerse,
+      command: toggleDisplayWholeVerse,
+    });
+  }
+
+  if (
+    focusFieldIdx.value >= 0 &&
+    boardFields.value[focusFieldIdx.value].type == "SourceVerse"
+  ) {
+    arr.push({ separator: true });
+    arr.push({
+      label: "סגנון הפניה",
+      items: verseRefArr,
     });
   }
 
@@ -189,9 +234,10 @@ function deleteField() {
   boardFields.value[focusFieldIdx.value].delete();
 }
 
-function toggleDisplayWholeVerse(){
+function toggleDisplayWholeVerse() {
   boardFields.value[focusFieldIdx.value].changeAttr({
-    display_whole_verse: !boardFields.value[focusFieldIdx.value].displayWholeVerse
+    display_whole_verse:
+      !boardFields.value[focusFieldIdx.value].displayWholeVerse,
   });
 }
 
@@ -252,5 +298,8 @@ function sortLines(attr) {
 }
 .context > span {
   margin: 10px;
+}
+.checked {
+  background-color: #d7e3f1;
 }
 </style>
