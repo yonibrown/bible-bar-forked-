@@ -46,7 +46,7 @@ const fieldMenuData = computed(function () {
     },
   ];
 
-  if (props.field != null && props.field.type == "SourceVerse") {
+  if (props.field && props.field.type == "SourceVerse") {
     addArr.push({ separator: true });
     addArr.push({
       label: "מילים מתוך פסוק",
@@ -99,7 +99,7 @@ const fieldMenuData = computed(function () {
     { label: "הוסף", icon: "fa fa-plus", items: addArr },
   ];
 
-  if (props.field != null && props.field.type == "SourceWord") {
+  if (props.field && props.field.type == "SourceWord") {
     arr.push({ separator: true });
     arr.push({
       label: "הצג פסוק שלם",
@@ -111,7 +111,7 @@ const fieldMenuData = computed(function () {
     });
   }
 
-  if (props.field != null && props.field.type == "SourceVerse") {
+  if (props.field && props.field.type == "SourceVerse") {
     arr.push({ separator: true });
     arr.push({
       label: "סגנון הפניה",
