@@ -346,11 +346,18 @@ class biElmBoard extends biElement {
   }
 
   async addField(attr) {
+    const fieldProp = {
+      position: attr.position,
+      type: attr.fieldType,
+    };
+    if (attr.fieldType == "SourceWord") {
+      fieldProp.parent_field = attr.openingField.id;
+    }
     const data = {
       type: "board",
       oper: "add_field",
       id: this.dbId,
-      prop: attr,
+      prop: fieldProp,
     };
 
     const obj = await sendToServer(data);
@@ -390,6 +397,9 @@ class biBoardField {
     this._type = rec.type;
     this._text = rec.text;
     this._widthPct = rec.width_pct;
+    this._parentField = rec.parent_field;
+    this._displayWholeVerse = rec.display_whole_verse;
+    this._referenceStyle = rec.reference_style;
   }
 
   get id() {
@@ -416,6 +426,18 @@ class biBoardField {
     return this._widthPct;
   }
 
+  get parentField() {
+    return this._parentField;
+  }
+
+  get displayWholeVerse() {
+    return this.getParent()._displayWholeVerse;
+  }
+
+  get referenceStyle() {
+    return this.getParent()._referenceStyle;
+  }
+
   get proj() {
     return this._board.proj;
   }
@@ -432,6 +454,13 @@ class biBoardField {
     };
   }
 
+  getParent() {
+    if (this.id == this.parentField) {
+      return this;
+    }
+    return this._board.getField(this.parentField);
+  }
+
   setPosition(position) {
     this._position = position;
     this.changeAttr({ position });
@@ -444,6 +473,20 @@ class biBoardField {
   async changeAttr(attr) {
     if (typeof attr.title != "undefined") {
       this._title = attr.title;
+    }
+    if (typeof attr.display_whole_verse != "undefined") {
+      if (this.id != this.parentField) {
+        this.getParent().changeAttr(attr);
+        return;
+      }
+      this._displayWholeVerse = attr.display_whole_verse;
+    }
+    if (typeof attr.reference_style != "undefined") {
+      if (this.id != this.parentField) {
+        this.getParent().changeAttr(attr);
+        return;
+      }
+      this._referenceStyle = attr.reference_style;
     }
 
     const data = {
@@ -498,8 +541,15 @@ class biBoardLine {
   }
 
   content(fldId) {
+    let searchFieldId = null;
+    const field = this._board.getField(fldId);
+    if (field.parentField == fldId) {
+      searchFieldId = fldId;
+    } else {
+      searchFieldId = field.parentField;
+    }
     return this._content.find(function (fld) {
-      return fld.id == fldId;
+      return fld.id == searchFieldId;
     });
   }
 
@@ -510,7 +560,9 @@ class biBoardLine {
   }
 
   async addContent(attr) {
-    this._content.push(new biBoardContent(attr, this));
+    this._content.push(
+      new biBoardContent({ field: attr.field, ...attr.content }, this)
+    );
     const data = {
       type: "brd_line",
       oper: "new_content",
@@ -556,22 +608,13 @@ class biBoardContent {
     this._src_to_division = +rec.src_to_division;
     this._src_to_word = +rec.src_to_word;
     this._src_to_name = rec.src_to_name;
-
-    // this._source = {
-    //   src_research: +rec.src_research,
-    //   src_collection: +rec.src_collection,
-    //   src_from_division: +rec.src_from_division,
-    //   src_from_word: +rec.src_from_word,
-    //   src_from_name: rec.src_from_name,
-    //   src_to_division: +rec.src_to_division,
-    //   src_to_word: +rec.src_to_word,
-    //   src_to_name: rec.src_to_name,
-    // };
+    this._gen_from_position = +rec.gen_from_position;
+    this._gen_to_position = +rec.gen_to_position;
+    this._gen_from_text = rec.gen_from_text;
+    this._gen_to_text = rec.gen_to_text;
 
     this._line = line;
-    this._type = line._board.getField(
-      rec.field
-    ).type; /* the type cannot be changed */
+    this._field = line._board.getField(rec.field);
   }
 
   get id() {
@@ -590,8 +633,20 @@ class biBoardContent {
     return this._line.id;
   }
 
+  get type() {
+    return this._field.type;
+  }
+
+  get displayWholeVerse() {
+    return this._field.displayWholeVerse;
+  }
+
+  get referenceStyle() {
+    return this._field.referenceStyle;
+  }
+
   get val() {
-    switch (this._type) {
+    switch (this.type) {
       case "SourceVerse":
         return {
           src_research: this._src_research,
@@ -602,6 +657,10 @@ class biBoardContent {
           src_to_division: this._src_to_division,
           src_to_word: this._src_to_word,
           src_to_name: this._src_to_name,
+          src_from_position: this._gen_from_position,
+          src_to_position: this._gen_to_position,
+          src_from_text: this._gen_from_text,
+          src_to_text: this._gen_to_text,
         };
     }
     // default (this.type == 'FreeText')
@@ -643,6 +702,7 @@ class biBoardContent {
     if (typeof attr.src_to_name != "undefined") {
       this._src_to_name = attr.src_to_name;
     }
+
     const data = {
       type: "brd_content",
       oper: "set",
@@ -651,5 +711,11 @@ class biBoardContent {
     };
 
     const obj = await sendToServer(data);
+
+    // update generated values
+    this._gen_from_position = +obj.data.gen_from_position;
+    this._gen_to_position = +obj.data.gen_to_position;
+    this._gen_from_text = obj.data.gen_from_text;
+    this._gen_to_text = obj.data.gen_to_text;
   }
 }

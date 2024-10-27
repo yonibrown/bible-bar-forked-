@@ -1,14 +1,14 @@
 <template>
-  <verse-range
+  <text-range
     :part="part"
-    :editable="editMode"
-    @changeValue="(newVal) => updateRange(newVal)"
-    :referenceStyle="referenceStyle"
-  ></verse-range>
+    :editMode="editMode"
+    @changeValue="updateRange"
+    :displayWholeVerse="displayWholeVerse"
+  ></text-range>
 </template>
 
 <script setup>
-import VerseRange from "../sequence/VerseRange.vue";
+import TextRange from "../ui/TextRange/TextRange.vue";
 import { computed, inject, ref } from "vue";
 const props = defineProps(["line", "fldId"]);
 
@@ -26,11 +26,10 @@ const part = computed(function () {
   }
 });
 
-const referenceStyle = computed(function () {
+const displayWholeVerse = computed(function () {
   if (fldContent.value) {
-    return fldContent.value.referenceStyle;
+    return fldContent.value.displayWholeVerse;
   }
-  return 0;
 });
 
 function updateRange(content) {

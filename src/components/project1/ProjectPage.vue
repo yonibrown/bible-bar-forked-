@@ -4,9 +4,12 @@
       <project-card
         :openNewElement="openNewElement"
         :copyToClipboard="copyToClipboard"
-        :toggleEditMode="toggleEditMode"
+        @toggleEditMode="toggleEditMode"
+        @toggleOptions="toggleOptions"
       >
       </project-card>
+      <project-options v-show="showOptions">
+      </project-options>
       <div class="tab-box">
         <div
           class="tab"
@@ -25,6 +28,7 @@
 </template>
 
 <script setup>
+import ProjectOptions from "./ProjectOptions.vue";
 import ElementList from "./ElementList.vue";
 import ProjectCard from "./ProjectCard.vue";
 import { ref, provide, computed } from "vue";
@@ -41,6 +45,12 @@ function toggleEditMode() {
   editMode.value = !editMode.value;
 }
 provide("editMode", editMode);
+
+const showOptions = ref(false);
+function toggleOptions() {
+  showOptions.value = !showOptions.value;
+}
+provide("showOptions", showOptions);
 
 const tabs = computed(function () {
   return project.value.tabs;

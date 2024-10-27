@@ -1,7 +1,7 @@
 <template>
   <span>
     <seq-key-level
-      v-for="(lvl, lvlIdx) in keyLevels"
+      v-for="(lvl, lvlIdx) in levels"
       :key="lvlIdx"
       :keyLvl="lvl"
       :keyLvlIdx="lvlIdx"
@@ -22,8 +22,9 @@ const defaultDiv = props.defaultValue == "min" ? "0" : "-1";
 // const lastKeyIdx = props.initialValue.length - 1;
 
 const seqIndex = inject("seqIndex");
+
+const levels = ref([]);
 var selectedKey = [];
-const keyLevels = ref([]);
 
 const initialKey = computed(function () {
   return props.initialValue;
@@ -35,13 +36,12 @@ updateKey(initialKey.value);
 // update selectedKey according to initialKey after change
 // watch(initialKey, updateKey);
 watch(initialKey, function (newVal) {
-  console.log("initialKey changed - update selectedKey");
   updateKey(newVal);
 });
 
-// update selectedKey according to the parameter
+// update selectedKey according to a parameter coming from outside
+// and reload levels
 function updateKey(key) {
-  console.log("update key", key);
   if (key) {
     key.forEach((lvl, lvlIdx) => {
       selectedKey[lvlIdx] = {
@@ -49,37 +49,43 @@ function updateKey(key) {
         division_id: lvl.division_id,
       };
     });
-  } else {
-    selectedKey = [{ division_id: -1 }];
   }
-  loadDivisions();
+  loadLevels();
 }
 
 function clear() {
-  console.log("clear");
   changeKeyLevel({ lvlIdx: 0, div: defaultDiv });
 }
 
-async function loadDivisions() {
-  console.log("loadDivisions", seqIndex.value, selectedKey);
-  keyLevels.value = await biResearch.getDivisions(seqIndex.value, {
+async function loadLevels() {
+  levels.value = await biResearch.getDivisions(seqIndex.value, {
     key: selectedKey,
   });
-  console.log("loadDivisions keyLevels", keyLevels.value);
+  if (selectedKey.length == 0) {
+    levels.value.forEach((lvl, lvlIdx) => {
+      selectedKey[lvlIdx] = {
+        level: lvl.level,
+        division_id: lvl.selected_div,
+      };
+    });
+  }
 }
 
+// chage division for a level in the selected key
 async function changeKeyLevel({ lvlIdx, div }) {
-  console.log("changeKeyLevel", div);
-  // update div
-  selectedKey[lvlIdx].division_id = div;
-
+  // handle no choise
   if (div == -999) {
-    for (let i = lvlIdx + 1; i < selectedKey.length; i++) {
-      keyLevels.value[i].divisions = [];
+    selectedKey = [];
+
+    for (let i = lvlIdx + 1; i < levels.value.length; i++) {
+      levels.value[i].divisions = [];
     }
     emit("changeValue", { id: div, name: "" });
     return;
   }
+
+  // update div
+  selectedKey[lvlIdx].division_id = div;
 
   // init divs in next levels
   for (let i = lvlIdx + 1; i < selectedKey.length; i++) {
@@ -88,7 +94,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
 
   // refresh div lists
   if (lvlIdx + 1 < selectedKey.length) {
-    await loadDivisions();
+    await loadLevels();
   }
 
   // update selected div
@@ -107,8 +113,7 @@ async function changeKeyLevel({ lvlIdx, div }) {
 }
 
 function updateSelectedKey() {
-  console.log("updateSelectedKey");
-  keyLevels.value.forEach(function (lvl, idx) {
+  levels.value.forEach(function (lvl, idx) {
     if (selectedKey[idx].division_id == defaultDiv) {
       if (defaultDiv == 0) {
         selectedKey[idx].division_id = lvl.divisions[0].id;
@@ -124,7 +129,6 @@ function updateSelectedKey() {
 }
 
 function getKey() {
-  console.log("getKey");
   const cloneKey = [];
   selectedKey.forEach((lvl, lvlIdx) => {
     cloneKey[lvlIdx] = { ...lvl };
