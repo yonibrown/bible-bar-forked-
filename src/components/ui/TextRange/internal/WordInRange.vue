@@ -28,21 +28,32 @@ const dividerFromIdx = inject("dividerFromIdx");
 const dividerToIdx = inject("dividerToIdx");
 const setDivider = inject("setDivider");
 const hilightWord = inject("hilightWord");
-const disabled = inject("disabled");
+const editMode = inject("editMode");
+const displayWholeVerse = inject("displayWholeVerse");
 
 const wordClass = computed(function () {
-  return props.wordIdx >= dividerFromIdx.value &&
-    props.wordIdx <= dividerToIdx.value
-    ? "inWord"
-    : "outWord";
+  if (props.wordIdx >= dividerFromIdx.value &&
+  props.wordIdx <= dividerToIdx.value){
+    return "inWord";
+  }
+
+  if (displayWholeVerse.value){
+    return "outWord";
+  }
+
+  if (editMode.value){
+    return "wordToHide";
+  }
+
+  return "hiddenWord";
 });
 
 const displayFromDivider = computed(function () {
-  return !disabled.value && props.wordIdx == dividerFromIdx.value;
+  return editMode.value && props.wordIdx == dividerFromIdx.value;
 });
 
 const displayToDivider = computed(function () {
-  return !disabled.value && props.wordIdx == dividerToIdx.value;
+  return editMode.value && props.wordIdx == dividerToIdx.value;
 });
 
 function setDividerOnWord(dragData) {
@@ -66,11 +77,16 @@ function leaveWord() {
 }
 
 .inWord {
-  /* background-color: rgb(204, 233, 233); */
   font-weight: bold;
 }
 .outWord {
-  /* background-color: rgb(204, 233, 233); */
   color: gray;
+}
+.wordToHide {
+  color: gray;
+  text-decoration: line-through;
+}
+.hiddenWord {
+  display: none;
 }
 </style>

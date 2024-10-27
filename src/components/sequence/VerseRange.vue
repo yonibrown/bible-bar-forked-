@@ -29,11 +29,15 @@
 import VerseEditable from "./VerseEditable.vue";
 import { computed, provide, ref } from "vue";
 
-const props = defineProps(["part", "editable"]);
+const props = defineProps(["part", "editable","referenceStyle"]);
 const emit = defineEmits(["changeValue"]);
 
 const defaultIndex = { res: 1, col: 1, idx: 1 };
 const defaultDivision = 972; /* Genesis,1,1 */
+
+provide("referenceStyle",computed(function(){
+  return props.referenceStyle;
+}));
 
 const showRangeButton = computed(function () {
   // return props.editable ;

@@ -8,18 +8,15 @@
         :part="line"
         :editable="enableSelection"
         @changeValue="(newVal) => updateRange(line, newVal)"
-      ></verse-range>
+        :referenceStyle="0"
+        ></verse-range>
     </template>
     <template #text>
       <text-range
-        :fromPosition="line.src_from_position"
-        :fromText="line.src_from_text"
-        :fromWord="line.src_from_word"
-        :toPosition="line.src_to_position"
-        :toText="line.src_to_text"
-        :toWord="line.src_to_word"
-        :disabled="!enableSelection"
+        :part="line"
+        :editMode="enableSelection"
         @changeValue="(newVal) => updateRange(line, newVal)"
+        :displayWholeVerse="true"
       ></text-range>
     </template>
   </spec-line>

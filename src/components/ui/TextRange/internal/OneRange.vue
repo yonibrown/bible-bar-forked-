@@ -34,7 +34,7 @@ function idxInRange(idx, from, to) {
 }
 
 const dividerFromIdx = computed(function () {
-  if (props.fromWord) {
+  if (typeof props.fromWord != 'undefined') {
     return idxInRange(props.fromWord, 0, lastWord.value);
   }
   return -1;
@@ -51,7 +51,7 @@ provide("dividerToIdx", dividerToIdx);
 
 function setDivider(idx, wordDivider) {
   var updAttr = {};
-  if (wordDivider == "from" && props.fromWord) {
+  if (wordDivider == "from" && typeof props.fromWord != 'undefined') {
     if (idx < dividerFromIdx.value) {
       updAttr.src_from_word = idx;
     } else {
