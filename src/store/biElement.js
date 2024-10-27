@@ -641,6 +641,10 @@ class biBoardContent {
     return this._field.displayWholeVerse;
   }
 
+  get referenceStyle() {
+    return this._field.referenceStyle;
+  }
+
   get val() {
     switch (this.type) {
       case "SourceVerse":

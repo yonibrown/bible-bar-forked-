@@ -36,7 +36,7 @@
 import FieldMenu from "./FieldMenu.vue";
 import { ordering } from "../../general.js";
 
-import { inject, computed, ref } from "vue";
+import { inject, computed, ref, provide } from "vue";
 
 const element = inject("element");
 const editMode = inject("editMode");

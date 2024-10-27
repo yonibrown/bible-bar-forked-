@@ -12,6 +12,7 @@
 <script setup>
 import ContextMenu from "primevue/contextmenu";
 import { inject, computed, ref } from "vue";
+import { biResearch } from "../../store/biResearch.js";
 
 const props = defineProps(["field"]);
 const emit = defineEmits([
@@ -58,22 +59,7 @@ const fieldMenuData = computed(function () {
   }
 
   // 'verse reference style' options
-  const refStyles = [
-    {
-      value: 0,
-      label: "מלכים א יח יב",
-    },
-    {
-      value: 1,
-      label: 'מלכים א\' י"ח י"ב',
-    },
-    {
-      value: 2,
-      label: 'מל"א יח 12',
-    },
-  ];
-
-  const verseRefArr = refStyles.map(function (st) {
+  const verseRefArr = biResearch.getReferenceStyles().map(function (st) {
     return {
       label: st.label,
       icon:

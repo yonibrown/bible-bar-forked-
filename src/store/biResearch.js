@@ -275,6 +275,26 @@ export class biResearch {
 
     return obj.data;
   }
+
+  static getReferenceStyles(){
+    return [
+      {
+        value: 0,
+        label: "מלכים א יח יב",
+        nameIdxArr: [1,1,1]
+      },
+      {
+        value: 1,
+        label: 'מלכים א\' י"ח י"ב',
+        nameIdxArr: [1,1,1]
+      },
+      {
+        value: 2,
+        label: 'מל"א יח 12',
+        nameIdxArr: [2,1,0]
+      },
+    ];
+  }
 }
 
 class biResearchCollection {

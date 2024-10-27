@@ -3,6 +3,7 @@
     :part="part"
     :editable="editMode"
     @changeValue="(newVal) => updateRange(newVal)"
+    :referenceStyle="referenceStyle"
   ></verse-range>
 </template>
 
@@ -23,6 +24,13 @@ const part = computed(function () {
   if (fldContent.value) {
     return fldContent.value.val;
   }
+});
+
+const referenceStyle = computed(function () {
+  if (fldContent.value) {
+    return fldContent.value.referenceStyle;
+  }
+  return 0;
 });
 
 function updateRange(content) {
