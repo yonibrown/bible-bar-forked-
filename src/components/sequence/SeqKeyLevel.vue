@@ -13,9 +13,9 @@ const props = defineProps(["keyLvlIdx", "keyLvl"]);
 const emit = defineEmits(["changeKeyLevel"]);
 import { biResearch } from "../../store/biResearch.js";
 
-console.log('keyLvlIdx',props.keyLvlIdx);
-console.log('keyLvl',props.keyLvl);
-console.log(biResearch.getReferenceStyles());
+// console.log('keyLvlIdx',props.keyLvlIdx);
+// console.log('keyLvl',props.keyLvl);
+// console.log(biResearch.getReferenceStyles());
 const divisions = computed(function () {
   const options = [];
   if (props.keyLvlIdx == 0) {
