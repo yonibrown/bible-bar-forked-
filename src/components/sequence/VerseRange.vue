@@ -7,7 +7,7 @@
       :referenceStyle="referenceStyle"
     ></sequence-key>
     <span v-if="displayOneVerse">
-      <button class="disp-range" v-show="showRangeButton" @click="displayRange">
+      <button class="disp-range" @click="displayRange">
         טווח
       </button>
     </span>
@@ -18,7 +18,7 @@
         @changeValue="updateTo"
         defaultValue="max"
         :referenceStyle="referenceStyle"
-        ></sequence-key>
+      ></sequence-key>
     </span>
     <button>שמור</button>
   </form>
@@ -43,10 +43,7 @@ const emit = defineEmits(["changeValue"]);
 const defaultIndex = { res: 1, col: 1, idx: 1 };
 const defaultDivision = 972; /* Genesis,1,1 */
 
-const showRangeButton = computed(function () {
-  // return props.editable ;
-  return props.editable && fromName.value != "";
-});
+console.log('props.part',props.part);
 
 const fromPosition = computed(function () {
   if (props.part) {
@@ -77,7 +74,7 @@ const seqIndex = computed(function () {
     return {
       res: props.part.src_research,
       col: props.part.src_collection,
-      idx: 1,
+      idx: props.part.src_index,
     };
   }
   return defaultIndex;
@@ -123,24 +120,20 @@ function updateTo(newVal) {
 }
 
 function submitValue() {
-  var fromDiv = props.part.src_from_division;
-  var toDiv = props.part.src_to_division;
-
-  if (!props.part) {
-    changedAttr.src_index = defaultIndex;
-  }
-
+  let fromDiv = fromDivision.value;
+  let toDiv = toDivision.value;
   if (changedAttr.src_from_division) {
-    if (displayOneVerse.value) {
-      changedAttr.src_to_division = changedAttr.src_from_division;
-      changedAttr.src_to_name = changedAttr.src_from_name;
-      changedAttr.src_to_word = changedAttr.src_from_word;
-    }
     fromDiv = changedAttr.src_from_division;
   }
-
   if (changedAttr.src_to_division) {
     toDiv = changedAttr.src_to_division;
+  }
+
+  if (changedAttr.src_from_division && !toDiv) {
+    toDiv = changedAttr.src_from_division;
+    changedAttr.src_to_division = changedAttr.src_from_division;
+    changedAttr.src_to_name = changedAttr.src_from_name;
+    changedAttr.src_to_word = changedAttr.src_from_word;
   }
 
   if (fromDiv == toDiv) {
@@ -158,7 +151,10 @@ const title = computed(function () {
     }
     return fromName.value;
   }
-  return "בחר פסוק...";
+  if (props.editable) {
+    return "בחר פסוק...";
+  }
+  return "";
 });
 
 const editing = ref(false);

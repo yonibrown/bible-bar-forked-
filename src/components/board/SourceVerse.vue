@@ -9,10 +9,11 @@
 
 <script setup>
 import VerseRange from "../sequence/VerseRange.vue";
-import { computed, inject, ref } from "vue";
+import { computed, inject } from "vue";
 const props = defineProps(["line", "fldId"]);
 
 const editMode = inject("editMode");
+const element = inject("element");
 
 const fldContent = computed(function () {
   if (!props.line.newLine) {
@@ -27,10 +28,7 @@ const part = computed(function () {
 });
 
 const referenceStyle = computed(function () {
-  if (fldContent.value) {
-    return fldContent.value.referenceStyle;
-  }
-  return 0;
+  return element.value.getField(props.fldId).referenceStyle;
 });
 
 function updateRange(content) {

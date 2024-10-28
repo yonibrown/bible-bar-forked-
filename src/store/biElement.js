@@ -400,6 +400,9 @@ class biBoardField {
     this._parentField = rec.parent_field;
     this._displayWholeVerse = rec.display_whole_verse;
     this._referenceStyle = rec.reference_style;
+    this._src_research = rec.src_research;
+    this._src_collection = rec.src_collection;
+    this._sec_index = rec.sec_index;
   }
 
   get id() {
@@ -600,8 +603,6 @@ class biBoardContent {
 
     this._text = rec.text;
 
-    this._src_research = +rec.src_research;
-    this._src_collection = +rec.src_collection;
     this._src_from_division = +rec.src_from_division;
     this._src_from_word = +rec.src_from_word;
     this._src_from_name = rec.src_from_name;
@@ -649,8 +650,9 @@ class biBoardContent {
     switch (this.type) {
       case "SourceVerse":
         return {
-          src_research: this._src_research,
-          src_collection: this._src_collection,
+          src_research: this._field._src_research,
+          src_collection: this._field._src_collection,
+          src_index: this._field._src_index,
           src_from_division: this._src_from_division,
           src_from_word: this._src_from_word,
           src_from_name: this._src_from_name,
