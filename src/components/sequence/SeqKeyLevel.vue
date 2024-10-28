@@ -9,7 +9,7 @@
 <script setup>
 import { watch, ref, computed } from "vue";
 
-const props = defineProps(["keyLvlIdx", "keyLvl", "nameIdx", "blanlable"]);
+const props = defineProps(["keyLvl", "nameIdx", "blanlable"]);
 const emit = defineEmits(["changeKeyLevel"]);
 
 const divisions = computed(function () {

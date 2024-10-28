@@ -6,7 +6,7 @@
       :keyLvl="lvl"
       :nameIdx="nameIdxArr[lvlIdx]"
       :blanlable="lvlIdx == 0"
-      @changeKeyLevel="(div) => changeKeyLevel( lvlIdx, div )"
+      @changeKeyLevel="(div) => changeKeyLevel(lvlIdx, div)"
     ></seq-key-level>
   </span>
 </template>
@@ -60,7 +60,7 @@ function updateKey(key) {
 }
 
 function clear() {
-  changeKeyLevel( 0, defaultDiv );
+  changeKeyLevel(0, defaultDiv);
 }
 
 async function loadLevels() {
@@ -78,7 +78,7 @@ async function loadLevels() {
 }
 
 // chage division for a level in the selected key
-async function changeKeyLevel( lvlIdx, div ) {
+async function changeKeyLevel(lvlIdx, div) {
   // handle no choise
   if (div == -999) {
     selectedKey = [];
