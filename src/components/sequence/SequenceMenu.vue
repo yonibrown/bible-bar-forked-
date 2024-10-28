@@ -16,6 +16,7 @@
         @changeValue="(newVal) => updateAttr('from_div', newVal.id)"
         defaultValue="min"
         ref="fromRef"
+        referenceStyle="1"
       ></sequence-key>
       <span>עד</span>
       <sequence-key
@@ -23,6 +24,7 @@
         @changeValue="(newVal) => updateAttr('to_div', newVal.id)"
         defaultValue="max"
         ref="toRef"
+        referenceStyle="1"
       ></sequence-key>
       <input
         v-if="enableWholeText"

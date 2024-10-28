@@ -4,6 +4,7 @@
       :initialValue="fromKey"
       @changeValue="updateFrom"
       defaultValue="min"
+      :referenceStyle="referenceStyle"
     ></sequence-key>
     <span v-if="displayOneVerse">
       <button class="disp-range" v-show="showRangeButton" @click="displayRange">
@@ -15,8 +16,9 @@
       <sequence-key
         :initialValue="toKey"
         @changeValue="updateTo"
-        defaultValue="min"
-      ></sequence-key>
+        defaultValue="max"
+        :referenceStyle="referenceStyle"
+        ></sequence-key>
     </span>
     <button>שמור</button>
   </form>
@@ -40,13 +42,6 @@ const emit = defineEmits(["changeValue"]);
 
 const defaultIndex = { res: 1, col: 1, idx: 1 };
 const defaultDivision = 972; /* Genesis,1,1 */
-
-provide(
-  "referenceStyle",
-  computed(function () {
-    return props.referenceStyle;
-  })
-);
 
 const showRangeButton = computed(function () {
   // return props.editable ;

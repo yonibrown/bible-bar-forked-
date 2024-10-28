@@ -1,7 +1,7 @@
 <template>
   <select v-model="selected" v-show="divisions.length > 0">
     <option v-for="div in divisions" :value="div.id">
-      {{ div.nameArr[1] }}
+      {{ div.nameArr[nameIdx] }}
     </option>
   </select>
 </template>
@@ -9,20 +9,16 @@
 <script setup>
 import { watch, ref, computed } from "vue";
 
-const props = defineProps(["keyLvlIdx", "keyLvl"]);
+const props = defineProps(["keyLvlIdx", "keyLvl", "nameIdx", "blanlable"]);
 const emit = defineEmits(["changeKeyLevel"]);
-import { biResearch } from "../../store/biResearch.js";
 
-// console.log('keyLvlIdx',props.keyLvlIdx);
-// console.log('keyLvl',props.keyLvl);
-// console.log(biResearch.getReferenceStyles());
 const divisions = computed(function () {
   const options = [];
-  if (props.keyLvlIdx == 0) {
+  if (props.blanlable) {
     options.push({
       id: -999,
       name: "בחר...",
-      nameArr: ["בחר...","בחר...","בחר..."]
+      nameArr: ["בחר...", "בחר...", "בחר..."],
     });
   }
 
@@ -48,7 +44,7 @@ watch(selected, (newVal) => {
   if (injectedChange) {
     injectedChange = false;
   } else {
-    emit("changeKeyLevel", { lvlIdx: props.keyLvlIdx, div: newVal });
+    emit("changeKeyLevel", newVal);
   }
 });
 </script>

@@ -4,8 +4,9 @@
       v-for="(lvl, lvlIdx) in levels"
       :key="lvlIdx"
       :keyLvl="lvl"
-      :keyLvlIdx="lvlIdx"
-      @changeKeyLevel="changeKeyLevel"
+      :nameIdx="nameIdxArr[lvlIdx]"
+      :blanlable="lvlIdx == 0"
+      @changeKeyLevel="(div) => changeKeyLevel( lvlIdx, div )"
     ></seq-key-level>
   </span>
 </template>
@@ -15,8 +16,13 @@ import SeqKeyLevel from "./SeqKeyLevel.vue";
 import { ref, inject, computed, watch } from "vue";
 import { biResearch } from "../../store/biResearch.js";
 
-const props = defineProps(["initialValue", "defaultValue"]);
+const props = defineProps(["initialValue", "defaultValue", "referenceStyle"]);
 const emit = defineEmits(["changeValue"]);
+
+const styles = biResearch.getReferenceStyles();
+const nameIdxArr = computed(function () {
+  return styles[props.referenceStyle].nameIdxArr;
+});
 
 const defaultDiv = props.defaultValue == "min" ? "0" : "-1";
 // const lastKeyIdx = props.initialValue.length - 1;
@@ -54,7 +60,7 @@ function updateKey(key) {
 }
 
 function clear() {
-  changeKeyLevel({ lvlIdx: 0, div: defaultDiv });
+  changeKeyLevel( 0, defaultDiv );
 }
 
 async function loadLevels() {
@@ -72,7 +78,7 @@ async function loadLevels() {
 }
 
 // chage division for a level in the selected key
-async function changeKeyLevel({ lvlIdx, div }) {
+async function changeKeyLevel( lvlIdx, div ) {
   // handle no choise
   if (div == -999) {
     selectedKey = [];
