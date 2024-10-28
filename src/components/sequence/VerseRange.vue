@@ -1,11 +1,10 @@
 <template>
   <form @submit.prevent="submitValue" class="menu" v-if="editing">
-    <verse-editable
-      :initialKey="fromKey"
-      :initPosition="fromPosition"
-      :initDivision="fromDivision"
-      ref="fromRef"
-    ></verse-editable>
+    <sequence-key
+      :initialValue="fromKey"
+      @changeValue="updateFrom"
+      defaultValue="min"
+    ></sequence-key>
     <span v-if="displayOneVerse">
       <button class="disp-range" v-show="showRangeButton" @click="displayRange">
         טווח
@@ -13,12 +12,11 @@
     </span>
     <span v-else>
       -
-      <verse-editable
-        :initialKey="toKey"
-        :initPosition="toPosition"
-        :initDivision="toDivision"
-        ref="toRef"
-      ></verse-editable>
+      <sequence-key
+        :initialValue="toKey"
+        @changeValue="updateTo"
+        defaultValue="min"
+      ></sequence-key>
     </span>
     <button>שמור</button>
   </form>
@@ -33,7 +31,7 @@
 </template>
 
 <script setup>
-import VerseEditable from "./VerseEditable.vue";
+import SequenceKey from "../sequence/SequenceKey.vue";
 import { computed, provide, ref, watch } from "vue";
 import { biResearch } from "../../store/biResearch.js";
 
@@ -116,32 +114,38 @@ const toName = computed(function () {
   return "";
 });
 
+var changedAttr = {};
+function updateFrom(newVal) {
+  changedAttr.src_from_division = newVal.id;
+  changedAttr.src_from_name = newVal.name;
+  changedAttr.src_from_word = 0;
+}
+
+function updateTo(newVal) {
+  changedAttr.src_to_division = newVal.id;
+  changedAttr.src_to_name = newVal.name;
+  changedAttr.src_to_word = 999;
+}
+
 function submitValue() {
   var fromDiv = props.part.src_from_division;
   var toDiv = props.part.src_to_division;
-  var updAttr = {};
 
   if (!props.part) {
-    updAttr.src_index = defaultIndex;
+    changedAttr.src_index = defaultIndex;
   }
 
-  if (fromRef.value.changedAttr.div) {
-    updAttr.src_from_division = fromRef.value.changedAttr.div;
-    updAttr.src_from_name = fromRef.value.changedAttr.name;
-    updAttr.src_from_word = 0;
+  if (changedAttr.src_from_division) {
     if (displayOneVerse.value) {
-      updAttr.src_to_division = fromRef.value.changedAttr.div;
-      updAttr.src_to_name = fromRef.value.changedAttr.name;
-      updAttr.src_to_word = 0;
+      changedAttr.src_to_division = changedAttr.src_from_division;
+      changedAttr.src_to_name = changedAttr.src_from_name;
+      changedAttr.src_to_word = changedAttr.src_from_word;
     }
-    fromDiv = fromRef.value.changedAttr.div;
+    fromDiv = changedAttr.src_from_division;
   }
 
-  if (toRef.value && toRef.value.changedAttr.div) {
-    updAttr.src_to_division = toRef.value.changedAttr.div;
-    updAttr.src_to_name = toRef.value.changedAttr.name;
-    updAttr.src_to_word = 999;
-    toDiv = toRef.value.changedAttr.div;
+  if (changedAttr.src_to_division) {
+    toDiv = changedAttr.src_to_division;
   }
 
   if (fromDiv == toDiv) {
@@ -149,7 +153,7 @@ function submitValue() {
   }
 
   editing.value = false;
-  emit("changeValue", updAttr);
+  emit("changeValue", changedAttr);
 }
 
 const title = computed(function () {
@@ -162,8 +166,6 @@ const title = computed(function () {
   return "בחר פסוק...";
 });
 
-const fromRef = ref();
-const toRef = ref();
 const editing = ref(false);
 const fromKey = ref(null);
 const toKey = ref(null);
@@ -195,6 +197,7 @@ async function startEdit() {
       toKey.value = null;
     }
 
+    changedAttr = {};
     editing.value = true;
   }
 }
